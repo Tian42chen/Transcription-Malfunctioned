@@ -1,0 +1,47 @@
+\newpage
+\section{Dynamic Programming}
+Solve sub-problems just once and save answers in a table. Use a table instead of recursion.
+
+\subsection{Fibonacci Numbers}
+\begin{align*}
+    F(N)=F(N-1)+F(N-2)
+\end{align*}
+
+\subsection{Ordering Matrix Multiplications}
+Problem:  In which order can we compute the product of $n$ matrices with minimal computing time?
+
+Suppose we are to multiply  $n$  matrices  $M_1*\dots*M_n$  where  $M_i$  is an $r_{i-1}\times r_i$ matrix.  Let $m_{ij}$ be the cost of the optimal way to compute  $M_i*\dots*M_j$ .  Then we have the recurrence equations:
+\begin{align*}
+    m_{ij}=\left\{ \begin{array}{ll}
+        0 & \text{ if }i=j\\
+        \min_{i\le l <j}\{ m_{il}+m_{l+1j}+r_{i-l}r_l r_j \} & \text{ if }j>i
+    \end{array} \right.
+\end{align*}
+
+\subsection{Optimal Binary Search Tree}
+The best for static searching (without insertion and deletion)
+
+Given  $N$  words  $w_1 < w_2 < \dots < w_N$, and the probability of searching for each  $w_i$  is  $p_i$ .  Arrange these words in a binary search tree in a way that minimize the expected total access time.
+\begin{align*}
+    T(N)=\sum_{i=1}^N p_i(1+d_i)
+\end{align*}
+\begin{align*}
+    T_{ij}&::=\text{(相当于)}\text{OBST for }w_i,\dots,w_j(i<j)\\
+    c_{ij}&::=\text{cost of }T_{ij}(c_{ii}=0)\\
+    r_{ij}&::=\text{root of }T_{ij}\\
+    w_{ij}&::=\text{weight of }T_{ij}=\sum_{k=i}^j p_k (w_{ii}=p_i)
+\end{align*}
+$T_{ij}$ is optimal $\Rightarrow$ $r_{ij}=k$ is such taht 
+\begin{align*}
+    c_{ij}&=\min_{i<l\le j}\{ w_{ij}+c_{i, l-1}+c_{l+1,j} \}
+\end{align*}
+
+\subsection{All-Pairs Shortest Path}
+For all pairs of $v_i$ and $v_j ( i \ne j )$, find the shortest path between.
+
+Define  
+$D^k_{ij} = \min\{\text{ length of path }i \rightarrow \{ l \le k \} \rightarrow j \}$  and  $D^{-1}_{ij} = Cost_{ij}$.   Then the length of the shortest path from $i$ to $j$  is $D^N_{ij}$. 
+
+\begin{align*}
+    D^k_{ij}=\min\{ D^{k-1}_{ij},\ D^{k-1}_{ik}+D^{k-1}_{kj} \},\ k\ge 0
+\end{align*}

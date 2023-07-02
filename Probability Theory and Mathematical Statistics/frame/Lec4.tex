@@ -1,0 +1,121 @@
+\newpage
+\section{随机变量数字特征}
+\subsection{数学期望}
+\subsubsection{离散型X分布律}
+$P(X=x_k)=p_k,\,k=1,2,\dots$, 
+\begin{align*}
+    E(X)=&\sum_{k=1}^{\infty}x_k p_k\\
+    E\left[g(X)\right]=&\sum_{k=1}^{\infty}g(x_k)p_k
+\end{align*}
+\subsubsection{离散型(X,Y)联合分布律}
+$P(X=x_i,Y=y_j)=p_{ij},\,i,j=1,2,\dots$,
+\begin{align*}
+    E\left[ h(X,Y) \right]=\sum_{i=1}^{\infty}\sum_{j=1}^{\infty}h(x_i,y_j)p_{ij}
+\end{align*}
+
+\subsubsection{连续型X概率密度函数}
+$f(x)$,
+\begin{align*}
+    E(X)=&\int_{-\infty}^{+\infty}xf(x)\,\mathrm{d}x\\
+    E(g(X))=&\int_{-\infty}^{+\infty}g(x)f(x)\,\mathrm{d}x
+\end{align*}
+\subsubsection{连续型(X,Y)联合密度函数}
+$f(x,y)$
+\begin{align*}
+    E\left(h(X,Y)\right)=\int_{-\infty}^{+\infty}\int_{-\infty}^{+\infty}h(x,y)f(x,y)\,\mathrm{d}x\mathrm{d}y
+\end{align*}
+
+\subsubsection{性质}
+\begin{enumerate}
+    \item $E(aX+bY+c)=aE(X)+bE(Y)+c$
+    \item 若$X,Y$相互独立, 则$E(XY)=E(X)E(Y)$
+\end{enumerate}
+
+\subsection{方差}
+\begin{definition}
+    \begin{align*}
+        Var(x)=E\left\{\left[X-E(x)\right]^2\right\}
+    \end{align*}
+\end{definition}
+
+\begin{enumerate}
+    \item $Var(X)=E(X^2)-\left[E(X)\right]^2$ \\
+    or $E(X^2)=Var(X)+[E(X)]^2$
+    \item 离散型
+    \begin{align*}
+        Var(x)=\sum_{i=1}^{\infty}\left[x_i-E(x)\right]^2p_i
+    \end{align*}
+    \item 连续型
+    \begin{align*}
+        Var(x)=\int_{-\infty}^{+\infty}\left[x-E(x)\right]^2f(x)\,\mathrm{d}x
+    \end{align*}
+\end{enumerate}
+
+\subsubsection{性质}
+\begin{enumerate}
+    \item $a,c\in \mathbb{C},\, Var(aX+c)=a^2Var(X)$.
+    \item $Var(X+Y)=Var(X)+Var(Y)+2Cov(X,Y)$. \\
+    若$X,Y$相互独立, $Var(X+Y)=Var(X)+Var(Y)$. 
+    \item $Var(X)=0\Longleftrightarrow P(X=C)=1, C=E(X)$.
+\end{enumerate}
+
+\subsection{协方差与相关系数}
+\subsubsection{协方差}
+\begin{definition}
+    \begin{align*}
+        Cov(X,Y)=E\left\{ \left[X-E(X)\right]\left[Y-E(Y)\right] \right\}
+    \end{align*}
+\end{definition}
+\begin{align*}
+    Cov(X,Y)&=E(XY)-E(X)E(Y)\\
+    \text{or } E(XY)&=Cov(X,Y)+E(X)E(Y)
+\end{align*}
+
+性质: 
+\begin{enumerate}
+    \item $Cov(X,Y)=Cov(Y,X)$
+    \item $Cov(X,X)=Var(X)$
+    \item $Cov(aX,bY)=abCov(X,Y)$
+    \item $Cov(X_1+X_2,Y)=Cov(X_1,Y)+Cov(X_2,Y)$
+    \item $Cov(aX+bY,cX+dY)=acVar(X)+bdVar(Y)\\+(ad+bc)Cov(X,Y)$
+    \item $Var(aX+bY+c)=a^2Var(X)+b^2Var(Y)\\+2abCov(X,Y)$
+\end{enumerate}
+
+\subsubsection{相关系数}
+\begin{definition}
+    \begin{align*}
+        \rho_{XY}=&\frac{Cov(X,Y)}{\sqrt{Var(X)Var(Y)}}\\
+        =&Cov\left(\frac{X-E(X)}{\sqrt{Var(X)}}\frac{Y-E(Y)}{\sqrt{Var(Y)}}\right)
+    \end{align*}
+    可看作标准化后的协方差
+\end{definition}
+
+性质:
+\begin{enumerate}
+    \item $|\rho_{XY}|\le 1$. 
+    \item $|\rho_{XY}|=1\Longleftrightarrow \exists a,b, P(Y=a+bX)=1$\\
+    特别的, $\rho_{XY}=1, b>0$; $\rho_{XY}=-1, b<0$. 
+\end{enumerate}
+
+不相关: $\rho_{XY}=0$
+\begin{enumerate}
+    \item $X,Y$独立 $\Longrightarrow$ $X,Y$不相关.
+    \item 若$(X,Y)$服从正太分布, \\ 则$X,Y$独立 $\Longleftrightarrow$ $X,Y$不相关
+\end{enumerate}
+
+\subsection{正态分布性质}
+若$(X,Y)\sim N(\mu_1,\mu_2,\sigma_1^2,\sigma_2^2,\rho)$
+\begin{enumerate}
+    \item $aX+bY+c\sim N(a\mu_1+b\mu_2+c,a^2\sigma_1^2+b^2\sigma_2^2+2ab\rho\sigma_1\sigma_2)$
+    \item $ Cov(aX+bY,cX+dY)= ac\sigma_1^2+bd\sigma_2^2+(ad+bc)\rho\sigma_1\sigma_2$
+    \item $aX+bY, cX+dY$相互独立$\Longleftrightarrow$ $Cov(aX+bY, cX+dY)=0$
+\end{enumerate}
+
+\subsection{上\texorpdfstring{$\alpha$}.分位数}
+\begin{definition}
+    $X$连续随机变量, $\exists F(x), f(x)$, 
+    \begin{align*}
+        P\left\{X>x_{\alpha}\right\}=1-F(x_{\alpha})=\int_{x_{\alpha}}^{=\infty}f(x)\,\mathrm{d}x=\alpha
+    \end{align*}
+    $x_{\alpha}$为$X$上$\alpha$分位数. 
+\end{definition}

@@ -1,0 +1,51 @@
+\section[Induction and Recursion]{Induction and Recursion (归纳与递归)}
+
+\subsection{Mathematical Induction}
+\subsubsection{The Well-ordeing Property (良序集)}
+
+Every nonnegative integers has a least element. 
+
+\subsubsection{The Proof by Mathematical Induction}
+A proof by mathematical induction that $P(n)$ is true for every positive integer $n$ consists of two steps: 
+\begin{enumerate}
+    \item Basic step: Th proposition $P(1)$ is shown to be true. 
+    \item Inductive step: The implication \\$P(n) \longrightarrow P(n+1)$ is shown to be true for every positive integer $n$. 
+\end{enumerate}
+
+\subsubsection{The Second Principle of Mathematical Induction}
+\begin{enumerate}
+    \item Basic step: Th proposition $P(1)$ is shown to be true. 
+    \item Inductive step: The implication \\ $\left[P(1)\land P(2) \land\cdots\land P(n)\right] \longrightarrow P(n+1)$ is shown to be true for every positive integer $n$. 
+\end{enumerate}
+
+The two forms of mathematical induction are equivalence. 
+
+\subsection{Recursive Definitions}
+
+\subsubsection{Recursively Defined Functions}
+To define a function with the set of nonnegative integers as its domain. 
+\begin{enumerate}
+    \item Specify the value of the function at zero, $f(0)$.
+    \item Give a rule for finding its value as an integer from ist values at smaller integers. 
+\end{enumerate}
+
+e.g. The Fibonacci numbers\begin{align*}
+    &f_0=1, f_1=1\\
+    &f_n=f_{n-1}+f_{n-2}
+\end{align*}
+
+\subsubsection{Recursively Defined Sets}
+e.g. Let S be defined recursively by 
+\begin{enumerate}
+    \item $3 \in S$.
+    \item $x+y\in S \text{ if } x\in S \text{ and }y \in S$.
+\end{enumerate}
+
+$S$ is the set of positive integers divisible by 3. 
+
+The most commom uses is to define well-formed formulae. 
+
+Also can define strings.
+
+\subsubsection{Recursive Algorithms}
+An algorithm is called \highlight{recursive} if it solves a problem by reducing it to an instance of the same problem with smaller input. 

@@ -1,0 +1,111 @@
+\newpage
+\section{Inverted Files Index}
+
+\textbf{Solution:}
+\begin{enumerate}
+    \item scan string
+    \item Term-Document Incidence Matrix. e.g. Document sets  
+\end{enumerate}
+
+\subsection{Compact Version - Inverted File Index}
+\begin{definition}
+    \hl{Index} is a mechanism for locating a given term in a text. 
+\end{definition}
+\begin{definition}
+    \hl{Inverted file} contains a list of pointers (e.g. the nuber of the page) to all occurrences of that term in the text. 
+\end{definition}
+
+Assume: bag of words (词顺序没那么重要)
+
+\subsubsection{Index Genertor}
+\begin{algorithm}[H]
+    \caption{Index Genertor}
+    \begin{algorithmic}
+        \ForAll{document D}
+            \ForAll{term T in D}
+                \If{T doesn't exist in D}
+                    \State insert T in D
+                \EndIf
+                \State Get T's posting list. 
+                \State Insert a node to T's posting list. 
+            \EndFor
+        \EndFor
+    \end{algorithmic}
+\end{algorithm}
+
+\subsubsection{While reading a term}
+\begin{enumerate}
+    \item \textbf{Word Stemming:} Process a word so that only its stem or root form is left. 
+    \item \textbf{Stop Words:} Some words are so common that almost every document contains them, such as ``a'' ``the'' ``it''.  It is useless to index them.  They are called stop words.  We can eliminate them from the original documents.
+\end{enumerate}
+
+\subsubsection{While accessing a term}
+\textbf{Solution:}
+\begin{enumerate}
+    \item Search trees
+    \item Hashing
+\end{enumerate}
+
+\subsubsection{While not having enough memory}
+Memory in blocks (分块存储), and merge them. 
+
+Distributed indexing --- Each node contains index of a subset of collection. 
+
+\textbf{Solution:}
+\begin{enumerate}
+    \item Term-partitioned index
+    \item Document-partitioned indedx (robust)
+\end{enumerate}
+
+\subsubsection{Dynamic indexing}
+
+\begin{itemize}
+    \item Docs come in over time
+    \begin{itemize}
+        \item postings update for terms already in dictionary. 
+        \item new terms added to dictionary. 
+    \end{itemize}
+    \item Docs get deleted
+\end{itemize}
+
+Using main index and auxiliary index. 
+
+\subsubsection{Compression}
+差分压缩index
+
+\subsubsection{Thresholding}
+Document: only retrieve the top $x$ documents where the documents are ranked by weight. 
+
+\textbf{Problems:}
+\begin{itemize}
+    \item Not feasible for Boolean queries. 
+    \item Can miss some relevant documents due to truncation. 
+\end{itemize}
+
+Query: Sort the query terms by their frequency in ascending order; search according to only some percentage of the original query terms. 
+
+\subsection{Measures for a search engine}
+\begin{itemize}
+    \item How fast does it index
+    \item How fast does it search
+    \item Expressiveness of query language
+\end{itemize}
+
+\subsubsection{Relevance measurement}
+\begin{enumerate}
+    \item A benchmark document collection
+    \item A benchmark suite of queries
+    \item A binary assessment of either Relevant or Irrelevant for each query-doc pair   
+\end{enumerate}
+\begin{table}[H]
+    \centering
+    \begin{tabular}[c]{|r|c|c|}\hline
+        & Relevant & Irrelevant\\ \hline
+        Retrieved & $R_R$ & $I_R$\\ \hline
+        Not Retrieved & $R_N$ & $I_N$ \\  \hline
+    \end{tabular}
+\end{table}
+\begin{align*}
+    \text{Precision }P&=\frac{R_R}{R_R+I_R}\\
+    \text{Recall }R&=\frac{R_R}{R_R+R_N}
+\end{align*}

@@ -1,0 +1,161 @@
+\newpage
+\section{Quantum Error Correction}
+
+\subsection{Error Representation and Correction}
+Errors for a single qubit can be represented by unexpected $Z, X$, and $Y$ gates (phase error, bit-flip error, and combined bit-flip and phase error, respectively) in a quantum circuit.
+
+Redundancy in coding can reduce the error rate from $p\ll 1$ to $O(p^2)$. The key in quantum error correction lies in how to replicate and extract the information.
+
+\subsubsection{Representation of Errors}
+Interaction with the environment will transform and entangle the states of the qubit and its environment. In general, we expect the following process:
+\begin{align*}
+    \ket{e_0}\ket{0}&\rightarrow \ket{e_1}\ket{0}+\ket{e_2}\ket{1}\\
+    \ket{e_0}\ket{1}&\rightarrow \ket{e_3}\ket{0}+\ket{e_4}\ket{1}
+\end{align*}
+where $\ket{e_{0-4}}$ are the states of the environment. 
+
+For practical quantum computing, we expect weak coupling between the qubit and its environment. Hence we expect
+\begin{align*}
+    \sqrt{\left|\braket{e_0|e_1}\right|^2}\approx \sqrt{\left|\braket{e_0|e_4}\right|^2}\approx 1\\
+    \braket{e_2|e_2}, \braket{e_3|e_3}\ll 1
+\end{align*}
+To discuss the interaction with the environment, it is useful to rewrite projection operators, which satisfy
+\begin{align*}
+    P_0\ket{\psi}=\ket{0}\braket{0|\psi},\ P_1\ket{\psi}=\ket{1}\braket{1|\psi}
+\end{align*}
+as
+\begin{align*}
+    P_\alpha=\frac{I+(-1)^\alpha Z}{2}
+\end{align*}
+
+We can now write
+\begin{align*}
+    \ket{e_0}\ket{\psi}\rightarrow\left[ \ket{e_1}I+\ket{e_2}X \right]P_0\ket{\psi}+\left[ \ket{e_3}X+\ket{e_4}I \right]P_1\ket{\psi}
+\end{align*}
+where $\ket{e}O\ket{\psi}\equiv \ket{e}\otimes O\ket{\psi}$. 
+
+Plugging in the explicit form of $P_\alpha$, we find
+\begin{align*}
+    \ket{e_0}\ket{\psi}\rightarrow& \left[ \frac{\ket{e_1}+\ket{e_4}}{2}I+\frac{\ket{e_1}-\ket{e_4}}{2}Z\right. \\
+    &\left. +\frac{\ket{e_3}+\ket{e_2}}{2}X+\frac{\ket{e_3}-\ket{e_2}}{2}Y \right] \ket{\psi}\\
+    \equiv & \left( \ket{d}I+\ket{a}X+\ket{b}Y+\ket{c}Z \right)\ket{\psi}
+\end{align*}
+The four operators $I, Z, X$ and $Y$ correspond to no error, phase error, bit-ﬂip error, and combined bit-ﬂip and phase error, respectively.
+
+We notice that
+\begin{align*}
+    \ket{d}=\frac{\ket{e_1}+\ket{e_4}}{2}\approx\ket{e_0}
+\end{align*}
+but $\ket{a}$, $\ket{b}$, and $\ket{c}$, which are associated with various errors, are ket-vectors with small amplitudes. This is consistent with our weak-coupling assumption. For one qubit, there are 3 terms of errors.
+
+When we generalize the result to 1-bit errors for n-bit codewords $\ket{\Psi_n}$, we can write
+\begin{align*}
+    \ket{e_0}\ket{\Psi_n}\rightarrow & \ket{d}\ket{\Psi_n}+\\
+    &\sum_{i=1}^n(\ket{a_i} X_i \ket{\Psi_n} + \ket{b_i} Y_i \ket{\Psi_n} + \ket{c_i} Z_i \ket{\Psi_n} )
+\end{align*}
+Altogether, there are $(3n + 1)$ terms.
+
+\subsubsection{Error Correction}
+A classical code is defined as being a set of bit strings with certain properties.
+
+Before 1995, it was believed that the concept of error correction could not apply to quantum systems, for the following reasons:
+\begin{enumerate}\small
+    \item Quantum states collapse when measured.
+    \item Errors are continuous.
+    \item Quantum states cannot be cloned.
+\end{enumerate}
+
+It turns out there are ways around all of these objections.
+\begin{enumerate}\small
+    \item The part of the Hilbert space containing the quantum information to be preserved need not be measured; only the eﬀect of the environment need be determined by a measurement. 
+    \item Using entangled states allow errors to be made orthogonal and distinguishable. 
+    \item Entanglement also replaces the role played by redundant copies in classical error correction.
+\end{enumerate}
+
+To encode each logic qubit in multiple physical qubit, we replace $\ket{0}$ and $\ket{1}$ by the codewords, e.g.
+\begin{align*}
+    \ket{\tilde{0}}=\ket{0}\ket{0}\ket{0}=\ket{000}\\
+    \ket{\tilde{1}}=\ket{1}\ket{1}\ket{1}=\ket{111}
+\end{align*}
+One (or two) bit ﬂip moves the states to the non-encoding space $\ket{001}, \ket{010}, \ket{100}, \ket{110}, \ket{101}, \ket{011}$, therefore can be detected. But as measurement can alter a state, one must come up with less obvious form of measurement.
+
+In addition to bit-ﬂip errors, there can also be phase errors,
+e.g.
+\begin{align*}
+    \frac{\ket{0}+\ket{1}}{\sqrt{2}}\rightarrow\frac{\ket{0}-\ket{1}}{\sqrt{2}}
+\end{align*}
+
+A generalization of the 3-bit coding to 9-bit can correct both bit-ﬂip and phase errors. See, e.g., D. Gottesman, arXiv:0904.2557, Sec. 2.1.
+
+\subsection{The 3-Bit Repetition Code}
+While measurement can alter a state, there exist less obvious forms of measurement for error detection. In a repetition code, one can use CNOT gates to extract the information without directly measuring the qubits.
+
+Errors, in general, leads to information leakage into the non-encoding space. One can correct the errors by returning to the encoding space without revealing any information of the logical qubit.
+
+Preparation
+\begin{align*}
+    \ket{\psi}\equiv \alpha\ket{000}+\beta\ket{111}
+\end{align*}
+%TODO P14
+
+Occasionally, a bit is flipped (with a small probability $p$).
+\begin{align*}
+    \ket{\psi_1}=X_1\ket{\psi}=\alpha\ket{100}+\beta\ket{011}\\
+    \ket{\psi_2}=X_2\ket{\psi}=\alpha\ket{010}+\beta\ket{101}\\
+    \ket{\psi_3}=X_3\ket{\psi}=\alpha\ket{001}+\beta\ket{110}
+\end{align*}
+
+Detection: We cannot measure the three qubits, but can use CNOT gates to extract the information.
+%TODO P15-19
+
+In addition to detection, we can directly correct the error by the following circuit without measuring.
+%TODO P20
+
+The essence is that we can restore $\ket{\psi}$ without revealing any information about $\alpha$ and $\beta$.
+
+
+\subsection{Toward Fault-Tolerant Quantum Computation}
+Provided the noise in individual quantum gates is below a certain constant threshold, it is possible to reliably perform an arbitrary quantum computation.
+
+In the modern surface code, errors are allowed to exist and propagate (hence fault-tolerant), as long as they are sparse. Once identiﬁed, classical control software can be used to track and correct the errors separately.
+
+\subsubsection{Fault-Tolerant Quantum Computation}
+Even though the repetition code cannot correct all possible errors, it convinces us that noise is not a serious problem in principle; error correction can reduce the error probability from $p$ to $O(p^2)$. 
+
+If we further introduce hierarchical procedures, the error probability can be ultimately reduced to as low a level as desired, as long as the original error rate $p$ is below some threshold $p_{th}$ (with physically reasonable assumptions).
+
+This is known as the threshold theorem, as was also important for early-day classical computation.
+
+\subsubsection{Understanding Error Detection}
+To understand the connection between error detection and operator measurement, we digress to the following circuit for measurement of an operator $U$ acting on a single qubit.
+%TODO P24
+
+Here, we suppose $U$ has eigenvalues $\pm 1$ and corresponding eigenvector $\ket{u_\pm}$. So a single-qubit state $\ket{\psi}$ can be generically expressed as $\alpha\ket{u_+}+\beta\ket{u_-}$. 
+
+Following the circuit from left to right, the two-qubit state evolves as
+%TODO P25
+\begin{align*}
+    1
+\end{align*}
+When the measurement result is 0, the circuit outputs $\ket{u_+}$. Otherwise, it outputs $\ket{u_-}$. 
+
+As an example of the circuit that can be used to measure a single-qubit operator $U$, we consider $U \equiv Z$ . 
+
+This implies that we can alternatively interpret the repetition code as measuring the product of $Z$-gates operating on the encoded qubits.
+
+For that reason, let us define
+\begin{align*}
+    U_1=Z_1Z_2,\ U_2=Z_2Z_3
+\end{align*}
+In fact, an equivalent circuit for error detection, which incorporates $U_1$ and $U_2$ explicitly, can be constructed.
+
+The operators $U_1$ and $U_2$ each has two distinct eigenvalues $\pm 1$. The measurement of the operators, for zero and one-qubit errors, yields
+%TODO P28
+
+Therefore, the measurement results contain the identical information as the measurement of $\ket{x}$ and $\ket{y}$. They are known as the \textbf{syndrome}, which can be used to identify and locate errors.
+
+%TODO P29-30
+
+\subsubsection{Toward Fault-Tolerance with the Surface Code}
+In a surface code, qubits form a two-dimensional array. They are entangled into a randomly selected quiescent state resulting from the measurement of stabilizers.
+%TODO P31-34

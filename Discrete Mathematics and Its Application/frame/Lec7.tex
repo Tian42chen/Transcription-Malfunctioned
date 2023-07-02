@@ -1,0 +1,318 @@
+\section[Relations]{Relations (关系)}
+
+\subsection{Relations and Their Properties}
+
+\subsubsection{Relations}
+\begin{definition}
+    A \highlight{binary relation} $R$ between $A$ and $B$ is a subset of Cartesian product $A\times B$
+    \[ R\subseteq A\times B \]
+    when $A=B$, $R$ is called a relation on set $A$. 
+\end{definition}
+
+\begin{enumerate}
+    \item Given a relation $R$ from $A$ to $B$. 
+    \begin{itemize}
+        \item The \highlight{domian} of $R$
+        \[ Dom(R)=\left\{ x\in A |\, \exists y \in B, \, (x,y) \in R  \right\} \]
+        \item The \highlight{range} of $R$
+        \[ Ram(R)=\left\{ y\in B | \,\exists x\in A ,\, (x,y)\in R \right\} \]
+    \end{itemize}
+    \item Function as relations: Recall a function $f$ from set $A$ to $B$. 
+    \item n-ary relations: Let $A_1,A_2,\dots,A_n$ be sets. An n-ary relation on these sets is a subset of $A_1\times A_2\times \cdots\times A_n$. $n$  is called the degree. 
+\end{enumerate}
+
+\subsubsection{Combining Relations}
+\begin{enumerate}
+    \item Union, intersection, complement and difference of relations (并交补差). 
+    \item Let $R$ be a relation from a set $A$ to $B$ and $S$ a relation from $B$ to $C$. The \highlight{composite (合成)} of $R$ and $S$ is the relation
+    \begin{align*}
+        S \circ R =\left\{ (a,c)|\, a\in A,c\in C \,\exists b\in B ,\, \begin{array}{l}
+            (a,b)\in R\\(b,c)\in S
+        \end{array}  \right\}
+    \end{align*}
+    \item LEt $R$ be a relation on set $A$. The \highlight{power (幂) $R^n$} $n=1,2,\dots$ are defined inductively by 
+    \begin{align*}
+        R^1=&R \\
+        R^{n+1}=&R^n \circ R
+    \end{align*}
+    \item Given a relation $R$ from $A$ to $B$, its \highlight{inverse $R^{-1}$} is the relation from $B$ to $A$ defined by
+    \begin{align*}
+        R^{-1}=\left\{ (y,x)| (x,y)\in R \right\}
+    \end{align*}
+\end{enumerate}
+
+\quad
+
+\subsubsection{Properties of Relations}
+\begin{definition}
+    Let $R$ be a relation on a set $A$. 
+    \begin{align*}
+        R \text{ is \highlight{reflexive (自反)}}\Longleftrightarrow \forall x \in A, (x,x)\in R\\
+        R \text{ is \highlight{irreflexive (反自反)}}\Longleftrightarrow \forall x \in A, (x,x)\notin  R
+    \end{align*}
+\end{definition}
+\begin{definition}
+    Let $R$ be a relation on a set $A$. 
+    \begin{align*}
+        R \text{ is \highlight{symmetric (对称)}}\Longleftrightarrow& \forall x,y \in A, (x,y)\in R\\& \Rightarrow (y,x)\in R\\
+        R \text{ is \highlight{anti-symmetric (反对称)}}\Longleftrightarrow& \forall x,y \in A, (x,y)\in R \\ &\text{and } (y,x)\in R \Rightarrow x=y
+    \end{align*}
+\end{definition}
+Remark:
+\begin{enumerate}
+    \item $R \text{ is symmetric} \Longleftrightarrow R^{-1}=R$
+    \item $R \text{ is anti-symmetric} \Longleftrightarrow R\cap R^{-1}\subseteq R_=$
+    \item Non-symmetric $\nLeftrightarrow $ anti-symmetric
+\end{enumerate}
+\begin{definition}
+    Let $R$ be a relation on a set $A$. 
+    \begin{align*}
+        R \text{ is \highlight{transitive (传递)}}\Longleftrightarrow& \forall x,y,z\in A\\ & \left( (x,y)\in R \land (y,z)\in R \right) \\ &\Rightarrow (x,z)\in R
+    \end{align*}
+\end{definition}
+Remark: $R$ is transitive $\Leftrightarrow R\circ R \subseteq R$. 
+
+\begin{theorem}
+    The relation $R$ on a set $A$ is transitive iff 
+    \[ R^n \subseteq R \]
+    for $n=2,3,\dots$
+\end{theorem}
+
+\subsection{Representing Relations}
+\subsubsection{Matrices of Relations}
+\begin{definition}
+    Suppose $R$ a relation \\ from $A=\left\{ a_1,a_2,\dots,a_m \right\}$ to $B=\left\{ b_1,b_2,\dots,b_n \right\}$, The relation $R$ can be represented by matrix $M_R=(m_{ij})_{m\times n}$
+    \[ m_{ij}=\left\{ \begin{array}{lc}
+        1 & (a_i,b_j)\in R \\ 0 & (a_i,b_j)\notin R
+    \end{array} \right. \]
+\end{definition}
+Remark:
+\begin{enumerate}
+    \item Let $M_R$ be the matrix of a relation $R$ on set $A$. Let $M_R^2=M_R\circ M_R$.
+    \begin{enumerate}
+        \item $R$ is reflexive $\Leftrightarrow$ $m_{ii}=1$.\\
+        $R$ is irreflexive $\Leftrightarrow$ $m_{ii}=0$.
+        \item  $R$ is symmetric $\Leftrightarrow$ $m_{ij}=m_{ji}$, i.e. $M_R$ is a symmetric matrix. \\
+        $R$ is anti-symmetric $\Leftrightarrow$ $m_{ij}=1, i\ne j \Rightarrow m_{ji}=0$. 
+        \item $R$ is transitive $\Leftrightarrow$ whenever $c_{ij}$ in $C=M_R^2$ is nonzero then entry $m_{ij}$ in $M_R$ is also nonzero. 
+        \begin{align*}
+            c_{ij}=a_{i1}a_{1j}\lor a_{i2}a_{2j} \lor \cdots \lor a_{ik}a_{kj} \lor \cdots \lor a_{in}a_{nj}
+        \end{align*}
+    \end{enumerate}
+    \item Suppose that $R_1$ and $R_2$ are relations on a set $A$ represented by matrix $M_{R_1}$ and $M_{R_2}$ respectively. Then 
+    \begin{align*}
+        M_{R_1\cup R_2}=&M_{R_1}\lor M_{R_2}\\
+        M_{R_1\cap R_2}=&M_{R_1}\land M_{R_2}\\
+        M_{S\circ R}=M_R\odot  M_S
+    \end{align*}
+    where the operator are join and meet. 
+\end{enumerate}
+
+\subsubsection{Digraphs of Relations}
+Each element of the set is represented by a point， and each ordered pair is represented using an arc with its direction indicated by an arrow --- \highlight{directed graphs} or digraphs (元素为结点, 关系为有向边).
+
+Remark: Let $R$ be a relation on set $A$. 
+\begin{enumerate}
+    \item $R$ is reflexive $\Leftrightarrow$ There are loops at every vertex of digraph. 
+    \item $R$ is symmetric $\Leftrightarrow$ Every edge is Bi-directional edge. 
+\end{enumerate}
+
+\subsection{Closures of Relations}
+\subsubsection{Introduction}
+\begin{definition}
+    Let $R$ be a relation on a set $A$. If there is a relation $S$ satisfy:
+    \begin{enumerate}
+        \item $S$ with property $P$ (reflexive, symmetricm, or transitive) and $R\subseteq S$. 
+        \item $\forall S'$ with property $P$ and $R\subseteq S'$, then $S\subseteq S'$.
+    \end{enumerate}
+    Then $S$ is called the \highlight{closure} of $R$ with respect to $P$. 
+\end{definition}
+
+\subsubsection{Computing of Closures}
+\begin{theorem}
+    Let $R$ be a relation on set $A$. 
+    \begin{enumerate}
+        \item The \highlight{reflexive closure} of relation $R$:
+        \begin{align*}
+            r(R)=R\cup \Delta
+        \end{align*}
+        where $\Delta=\left\{ (a,a) | a\in A \right\}$ is diagonal relation on $A$. 
+        \item The \highlight{symmetric closure} of relation $R$: 
+        \begin{align*}
+            s(R)=R\cup R^{-1}
+        \end{align*}
+        \item The \highlight{transitive closure} of $R$:
+        \begin{align*}
+            t(R)=R^*
+        \end{align*}
+    \end{enumerate}
+\end{theorem}
+
+\begin{definition}
+    A \highlight{path} from $a$ to $b$ in the digraph $G$ is a sequence of one or more edges $(x_0,x_1)$, $(x_1,x_2)$, $\dots$, $(x_{n-1},x_n)$ in $G$. where $x_0=a$ and $x_n=b$. The path is denoted by $x_0,x_1,\dots,x_n$ and has length $n$. 
+    \begin{itemize}
+        \item A \highlight{circuit} or \highlight{cycle}: a path that begins and ends at the same vertex. 
+    \end{itemize}
+\end{definition}
+
+\begin{theorem}
+    Let $R$ be a relation on set $A$. There is a path of length $n$ from $a$ to $b$ $\Leftrightarrow$ $(a,b)\in R^n$.
+\end{theorem}
+
+\begin{definition}
+    The \highlight{connectivity relation}\\ $R^*=\left\{ (a,b)| \text{there is a path from $a$ to $b$} \right\}$. 
+    \begin{align*}
+        R^*=\bigcup_{n=1}^{\infty}R^n
+    \end{align*}
+\end{definition}
+
+\begin{theorem}
+    The transitive closure of a relation $R$ equals the connectivity relation $R^*$, i.e.
+    \begin{align*}
+        t(R)=R^*
+    \end{align*}
+\end{theorem}
+
+Let $R$ be a relation on set $A$ with $n$ elements. Then,
+\begin{align*}
+    R^*=\bigcup_{i=1}^n R^i
+\end{align*}
+
+\begin{theorem}
+    Let $M_R$ be the zero-one matrix of the relation $R$ on a set with $n$ elements. Then the zero-one matrix of the transitive closure $R^*$ is 
+    \begin{align*}
+        M_{R^*}=M_R\lor \cdots \lor M_R^{[n]}
+    \end{align*}
+\end{theorem}
+
+$O(n^4)$
+
+\subsubsection{Warshall's Algorithm}
+$O(2n^3)$
+
+\subsection{Equivalence Relations}
+\subsubsection{Introduction of Equivalence Relations}
+\begin{definition}
+    Relation $R_{\sim}: A\leftrightarrow  A$ is an \highlight{equivalence relation (等价关系)}, if it reflexive, symmetric and transitive. 
+\end{definition}
+
+\subsubsection{Equivalence Classes and its Properties}
+\begin{definition}
+    Let $R: A \leftrightarrow A$ is an equivalence relation. $\forall a\in A$, the \highlight{equivalence class (等价类)} of $a$ is the set of the elements related to $a$
+    \[ [a]_R=\left\{ x\in A | (x,a)\in R \right\} \]
+    If $b\in [a]_R$, $b$ is called a representative of this equivalence class. 
+\end{definition}
+
+The properties of equivalence classes:
+\begin{enumerate}
+    \item $\forall a\in A, [a]_R\ne \emptyset $.
+    \item $(a,b)\in R \Rightarrow [a]_R=[b]_R$
+    \item $(a,b)\notin R \Rightarrow [a]_R\cap[b]_R=\emptyset$
+    \item $\displaystyle \bigcup_{a\in A} [a]_R=A$
+\end{enumerate}
+
+\begin{definition}
+    The set of all equivalence classes of $R$ is the \highlight{quotient set (商集)} of $A$ with respect to $R$
+    \begin{align*}
+        \frac{A}{R}=\left\{ [a]_R|a\in A \right\}
+    \end{align*}
+\end{definition}
+Remark:
+\begin{enumerate}
+    \item If $A$ finite, then $\frac{A}{R}$ finite. 
+    \item If $A$ has $n$ elements, and if every $[a]_R$ has $m$ elements, then $m|n$, and $\frac{A}{R}$ has $\frac{n}{m}$ elements. 
+\end{enumerate}
+
+\subsubsection{Partition}
+\begin{definition}
+    A \highlight{partition (划分)} $\pi$ on a set $S$ is a family $\left\{ A_1,A_2,\dots,A_n \right\}$ of subsets of $S$ and 
+    \begin{enumerate}
+        \item $\displaystyle \bigcup_{k=1}^n A_k=S$.
+        \item $\displaystyle A_j\cap A_k=\emptyset$ for every $j,k$ with $j\ne k,\, 1<j,k<n$. 
+    \end{enumerate}
+\end{definition}
+\begin{theorem}
+    Let $R$ be an equivalence relation on a set $S$. Then the equivalence classes of $R$ form a partition of $X$. Conversely, given a partition $\left\{A_i|i\in I\right\}$ of set $S$, there is an equivalence relation $R$ that has the set $A_i,i\in I$, as its equivalence classes. 
+\end{theorem}
+
+\subsection{Partial Orderings}
+\subsubsection{Introduction}
+\begin{definition}
+    Relation $R_{\preceq }: S\leftrightarrow S$ is a \highlight{partial order}, if it reflexive, anti-symmetric and transitive. 
+
+    A set $S$ together with a partial ordering $R_{\preceq}$ is called a \highlight{partial order set} or \highlight{poset}, and is denoted by $(S,R_{\preceq}), P(S)$. 
+\end{definition}
+
+\begin{definition}
+    $\forall a,b\in poset(S,\preceq)$ are called \highlight{comparable (可比)} if either $a\preceq b$ or $b\preceq a$, otherwise they are called \highlight{incomparable (不可比)}.
+    
+    If $(S,\preceq)$ is a poset and every elements of $S$ are comparable, $S$ is called a \highlight{totally order (全序集)} or \highlight{linearly order set (线性集)}, $\preceq$ is called a \highlight{total order or linear order (全序或线性)}. A totally ordered set is also called a \highlight{chain (链)}. 
+\end{definition}
+
+\subsubsection{Lexicographic Order}
+\subsubsection{Hasse Diagram}
+Represent a partial ordering on a finite set using the following procedure: 
+\begin{enumerate}
+    \item Start with the directed graph for the relation. 
+    \item Remove all loops. 
+    \item Remove all edges that must be present because of the transitivity. 
+    \item Finally, arrange each edges so that its initial vertex is  below its terminal vertex, remove all the arrows. 
+\end{enumerate}
+The resulting diagram contains sufficient information to find the partial ordering. --- Hasse Diagram. 
+
+\subsubsection{Maximal and Minimal Elements}
+\begin{definition}
+    Let $(A,\preceq)$ be a partial ordered set, $B\subseteq A$.
+    \begin{enumerate}
+        \item maximal and minimal elements
+        \begin{enumerate}
+            \item $a$ is a \highlight{maximal element (极大元)} of $B$: 
+            \begin{align*}
+                a\in B \land \nexists\, x\in B:\, a\prec x
+            \end{align*}
+            \item $b$ is a \highlight{minimal element (极小元)} of $B$: 
+            \begin{align*}
+                b\in B \land \nexists\, x\in B:\, x\prec b
+            \end{align*}
+        \end{enumerate}
+        \item greatest and least elements
+        \begin{enumerate}
+            \item $a$ is the \highlight{greatest element (最大元)} of $B$: 
+            \begin{align*}
+                a\in B \land \forall\, x\in B:\, x\preceq a
+            \end{align*}
+            \item $b$ is the \highlight{least element (最小元)} of $B$: 
+            \begin{align*}
+                b\in B \land \forall\, x\in B:\, b\preceq x
+            \end{align*}
+        \end{enumerate}
+        \item upper and lower bound
+        \begin{enumerate}
+            \item c is an \highlight{upper bound (上界)} of $B$:
+            \begin{align*}
+                c\in A \land \forall\, x \in B:\, x\preceq c
+            \end{align*}
+            \item d is a \highlight{lower bound (下界)} of $B$: 
+            \begin{align*}
+                d\in A \land \forall\, x \in B:\, d\preceq x
+            \end{align*}
+        \end{enumerate}
+        \item least upper and greatest lower bound
+        \begin{enumerate}
+            \item c is the \highlight{least upper bound (最小上界)} of $B$:
+            \begin{align*}
+                c\text{ is an upper bound of }B&\\ \land \forall\, x \text{ is an upper bound of }B&:\, c\preceq x
+            \end{align*}
+            \item d is the \highlight{greatest lower bound (最大下界)} of $B$: 
+            \begin{align*}
+                d\text{ is an lower bound of }B&\\ \land \forall\, x \text{ is an lower bound of }B&:\, x\preceq d
+            \end{align*}
+        \end{enumerate}
+    \end{enumerate}
+    $(S,\preceq)$ is a well-ordered set if it is a poset such that $\preceq$ is a total ordering and such that every nonempty of $S$ has a least element. 
+\end{definition}
+
+\subsubsection{Lattices}
+\begin{definition}
+    A partially ordered set in which pair of elements has both a least upper bound and a greatest lower bound is called \highlight{lattice (格)}.
+\end{definition}

@@ -1,0 +1,187 @@
+\section[Advanced Counting Techniques]{Advanced Counting Techniques (高级算法科技)}
+\subsection{Recurrence Relations}
+
+\begin{definition}
+    A \highlight{recurrence relation} for a sequence $\left\{a_n \right\}$ is an equation that express $a_n$ in terms of one or more of the previous terms of the sequence. 
+    \begin{itemize}
+        \item A sequence is calle a \highlight{solution} of recurrence relation if its term satisfy the recurrence relation. 
+        \item Initial condition. 
+    \end{itemize}
+\end{definition}
+
+e.g. Rabbits and Fibonacci Numbers, The Tower of Hanoi, DP etc. 
+
+\subsection{Solving Recurrence Relations}
+
+\subsubsection{Induction}
+\begin{definition}
+    A \highlight{linear homogeneous recurrence relation of degree k with constant coefficients (k阶线性齐次常系数递推关系)} is a recurrence relation of the form
+    \[ a_n = c_1a_{n-1} + c_2a_{n-2}+ \cdots + c_k a_{n-k} \]
+    where $c_1,c_2,\cdots,c_k$ are real number, and $c_k \ne 0$.
+\end{definition}
+
+\subsubsection{Solving k阶线性齐次常系数递推关系}
+
+To look for solutions of the form $a_n=r^n$, where $r$ is a constant. And $a_n=r^n$ is a solution of $a_n = c_1a_{n-1} + c_2a_{n-2}+ \cdots + c_k a_{n-k}$. Then can obtain
+\begin{align*}
+    r^k-c_1r^{k-1} - c_2r^{k-2}- \cdots - c_{k-1}r- c_k=0
+\end{align*}
+called Characteristic Equation (特征方程). The solution are called the Characteristic roots (特征根). 
+\begin{enumerate}
+    \item For degree $k=2$
+    \begin{theorem}
+        Suppose $r^2-c_1r-c_2=0$ has two distinct roots $r_1$ and $r_2$. Then the sequence $\left\{a_n\right\}$ is a solution of the recurrence relation, iff 
+        \[a_n=\alpha_1r_1^n+\alpha_2r_2^n\]
+        for $n=0,1,2,\cdots$, where $\alpha_1 \text{ and } \alpha_2$ are constants. 
+    \end{theorem}
+    \begin{theorem}
+        Suppose that $r^2-c_1r-c_2=0$ has only one root $r_0$. Then the sequence $\left\{a_n\right\}$ is a solution of the recurrence relation, iff 
+        \[ a_n=\alpha_1 r_0^n + \alpha_2 n r_0^n \]
+        for $n=0,1,2,\cdots$, where $\alpha_1 \text{ and } \alpha_2$ are constants. 
+    \end{theorem}
+    \item For degree $k>2$
+    \begin{theorem}
+        Suppose that the characteristic equation $r^k-c_1r^{k-1} - c_2r^{k-2}- \cdots - c_{k-1}r- c_k=0$ has $k$ distinct roots $r_1,\cdots,r_k$. Then the sequence $\left\{ a_n \right\}$ is a solution of the recurrence relation $a_n = c_1a_{n-1} + c_2a_{n-2}+ \cdots + c_k a_{n-k}$ iff
+        \[ a_n=\alpha_1r_1^n+\alpha_2r_2^n+\cdots +\alpha_kr_k^n \]
+        for $n=0,1,2,\cdots$, where $\alpha_1,\alpha_2,\cdots ,\alpha_k$ are constants.
+    \end{theorem}
+
+    \begin{theorem}
+        Suppose that $r^k-c_1r^{k-1} - c_2r^{k-2}- \cdots - c_{k-1}r- c_k=0$ has $t$ distinct roots $r_1,\cdots, r_t$ with multiplicities $m_1,\cdots, m_t$, respectively, so that $m_i \ge 1$ for $i=1,2,\cdots,t$ and $m_1+m_2+\cdots +m_t=k$. The the sequence $\left\{ a_n \right\}$ is a solution of the recurrence relation $a_n = c_1a_{n-1} + c_2a_{n-2}+ \cdots + c_k a_{n-k}$ iff 
+        \begin{align*}
+            a_n=&(\alpha_{1,0}+\alpha_{1,1}n+\cdots+\alpha_{1,m_1}n^{m_1-1})r_1^n\\
+            &+(\alpha_{2,0}+\alpha_{2,1}n+\cdots+\alpha_{2,m_2}n^{m_2-1})r_2^n\\
+            &+\cdots + (\alpha_{t,0}+\alpha_{t,1}n+\cdots+\alpha_{t,m_t}n^{m_t-1})r_t^n
+        \end{align*}
+        for $n=0,1,2,\cdots$, where $\alpha_{i,j}$ are constants. 
+    \end{theorem}
+\end{enumerate}
+
+\subsubsection{Solving k阶线性非齐次常系数递推关系}
+
+\begin{definition}
+    A \highlight{linear nonhomogeneous recurrence relation of degree k with constant coefficients (k阶线性非齐次常系数递推关系)} is a recurrence relation of the form 
+    \[ a_n = c_1a_{n-1} + c_2a_{n-2}+ \cdots + c_k a_{n-k} +F(n) \]
+    where $c_1,c_2,\cdots, c_k$ are real numbers, and $F(n)$ is a function not identically zero depending only on $n$. The recurrence relation 
+    \[ a_n = c_1a_{n-1} + c_2a_{n-2}+ \cdots + c_k a_{n-k} \]
+    is called \highlight{the associated homogeneous recurrence relation (相对齐次式子)}. 
+\end{definition}
+
+\begin{theorem}
+    If $\left\{ a_n^{(p)} \right\}$ is \highlight{particular solution} of the linear nonhomogeneous recurrence relation with constant coefficients
+    \[ a_n = c_1a_{n-1} + c_2a_{n-2}+ \cdots + c_k a_{n-k} +F(n) \]
+    then every solution is of the form $\left\{ a_n^{(p)}+a_n^{(h)} \right\}$, where $\left\{a_n^{(h)}\right\}$ is \highlight{a solution of the associated homogeneous recurrence relation}
+    \[ a_n = c_1a_{n-1} + c_2a_{n-2}+ \cdots + c_k a_{n-k} \]
+\end{theorem}
+
+\begin{theorem}
+    Suppose that $\left\{a_n\right\}$ satisfies the linear nonhomogeneous recurrence relation $ a_n = c_1a_{n-1} + c_2a_{n-2}+ \cdots + c_k a_{n-k} +F(n) $ and $F(n)=(b_tn^t+b_{t-1}n^{t-1}+\cdots+b_1n+b_0)s^n$, where $b_1,\cdots ,b_t$ and $s$ are real numbers.
+    \begin{enumerate}
+        \item When $s$ isn't a characteristic root of the associated linear homogeneous recurrence relation, there is a particular solution of the form 
+        \[ (p_tn^t+p_{t-1}n^{t-1}+\cdots+p_1n+p_0)s^n \]
+        \item When $s$ is a characteristic root with multiplicity $m$, there is a particular solution of the form 
+        \[ n^m(p_tn^t+p_{t-1}n^{t-1}+\cdots+p_1n+p_0)s^n \]
+    \end{enumerate}
+\end{theorem}
+
+\subsection{Generating Function}
+
+\subsubsection{Introduction}
+
+\begin{definition}
+    The \highlight{generating function} for the sequence $a_0,a_1,\dots,a_k,\dots$ of real numbers is the infinite series
+    \[ G(x)=a_0+a_1 x+\cdots + a_kx^k + \cdots=\sum_{k=0}^{\infty}a_kx^k \]
+\end{definition}
+\begin{definition}
+    The generating functions are usually considered to be \highlight{formal power series (形式化序列)}
+    \[ G(x)=a_0+a_1 x+\cdots + a_kx^k + \cdots=\sum_{k=0}^{\infty}a_kx^k \]
+\end{definition}
+
+\subsubsection{Calculating}
+\begin{theorem}
+    Let $\displaystyle  f(x)=\sum_{k=0}^{\infty} a_k x^k$ and $\displaystyle g(x)=\sum_{k=0}^{\infty} b_k x^k$. Then, 
+    \begin{enumerate}
+        \item $\displaystyle f(x)+g(x)=\sum_{k=0}^{\infty}(a_k+b_k)x^k$
+        \item $\displaystyle f(x)\cdot g(x)=\sum_{k=0}^{\infty}\left(\sum_{j=0}^{k}a_j+b_{k-j}\right)x^k$
+        \item $\displaystyle \alpha \cdot f(x)=\sum_{k=0}^{\infty}\alpha a_k x^k$
+        \item $\displaystyle x\cdot f'(x)=\sum_{k=0}^{\infty}ka_k x^k$
+        \item $\displaystyle f(\alpha x)=\sum_{k=0}^{\infty}\alpha^k a_k x^k$
+    \end{enumerate}
+\end{theorem}
+
+\subsubsection{Extended Binomial Coefficient}
+\begin{definition}
+    Let $u \in \mathbb{R}$, and $k \in \mathbb{N}$. Then the \highlight{extended binomial coefficient (广义二项式系数)} is $\displaystyle \binom{u}{k}$ defined by
+    \[ \binom{u}{k}=\left\{ \begin{array}{lc}
+        \frac{u(u-1)\cdots(u-k+1)}{k!} & \text{if }k>0\\
+        1 & \text{if }k=0
+    \end{array} \right. \]
+\end{definition}
+Remark: When $u=-n$ is a negative integer, 
+\begin{align*}
+    \binom{-n}{r}=(-1)^r \binom{n+r-1}{r}
+\end{align*}
+
+\begin{theorem}[The Extended Binomial Theorem] \quad \\
+    Let $x,u \in \mathbb{R}$ with $|x|<1$. Then,
+    \[ (1+x)^u=\sum_{k=0}^{\infty} \binom{u}{k}x^k \]
+\end{theorem}
+
+\subsubsection{Useful Generating Function}
+
+\ref{UGF}
+
+\begin{table*}[htb]
+    \centering
+    \caption{Useful Generating Function}
+    \label{UGF}
+    \begin{tabular}[c]{|l|l|}\hline
+        $G(x)$ & $a_k$ \\ \hline
+        $\displaystyle (1+x)^n=\sum_{k=0}^{\infty}\binom{n}{k}x^k$ & $\displaystyle \binom{n}{k}$ \\
+        $\displaystyle (1+\alpha x)^n=\sum_{k=0}^{\infty}\binom{n}{k}\alpha^k x^k$ & $\displaystyle \binom{n}{k}\alpha^k$ \\
+        $\displaystyle (1+x^r)^n$ & $\displaystyle \left\{  \begin{array}{lc}
+            \displaystyle \binom{n}{\frac{k}{r}} & r|k\\ 0 & otherwise
+        \end{array}\right.$\\
+        $\displaystyle \frac{1-x^{n+1}}{1-x}=\sum_{k=0}^n x^k$ & $\displaystyle \left\{ \begin{array}{lc}
+            1 & k\le n \\ 0 & otherwise
+        \end{array} \right.$ \\
+        $\displaystyle \frac{1}{1-x}=\sum_{k=0}^n x^k$ & $\displaystyle 1$ \\
+        $\displaystyle \frac{1}{1-\alpha x}=\sum_{k=0}^n\alpha^k x^k$ & $\displaystyle a^k$ \\
+        $\displaystyle \frac{1}{1-x^r}=\sum_{k=0}^n x^{rk}$ & $\displaystyle \left\{\begin{array}{lc}
+            1 & r|k \\ 0 & otherwise
+        \end{array} \right.$ \\
+        $\displaystyle \frac{1}{(1-x)^2}=\sum_{k=0}^n (k+1) x^k$ & $\displaystyle k+1$ \\
+        $\displaystyle \frac{1}{(1-x)^n}=\sum_{k=0}^n \binom{n+k+1}{k} x^k$ & $\displaystyle \binom{n+k+1}{k}$ \\
+        $\displaystyle \frac{1}{(1+x)^n}=\sum_{k=0}^n \binom{n+k+1}{k} (-x)^k$ & $\displaystyle (-1)^k\binom{n+k+1}{k}$ \\
+        $\displaystyle e^x=\sum_{k=0}^{\infty}\frac{x^k}{k!}$ & $\displaystyle \frac{1}{k!}$ \\\hline
+    \end{tabular}
+\end{table*}
+
+\subsubsection{Using Generating Functions to Solve Recurrence Relations}
+等式两边同乘$x^n$, 累加求和后化求$G(x)$, 再用$G(x)$解$a_n$.
+
+\subsubsection{Counting Problems and Generating Functions}
+\begin{enumerate}
+    \item Combination: 
+    \begin{align*}
+        G(x)=(1+x+x^2+x^3+\cdots)^n=\frac{1}{(1-x)^n}
+    \end{align*}
+    $a^r$ is the number of $r$-combination from a set with $n$ elements when the repetition of elements is allowed. 
+    \item Permutation: Using
+    \begin{align*}
+        \sum_{n=1}^{\infty}\frac{a_n}{n!}x^n
+    \end{align*}
+    $\frac{x^r}{r!}$ is the solution. 
+\end{enumerate}
+
+\subsection[Applications of Inclusion-Exclusion]{Applications of Inclusion-Exclusion (容斥应用)}
+\subsubsection{Introduction}
+\begin{theorem}[Principle of Inclusion-Exclusion]\quad \\
+    Let A and B are two finite sets, then,
+    \[ |A\cup B|=|A|+|B|-|A\cap B| \]
+    The extended principle of Inclusion-Exclusion
+    \begin{align*}
+        \left| \bigcup_{i=1}^n A_i \right|=&\sum_{i=1}^n\left| A_i \right|-\sum_{1\le i\ne j\le n} \left| A_i\cap A_j \right| + \cdots \\
+        &+(-1)^{n-1}\left| \bigcap_{i=1}^n A_i \right|
+    \end{align*}
+\end{theorem}

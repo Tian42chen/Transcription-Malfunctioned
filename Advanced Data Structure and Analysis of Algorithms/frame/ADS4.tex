@@ -1,0 +1,98 @@
+\newpage
+\section{Leftist Heaps and Skew Heaps}
+
+\subsection{Leftist Heaps}
+\begin{itemize}
+    \item [\textbf{Target:}] Speed up merging in $O(N)$.
+    \item [Heap:] Structure Property + Order Property
+\end{itemize} 
+Leftist Heap:
+\begin{itemize}
+    \item Order Property --- the same
+    \item Structure Property --- binary tree, but unbalanced
+\end{itemize}
+
+\begin{definition}
+    The \hl{null path length, NPl($X$) (距离)}, of any node $X$ is the length of the shortest path from $X$ to a node without two children. Define Npl(NULL)=-1. 
+\end{definition}
+Note: Npl($X$)=min\{Npl($C$)+1 for all $C$ as children of $X$\}
+
+\begin{definition}
+    The \hl{leftist heap property} is that for every node $X$ in the heap, the null path length of the \textcolor{light_green}{left} child is at least \hl{as large as} that of the \textcolor{light_green}{right} child. 
+\end{definition}
+
+\begin{theorem}
+    A leftist tree with $r$ nodes on the right path must have at least $2^r-1$ nodes.
+\end{theorem}
+
+Note: The leftist tree of N nodes has a right path containing at most $\lfloor\log(N+1)\rfloor$ nodes. 
+
+\begin{lstlisting}[language=c++,title={Declaration}]
+struct TreeNode{
+    ElementType Element;
+    PriorityQueue Left;
+    PriorityQueue Right;
+    int Npl;
+};
+\end{lstlisting}
+
+\subsubsection{Merge (recursive version)}
+Have two leftist tree $H_1$ and $H_2$. 
+\begin{enumerate}
+    \item Merge($H_1$->Right, $H_2$), the top of $H_1$ is less than $H_2$
+    \item Attach($H_2$, $H_1$->Right), attach $H_2$ to $H_1$->Right 
+    \item Swap($H_1$->Right, $H_1$->Left)\\ if Nlp(Left) < Nlp(Right) 
+\end{enumerate}
+
+\subsubsection{Merge (iteration version)}
+Have two leftist tree $H_1$ and $H_2$. 
+\begin{enumerate}
+    \item Sort the right paths without changing their left children. 
+    \item Swap children if Nlp(Left) < Nlp(Right)
+\end{enumerate}
+
+$T_p=O(\log N)$
+
+\subsubsection{Delete Min}
+\begin{enumerate}
+    \item Delete teh root
+    \item Merge the two subtrees. 
+\end{enumerate}
+
+$T_p=O(\log N)$
+
+\subsection{Skew Heaps}
+\begin{itemize}\small
+    \item [\textbf{Target}:] Any $M$ consecutive operations take at most $O(M\log N)$ time. 
+    \item [Merge:] \hl{Always} swap the left and right children  except the \hl{largest} of all the nodes on the right paths doesn't have its children swapped. No Npl. 
+\end{itemize}
+
+Skew heaps have the advantage that no extra space is required to maintain path lengths and no tests are required to determine when to swap children.
+
+It is an open problem to determine precisely the expected right path length of both leftist and skew heaps.
+
+\subsubsection{Amortized Analysis for Skew Heaps}
+Insert \& Delete are just Merge
+\begin{itemize}
+    \item $T_{amortized}=O(\log N)$ ?
+    \item $D_i=$ the root of the resulting tree 
+    \item $\Phi(D_i)=$ number of \hl{heavy} nodes
+\end{itemize}
+\begin{definition}
+    A node $p$ is \hl{heavy} if the number of descendants of $p$'s right subtree is at least half of the number descendants of $p$, and \textcolor{light_green}{light} otherwise. The number of descendants of a node includes the node itself. 
+\end{definition}
+
+The only nodes whose heavy/light status can change are nodes that are initially on the right path.
+\begin{align*}
+    H_i=l_i+h_i\ (i=1,2),\ T_{worst}=l_1+h_1+l_2+h_2
+\end{align*}
+
+Before merge: $\Phi_i=h_1+h_2+h$
+
+After merge: $\Phi_{i+1} \le l_1+l_2 +h$
+
+\begin{align*}
+    T_{amortized}=T_{worst}+\Phi_{i+1}-\Phi_i\le 2(l_1+l_2)
+\end{align*}
+
+$\because\ l=O(\log N)\ \therefore\ T_{amortized}=O(\log N)$

@@ -1,0 +1,196 @@
+\newpage
+\section{多元随机变量及其分布}
+
+\subsection{二元离散型随机变量}
+
+\subsubsection{联合概率分布}
+\begin{definition}
+    若二元随机变量$(X,Y)$全部可能取到的不同值是有限对或可列无限对, 则称$(X,Y)$是离散型随机变量. 
+\end{definition}
+
+联合概率分布律: 
+\begin{align*}
+    (x_i,y_j),&\, i,j=1,2,\dots\\
+    P(X=x_i,Y=y_j)=p_{ij},&\, i,j=1,2,\dots
+\end{align*}
+
+性质:
+\begin{enumerate}
+    \item $p_{ij}\ge 0,\,i,j=1,2,\dots$
+    \item $\sum_{i=1}^{\infty}\sum_{j=1}^{\infty}p_{ij}=1$
+\end{enumerate}
+
+\subsubsection{边际分布律}
+\begin{align*}
+    P(Y=y_j)=&P(X<+\infty, Y=y_j)\\
+    =&\sum_{i=1}^{\infty}p_{ij}\equiv p_{\bullet  j}\,j=1,2,\dots\\
+    P(X=x_i)=&P(X=x_i, Y<+\infty)\\
+    =&\sum_{j=1}^{\infty}p_{ij}\equiv p_{i\bullet }\,i=1,2,\dots
+\end{align*}
+
+\subsubsection{条件分布律}
+\begin{enumerate}
+    \item 对 $Y=y_j$, 若 $P(Y=y_j)>0$
+    \begin{align*}
+        P(X=x_i|Y=y_j)=&\frac{P(X=x_i,Y=y_j)}{P(Y=y_j)}\\
+        =&\frac{p_{ij}}{p_{\bullet j}}\, i=1,2,\dots
+    \end{align*}
+    \item 对 $X=x_i$, 若 $P(X=x_i)>0$
+    \begin{align*}
+        P(Y=y_j|X=x_i)=&\frac{P(X=x_i,Y=y_j)}{P(X=x_i)}\\
+        =&\frac{p_{ij}}{p_{i \bullet }}\, j=1,2,\dots
+    \end{align*}
+\end{enumerate}
+
+\subsection{随机变量(X,Y)的联合分布函数}
+\begin{align*}
+    F(x,y)=&P\left\{(X\le x)\cup (Y\le y)\right\}\\
+    \equiv&P(X\le x, Y\le y)
+\end{align*}
+
+\subsubsection{边际分布函数}
+\begin{align*}
+    F_X(x)&=F(x,+\infty)=P(X\le x,Y<+\infty)\\
+    F_Y(y)&=F(+\infty,y)=P(X<+\infty,Y\le y)
+\end{align*}
+
+\subsubsection{条件分布函数}
+\begin{align*}
+    F_{X|Y}(x|y)&=P(X\le x|Y=y)=\frac{P(X\le x,Y=y)}{P(Y=y)}\\
+    F_{Y|X}(y|x)&=P(Y\le y|X=x)=\frac{P(X=x,Y\le y)}{P(X=x)}
+\end{align*}
+
+\subsection{二元连续型随机变量}
+
+\subsubsection{联合概率密度函数}
+\begin{definition}
+    $F(x,y)$, $\exists f(x,y)>0, \forall x,y$,
+    \begin{align*}
+        F(x,y)=\int_{-\infty}^{y}\int_{-\infty}^{x}f(u,v)\,\mathrm{d}u\mathrm{d}v
+    \end{align*}
+\end{definition}
+
+性质:
+\begin{enumerate}
+    \item $f(x,y)\ge 0$
+    \item $\int_{-\infty}^{+\infty}\int_{-\infty}^{+\infty}f(x,y)\,\mathrm{d}x\mathrm{d}y=1$
+    \item 设$G$是平面
+    \begin{align*}
+        P\left\{(X,Y)\in G\right\}=\underset{G}{\iint} f(x,y)\,\mathrm{d}x\mathrm{d}y
+    \end{align*}
+    \item 在$(x,y)$连续$f(x,y)$, 
+    \begin{align*}
+        \frac{\partial^2 F(x,y)}{\partial x\partial y}=f(x,y)
+    \end{align*}
+\end{enumerate}
+
+\subsubsection{边际概率密度函数}
+\begin{align*}
+    f_X(x)=&\int_{-\infty}^{+\infty}f(x,y)\,\mathrm{d}y\\
+    f_Y(y)=&\int_{-\infty}^{+\infty}f(x,y)\,\mathrm{d}x
+\end{align*}
+\begin{align*}
+    F_X(x)=&\int_{-\infty}^x f_X(u)\,\mathrm{d}u\\
+    F_Y(y)=&\int_{-\infty}^y f_Y(v)\,\mathrm{d}v
+\end{align*}
+
+\subsubsection{条件概率密度函数}
+\begin{align*}
+    \text{在 $Y=y$下, }f_{X|Y}(x|y)=\frac{f(x,y)}{f_Y(y)}, \, f_Y(y)>0\\
+    \text{在 $X=x$下, }f_{Y|X}(y|x)=\frac{f(x,y)}{f_X(x)}, \, f_X(x)>0
+\end{align*}
+\begin{align*}
+    F_{X|Y}(x|y)=\int_{-\infty}^x \frac{f(u,y)}{f_Y(y)}\,\mathrm{d}u\\
+    F_{Y|X}(y|x)=\int_{-\infty}^y \frac{f(x,v)}{f_X(x)}\,\mathrm{d}v
+\end{align*}
+\begin{align*}
+    P(Y\in D| X=x)=\underset{D}{\int}f_{Y|X}(y|x)\,\mathrm{d}y
+\end{align*}
+
+\subsection{二元随机变量常见分布及性质}
+\subsubsection{二元均匀分布}
+$(X,Y)$在二维有界$D$上, 
+\begin{align*}
+    f(x,y)=\left\{\begin{array}{lc}
+        \frac{1}{D\text{面积}} & (x,y)\in D\\0 & otherwise
+    \end{array} \right.
+\end{align*}
+
+若$D_1\subset D$, 
+\begin{align*}
+    P\left\{(X,Y)\in D_1\right\}=\frac{D_1\text{面积}}{D\text{面积}}
+\end{align*}
+
+\subsubsection{二元正态 \texorpdfstring{$(X,Y)\sim N(\mu_1,\mu_2,\sigma_1^2,\sigma_2^2,\rho )$}.}
+性质:
+\begin{enumerate}
+    \item \begin{align*}
+        X\sim f_X(x)\sim N(\mu_1,\sigma_1^2)\\
+        Y\sim f_Y(y)\sim N(\mu_2,\sigma_2^2)
+    \end{align*}
+    \item \begin{align*}
+        \text{在$\{X=x\}$条件下, }& \\
+        f_{Y|X}(y|x)\sim &N(\mu_2+\rho \frac{\sigma_1}{\sigma_2}(x-\mu_1),(1-\rho^2)\sigma_2^2)\\
+        \text{在$\{Y=y\}$条件下, }& \\
+        f_{X|Y}(x|y)\sim &N(\mu_1+\rho \frac{\sigma_2}{\sigma_1}(x-\mu_2),(1-\rho^2)\sigma_1^2)
+    \end{align*}
+    \item $X$与$Y$相互独立$\Longleftrightarrow$ $\rho=0$
+    \item 若$\rho=0$, $aX+bY+c\sim N(a\mu_1+n\mu_2+c,a^2\sigma_1^2+b^2\sigma_2^2)$
+\end{enumerate}
+
+\subsection{事件独立性与随机变量独立性}
+\begin{definition}
+    $\forall x,y \in R$, 
+    \[P(X\le x,Y\le y)=P(X\le x)P(y\le y)\]
+    or
+    \[F(x,y)=F_X(x)F_Y(y)\]
+\end{definition}
+
+$A$发生与否都不会改变$B$发生的概率. 
+
+$A,B$相互独立 $\Longleftrightarrow$ $\bar{A},B$相互独立 $\Longleftrightarrow$ $A,\bar{B}$相互独立 $\Longleftrightarrow$ $\bar{A},\bar{B}$相互独立. 
+
+\begin{enumerate}
+    \item 离散型独立$\Longleftrightarrow$
+    \begin{align*}
+        \forall i,j,\, P(X=x_i,Y=y_j)=P(X=x_i)P(Y=y_j)
+    \end{align*}
+    \item 连续型独立$\Longleftrightarrow$
+    \begin{align*}
+        f(x,y)=f_X(x)f_Y(y)
+    \end{align*}
+    除去0面积后处处成立. 
+\end{enumerate}
+
+\subsection{二元随机变量函数的分布}
+
+\subsubsection{离散型}
+$(X,Y)$, 有$P(X=x_i,Y=y_i)=p_{ij}$. 
+\begin{enumerate}
+    \item 若$U=u(x,y), V=v(x,y)$, 先定$u_i,v_j$, 找$(U=u_i,V=V_j)=\left\{(X,Y)\in D\right\}$. 
+    \item 若 $Z=z(x,y)$, 先定$z_i$, 找$(Z=z_i)=\left\{(X,Y)\in D\right\}$. 
+\end{enumerate}
+
+\subsubsection{连续型}
+分布函数
+\begin{align*}
+    F_Z(z)=P(g(X,Y)\le z)=\underset{g(x,y)\le z}{\iint} f(x,y)\, \mathrm{d}x\mathrm{d}y
+\end{align*}
+\begin{enumerate}
+    \item $Z=X+Y$
+    \begin{align*}
+        f_Z(z)=&\int_{-\infty}^{\infty}f(z-y,y)\,\mathrm{d}y\\
+        =&\int_{-\infty}^{\infty}f(x,z-x)\,\mathrm{d}x
+    \end{align*}
+
+    若$X,Y$独立,
+    \begin{align*}
+        f_Z(z)=&\int_{-\infty}^{\infty}f_X(x)f_Y(z-x)\,\mathrm{d}x\\
+        =&\int_{-\infty}^{\infty}f_X(z-y)f_Y(y)\,\mathrm{d}y
+    \end{align*}
+    \item $M=\max\left\{X,Y\right\}$, $N=\min\left\{X,Y\right\}$, $X,Y$独立
+    \begin{align*}
+        F_M(z)=&P(X\le z,Y\le z)=F_X(z)F_Y(z)\\
+        F_N(z)=&1-P(X>z,Y>z)\\=&1-(1-F_X(z))(1-F_Y(z))
+    \end{align*}
+\end{enumerate}

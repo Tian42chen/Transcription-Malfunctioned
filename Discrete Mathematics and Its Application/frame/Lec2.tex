@@ -1,0 +1,241 @@
+\section[Basic Structures: Sets, and Functions]{Basic Structures: Sets, and Functions (集合与函数)}
+
+\subsection{Sets}
+
+\subsubsection{Properties of sets}
+\begin{itemize}
+    \item Order of elements doesn't matter.
+    \item Repetition of elements doesn't matter. 
+    \item Certainty. 
+\end{itemize}
+
+\subsubsection{Infinite and Finite Set}
+Cardinality of set $S$ ($\left| S \right|$) is the number of elements in $S$. 
+\begin{itemize}
+    \item Infinite Countable.
+    \item Uncountable. 
+\end{itemize}
+
+\subsubsection{Subsets}
+\begin{enumerate}
+    \item Subset notation: $\subseteq$  
+    \begin{align*}
+        S \subseteq T \Longleftrightarrow \forall x \in S \longrightarrow x\in T
+    \end{align*}
+    \item Proper Subset: $\subset $
+    \begin{align*}
+        S \subset T \Longleftrightarrow \forall x \in S \longrightarrow x\in T \text{ and } S\neq T
+    \end{align*}
+    \item Empty set $\emptyset $ and Universal set $U$:
+    
+    For any set A:
+    \begin{align*}
+        A \subseteq A\\
+        \emptyset \subseteq A \subseteq U
+    \end{align*}
+\end{enumerate}
+
+\subsection{Set Operations}
+\begin{enumerate}
+    \item Union
+    \begin{align*}
+        A \cup B = \left\{ x | x \in A \lor x \in B  \right\}
+    \end{align*}
+    \item Intersection
+    \begin{align*}
+        A \cap  B = \left\{ x | x \in A \land x \in B  \right\}
+    \end{align*}
+    \item Difference
+    \begin{align*}
+        A-B = \left\{ x| x\in A \lor x \notin B \right\}
+    \end{align*}
+    \item Complement
+    
+    Let $U$ be the universal set. 
+    \begin{align*}
+        \bar{A}=U-A
+    \end{align*}
+    \item Symmetric Difference
+    \begin{align*}
+        A \oplus B =(A-B)\cup (B-A)
+    \end{align*}
+\end{enumerate}
+
+\subsubsection{The Power Set}
+\begin{definition}
+    Given s set S, \textcolor{light_red}{the power set} of S is the set of all subsets of the set S. The power set of S is denoted by P(S) or $2^S$.
+    \[ 2^S = \left\{ T | T \subseteq S  \right\} \]
+\end{definition}
+
+Remark: If $|S|=n$, $|2^S|=2^n$. 
+\subsubsection{Cartesian Products}
+\begin{definition}
+    \textcolor{light_red}{The ordered n- tuple} $(a_1,a_2,\cdots,a_n)$ is the ordered collection that has $a_1$ as its first element, $\cdots$, and $a_n$ as its $n$-th element. 
+\end{definition}
+\begin{itemize}
+    \item $(a_1,\cdots, a_n)=(b_1,\cdots,b_n)\Longleftrightarrow a_i=b_i \text{ for } i=1,\cdots, n$.
+    \item In particular, 2-tuples are called ordered pairs (序偶). 
+\end{itemize}
+
+\begin{definition}
+    Let A and B be sets. \textcolor{light_red}{The Cartesian product of A and B} , denoted by A$\times$B, is the set of all ordered pairs (a,b), where $a\in A$ and $b\in B$. Hence,
+    \[ A\times B = \left\{ (a,b) | a\in A \land b \in B  \right\} \]
+\end{definition}
+
+\begin{itemize}
+    \item $A^2=A\times A$ the Cartesian square of A. 
+    \item If $A$ and $B$ finite, $A \times B$ finite.
+    
+    If $A$ has $m$, $B$ has $n$, $A \times B$ has $mn$.
+    \item If $A$ infinite and $B$ non-empty, $A\times B, B\times A$ infinite.
+\end{itemize}
+
+Properites of Cartesian Products: 
+\begin{enumerate}
+    \item $A \times \emptyset=\emptyset \times B =\emptyset$.
+    \item In general, $A \times B\neq B\times A$.
+    \item In general, $(A \times B)\times C \neq A \times (B\times C)$, unless we identify $((a,b),c)$ and $(a,(b,c))$. 
+    \item \begin{align*}
+        A \times (B \cup C) &= (A \times B )\cup (A \times C)\\
+        A \times (B \cap C) &= (A \times B )\cap (A \times C)\\
+    \end{align*}
+\end{enumerate}
+
+\begin{definition}
+    \textcolor{light_red}{The Cartesian porduct of $A_1, A_2, \cdots, A_n$}, denoted by $A_1\times A_2\times \cdots \times A_n$, is the set of all ordered n-tuples $(a_1,a_2,\cdots, a_n)$, where $a_i \in A_i$ for $i=1,2,\cdots, n$. In other words, 
+    \[ A_1\times \cdots \times A_n=\left\{ (a_1,\cdots, a_n)| a_i \in A_i \text{ for } i=1,\cdots, n \right\} \]
+\end{definition}
+
+\begin{itemize}
+    \item $A^n=A\times A \times \cdots \times A$($n$ times).
+    \item \begin{align*}
+        (A \cap B )\times (C \cap D)=(A\times C)\cap (B\times D)\\
+        (A \cup B )\times (C \cup D)\ne (A\times C)\cup (B\times D)\\
+    \end{align*}
+\end{itemize}
+
+\subsection{Cardinality of Finite and Infinite Sets}
+
+\subsubsection{Counting Finite Sets}
+
+\begin{enumerate}
+    \item Cardinality: $|S|$.
+    \item Prnciple of Inclusion-exclutsion:
+    \begin{align*}
+        |A\cup B|=& |A|+|B|-|A\cap B|\\
+        \left|\bigcup_{i=1}^n A_i\right|=&\sum_{i=1}^n \left| A_i \right|-\sum_{1\le i \ne j \le n } \left| A_i\cap A_j \right| + \cdots \\
+        &+ (-1)^{n-1} \left| \bigcap_{i=1}^n A_i \right|
+    \end{align*}
+\end{enumerate}
+
+\subsubsection{Cardinality of Infinite Sets}
+$|A|=|B|$, $A,B$ have the same cardinality (equinumerous), iff there is an one-to-one correspondence (双射) from $A$ to $B$.
+
+Remark: 
+\begin{enumerate}
+    \item Two sets have the same cardinality is a equivalence relation (等价关系). 
+    \item Two sets have the same cardinality, but the one-to-one correspondence may be not unique. 
+    \item A set and its proper set have the same cardinality iff it is infinite set. 
+\end{enumerate}
+
+\subsubsection{Two Types of Infinite sets}
+
+
+\begin{itemize}
+    \item Countable (denumberable) set ($\mathbb{N}$) is either finite or has the same cardinality as the set of natural numbers $\mathbb{N}$, $\aleph_0$ is called countable. 
+    \item  And other are  uncountable set. 
+\end{itemize}
+
+
+Some special infinite sets: 
+\begin{enumerate}
+    \item The set of integers is countable, $|\mathbb{N}|=|\mathbb{Z}|$.
+    \item The set of rational number is countable, $|\mathbb{N}|=|\mathbb{Q}|$. 
+    \item The set of real nnumbers is uncountable, $|R|=\aleph >\aleph_0 $.
+    \item The set $\mathbb{N}\times \mathbb{N}$ is uncountable. 
+    \item The uncountable set always has a proper set that is countable. 
+\end{enumerate}
+
+\begin{theorem}[Cantor Theorem]
+    The cardinality of the power set of an arbitrary set has a greater cardinality than the original arbitrary set, or 
+    \[ \left|2^A\right| > |A| \].
+\end{theorem}
+
+\subsection{Functions}
+
+\subsubsection{Introduction}
+\begin{definition}
+    Let A and B be sets, a \textcolor{light_red}{function f} from A to B: 
+    \[
+        f : A \longrightarrow B \Longleftrightarrow \forall a \in A \, \exists !b \in B (b unique): f(a)=b
+    \]
+    f maps A to B. 
+    \begin{itemize}
+        \item A is \textcolor{light_red}{the domain} of f.
+        \item B is \textcolor{light_red}{the codomain} of f.
+        \item $f(a)=b, a\in A, b \in B$, b is the \textcolor{light_red}{image} of a, a is a \textcolor{light_red}{pre-image} of b. 
+        \item The \textcolor{light_red}{range} of f is the set: 
+        \[ \mathrm{Range}(f)=\left\{ b \in B | \exists a \in A , f(a)=b \right\} \]
+    \end{itemize}
+\end{definition}
+
+\subsubsection{One-to-one and Onto Functions}
+\begin{definition}
+    Lef f be a function fro A to B: 
+    \begin{itemize}
+        \item \textcolor{light_red}{one-to-one function}: (injective) (单射)
+        \[ \forall a, b \in A \land a \ne b \Longrightarrow f(a \ne f(b)) \]
+        \item \textcolor{light_red}{onto function}: (surjective) (满射)
+        \[ \forall b \in B \, \exists a \in A \text{ such that } f(a)=b \]
+        \item \textcolor{light_red}{bijection function}:  (one-to-one correspondence) (双射)
+        
+        \[\text{one-to-one} + \text{onto}\]
+    \end{itemize}
+\end{definition}
+
+\subsubsection{Inverse and composition of function}
+\begin{definition}
+    Let f be a one-to-one correspondence from A to B. \textcolor{light_red}{The inverse function} of f, $f^{-1}: B \longrightarrow A$ is 
+    \[ \forall a \in A ,b\in B (f(a)=b) \Longleftrightarrow (f^{-1}(b)=a) \]
+\end{definition}
+
+Remark: 
+\begin{enumerate}
+    \item A one-to-one correspondence is called invertible.
+    \item A function is not invertible if it is not a one-to-one correspondence. 
+\end{enumerate}
+
+\begin{definition}
+    Let $g: A \longrightarrow B$ and $f: B \longrightarrow C$ are two functions. \textcolor{light_red}{The composition} of the functions f and g, $f\circ g: A \longrightarrow C$ is 
+    \[ \forall a \in A, (f\circ g)(a)=f(g(a)) \]
+\end{definition}
+
+\subsubsection{Some Important Functions}
+\begin{definition}
+    The floor functions and the ceiling function.
+    \begin{itemize}
+        \item \highlight{The floor functions} $\lfloor x \rfloor$ assigns the real number x the largest integer that $\le$ x.
+        \item \highlight{The ceiling function} $\lceil x \rceil$ assigns to the real number x the smallest integer that is $\ge$ x. 
+    \end{itemize}
+\end{definition}
+
+Remark: 
+\begin{enumerate}
+    \item $x-1<\lfloor x \rfloor\le x \le \lceil x \rceil < x+1$
+    \item $\lceil -x \rceil=-\lfloor x \rfloor$
+    \item $\lfloor -x \rfloor=-\lceil x \rceil$
+\end{enumerate}
+
+\subsubsection{The Growth of Functions}
+\begin{definition}[Big-O, Big-Omega, Big-Theta]
+    Let f and g be functions from the set of integers or the set of  real numbers. 
+    \begin{itemize}
+        \item We say that f(x) is \highlight{O(g(x))} if there exist constants C and k such that 
+        \[ |f(x)\le C|g(x)||\]
+        where x>k. 
+        \item We say that f(x) is \highlight{$\Omega(g(x))$} if there exist constants C and k such that
+        \[ |f(x)|\ge C|g(x)| \]
+        where x>k.
+        \item We say that f(x) is \highlight{$\Theta (g(x))$} if f(x)=O(g(x)) and $f(x)=\Omega (g(x))$. We also say that f(x) is of \highlight{order} g(x). 
+    \end{itemize}
+\end{definition}
