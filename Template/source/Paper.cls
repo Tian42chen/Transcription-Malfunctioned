@@ -10,27 +10,27 @@
 \RequirePackage{listings}
 \RequirePackage{xcolor}
 \RequirePackage{array}
-% \RequirePackage{mathtools}
 \RequirePackage{float}
 \RequirePackage{indentfirst}
 \RequirePackage{braket}
-\RequirePackage{zhnumber}
 \RequirePackage{multirow}
-\RequirePackage{listings}
 \RequirePackage{lmodern}
 \RequirePackage{amssymb}
 \RequirePackage{ulem}
 \RequirePackage{accsupp}
 \RequirePackage{diagbox}
-\RequirePackage{unicode-math}
+\RequirePackage{amsmath}
+\RequirePackage{mathtools}
+% \RequirePackage{unicode-math}
 \RequirePackage{extarrows}
 \RequirePackage{caption}
 \RequirePackage{subcaption}
 \RequirePackage{multicol}
+\RequirePackage{booktabs}
+\RequirePackage{makecell}
 \RequirePackage{supertabular}
 \RequirePackage{algorithm}
 \RequirePackage{algpseudocode}
-\RequirePackage{amsmath}
 \RequirePackage{wrapfig}
 \RequirePackage{titletoc}
 \RequirePackage{tikz}
@@ -41,6 +41,7 @@
 \usetikzlibrary{shapes}
 \usetikzlibrary{bayesnet}
 \usetikzlibrary{decorations.pathreplacing}
+\usetikzlibrary{calc}
 \tikzset{>=stealth}
 \definecolor{light_red}{RGB}{209,105,81}
 \definecolor{light_green}{RGB}{58,181,75}
@@ -66,12 +67,12 @@
 \numberwithin{equation}{section}
 
 \hypersetup{
-  colorlinks=true,%打开颜色显示
-  linkcolor=light_blue,%内部链接
-  filecolor=magenta,%本地连接
-  urlcolor=cyan,%网页链接
-  % pdftitle={Overleaf Example},
-  % pdfpagemode=FullScreen,
+	colorlinks=true,%打开颜色显示
+	linkcolor=light_blue,%内部链接
+	filecolor=magenta,%本地连接
+	urlcolor=cyan,%网页链接
+	% pdftitle={Overleaf Example},
+	% pdfpagemode=FullScreen,
 }
 
 %自定义命令
@@ -104,6 +105,11 @@
 %
 
 %多级标题
+	%多级标题目录格式
+	\titlecontents{section}[0pt]{\addvspace{1pc}\bfseries}{\thecontentslabel\quad}{}{\titlerule*[8pt]{$\cdot$}\contentspage}
+	\titlecontents{subsection}[1em]{\vspace{0.1cm}\normalsize}{\thecontentslabel\quad}{}{\titlerule*[8pt]{$\cdot$}\contentspage}
+	\titlecontents{subsubsection}[2em]{\vspace{0.1cm}\small}{\thecontentslabel\quad}{}{\titlerule*[8pt]{$\cdot$}\contentspage}
+	\titlecontents{paragraph}[2em]{\vspace{0.1cm}\small}{\thecontentslabel\quad}{}{\titlerule*[8pt]{$\cdot$}\contentspage}
 	%多级标题命名格式
 	\renewcommand\thesection{\Roman{section}}
 	\renewcommand\thesubsection{\arabic{subsection}.}
@@ -112,10 +118,12 @@
 	\titleformat*{\section}{\large\bfseries}
 	\titleformat*{\subsection}{\normalsize\bfseries}
 	\titleformat*{\subsubsection}{\normalsize\slshape}
+	\titleformat*{\paragraph}{\small\bfseries}
 	%多级标题间隔
 	\titlespacing{\section}{0pt}{*1.5}{*1.5}
 	\titlespacing{\subsection}{2em}{*1}{*1}
 	\titlespacing{\subsubsection}{2em}{*1}{*1}
+	\titlespacing{\paragraph}{0pt}{*1}{*1}
 	%多级序号格式
 	\setlist[enumerate,1]{label=\arabic*),itemindent=2em,itemsep=0pt,partopsep=0pt,parsep=\parskip,topsep=5pt}
 	\setlist[enumerate,2]{label=\alph*.,itemindent=1em,itemsep=0pt,partopsep=0pt,parsep=\parskip,topsep=5pt}
@@ -141,7 +149,7 @@
 
 \lstset{
 	language=c++,
-    basicstyle          =   \normalsize\fontspec{Consolas},          % 基本代码风格
+    basicstyle          =   \small\fontspec{Consolas},          % 基本代码风格
 	morekeywords		=	{ll},	%增加高亮
     keywordstyle        =   \color{blue!90},          % 关键字风格
     commentstyle        =   \color{green!40!black!60},  % 注释的风格，斜体
