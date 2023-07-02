@@ -1,0 +1,77 @@
+\section[The Fundamentals: Algorithms]{The Fundamentals: Algorithms (算法基础)}
+\subsection{Algorithms}
+
+\subsubsection{Introduction}
+
+\begin{definition}
+    An \highlight{algorithm}: a finite set of precise instructions for performing a computation or solving problem. 
+\end{definition}
+
+Pseudocode (伪代码)
+
+\subsubsection{Searching Algorithms}
+\begin{enumerate}
+    \item Linear search. 
+    \item Binary search. 
+\end{enumerate}
+
+\subsection{Complexity of Algorithms}
+\begin{definition}
+    Complexity, space Complexity and time Complexity. 
+    \begin{itemize}
+        \item \highlight{Complexity}: the amount of time and/or space needed to execute the algorithm. 
+        \item \highlight{Space Complexity}: be tied with particular data structures of used to implement the algorithm. 
+        \item \highlight{Time Complexity}: can be expressed in terms of the number of operation used by the algorithm when the input has a particular size. 
+    \end{itemize}
+\end{definition}
+
+Types of Complexity: 
+\begin{itemize}
+    \item Best-case time
+    \item Worst-casr time
+    \item Average-case time 
+\end{itemize}
+
+\subsubsection{Some Terminology to Describe the Time Complexity}
+
+\begin{center}
+    \tablefirsthead{\hline
+        Complexity  & Terminology\\ \hline
+    }
+    \tablehead{\hline
+        Complexity  & Terminology\\ \hline
+    }
+    \tabletail{\hline}
+    \tablelasttail{\hline}
+    % \tablecaption{}
+    \bottomcaption{Commonly used Terminology for the Complexity of Algorithms}
+    \begin{supertabular}{|l|r|}
+        $O(1)$      &Constant complexity\\
+        $O(\log n )$&Logarithmic complexity\\
+        $O(n)$      &Linear complexity\\
+        $O(n\log n)$&$n \log n$ complexity\\
+        $O(n^b)$    &Polynomial complexity\\
+        $O(b^n),b>1$&Exponential complexity\\
+        $O(n!)$     &Factorial complexity\\ 
+    \end{supertabular}
+\end{center}
+
+\subsubsection{NP Problem}
+\begin{itemize}
+    \item P class: Problems can be solved bu Polynomial time algorithm. 
+    \item NP class: Problems for which a solution can be checked in Polynomial time. 
+    \item NP-Complete Problem: If any of these probelms can be solved bu polynomial worst-case time algorithm, then all can be solvev by polynomial worst-case time algorithms.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \node [ellipse, draw=black, text centered] at (-1,0.5) {P Problems};
+        \node [ellipse, draw=black, text centered] at (0.8,-0.5) {NP Complete};
+        \node at (0,1.2) {NP Problems};
+        \draw (0,0.2) ellipse (3.2 and 1.6);
+
+        \draw (-4,-1.6) rectangle (4,2);
+    \end{tikzpicture}
+    \caption{The World}
+\end{figure}

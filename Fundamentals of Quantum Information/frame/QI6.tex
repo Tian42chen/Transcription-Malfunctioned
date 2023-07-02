@@ -1,0 +1,267 @@
+\newpage
+\section{From the Microscopic to the Macroscopic World}
+
+\subsection{(No-)Cloning of the Quantum States}
+Getting from One to Two (and More). What extent can we duplicate the information of a quantum state.
+\begin{enumerate}
+    \item The first possibility is to copy or clone, as if we had a quantum copy machine. Putting in a qubit in a state $\ket{\psi}=\mu\ket{0}+\nu\ket{1}$, we would get a new qubit in the state $\ket{\psi}=\mu\ket{0}+\nu\ket{1}$ and the original qubit in the state $\ket{\psi}$ back. In other words, the result is
+    \begin{align*}
+        \ket{\psi}\ket{\psi}=\mu^2\ket{0}\ket{0}+\mu\nu\ket{0}\ket{1}+\nu\mu\ket{1}\ket{0}+\nu^2\ket{1}\ket{1}
+    \end{align*}
+    \item The second possibility is to entangle, which we have learned in Lecture 4. Given a quantum state $\ket{\psi}=\mu\ket{0}+\nu\ket{1}$ and another qubit, say, in the state $\ket{0}$, we obtain $\mu\ket{0}\ket{0}+\nu\ket{1}\ket{1}$. 
+\end{enumerate}
+
+\begin{theorem}[The No-Cloning Theorem]\quad 
+
+    It is not possible to perfectly clone an unknown quantum state, or a state drawn from a set of two (or more) non-orthogonal states.
+\end{theorem}
+
+\subsection{The Process of Measurement}
+Unlike in classical computation, entanglement is a fundamentally new resource crucial in quantum error correction and quantum parallelism.
+
+Quantum measurement generally encounter entanglement between microscopic and macroscopic systems, such as an atom (with spin) and a Stern-Gerlach apparatus. 
+
+In the simplest description, the apparatus has exactly three states: a blank state $\ket{b}$ and two outcome states $\ket{u}$, $\ket{d}$. Coupled with the spin state $\ket{0}$, $\ket{1}$, the combined system has six basis vectors. Measurement involves interaction between (hence, joint evolution of) spin and the apparatus, so we have, e.g.,
+\begin{align*}
+    \ket{0b}&\rightarrow\ket{0u}\\
+    \ket{0b}&\rightarrow\ket{1d}\\
+    \alpha_0\ket{0b}+\alpha_1\ket{1b}&\rightarrow\alpha_0\ket{0u}+\alpha_1\ket{1d}
+\end{align*}
+
+In general, the entanglement between the spin and the apparatus occurs via a unitary evolution of the state-vector. There is no wave function collapse at this stage. 
+
+\subsection{The Schroedinger Cat Paradox}
+Schroedinger (1935) dramatize it by introducing a fictitious cat, whose living and dead states are entangled to the atomic states in a radiative decay:
+\begin{align*}
+    \ket{\psi_{A+C}}=\frac{1}{\sqrt{2}}(\ket{0_A}\ket{0_C}+\ket{1_A}\ket{1_C})
+\end{align*}
+
+It turns out when we come to the macroscopic world, the cat state is really coupled to a large environment E (the whole cat and its surrounding). The whole system (if we assume the environment is initially in a pure state) is, e.g.,
+\begin{align*}
+    \ket{\psi_{A+C+E}}=\frac{1}{\sqrt{2}}(\ket{0_A}\ket{0_C}\ket{\zeta_E^0}+\ket{1_A}\ket{1_C}\ket{\zeta_E^1}) 
+\end{align*}
+
+The coupling to the environment functions as a measurement, which leaks the information of the living or dead state, even though human observers are not looking. In other words, the presence of a large object (the real cat) at different macroscopic states (e.g., positions of the cat) influences the microscopic state, so the coherence between the living and dead states associated to, e.g., different positions vanishes (hence the name decoherence). As a result, the environmental measurement prevents interference effects from building up between the living and dead states. Very quickly, the cat is either dead or alive and not in a superposition of the two states. (不存在叠加态, 叠加态因为环境作用退相干为经典了)
+
+
+\subsection{Quantum LC Oscillator}
+\subsubsection{Quantum Electrical Circuits}
+Once we summarize the device properties by a set of operating parameters (which are determined by quantum physics), we can operate it classically, because the collective degrees of freedom (such as current I and voltage V ) are pure classical–they are numbers, not quantum operators.
+
+On the other hand, intrinsically quantum mechanical circuit elements can be achieved in superconducting electrical circuits. They have quantized energy levels and can be set up into the quantum superpositions of different energy states. We discuss the theory of quantum LC oscillators here, but leave superconductivity to later lectures.
+
+\subsubsection{The Harmonic Oscillator}
+In classical physics, a block attached to a spring, a pendulum, or the electric current in an LC circuit can be described as a harmonic oscillator.
+
+All these systems, when disturbed, oscillate about the equilibrium point–any smooth energy function looks like a parabola close to its minimum. The energy of a block of mass $m$ attached to a spring with strength $k$ is
+\begin{align*}
+    E=\frac{1}{2}m\dot{x}^2+\frac{1}{2}kx^2=\frac{p^2}{2m}+\frac{1}{2}kx^2
+\end{align*}
+
+The classical equation of motion for a harmonic oscillator is given by
+\begin{align*}
+    \frac{\mathrm{d}^2 x}{\mathrm{d}t^2}-\omega^2x
+\end{align*}
+where the characteristic frequency of oscillation is $\omega=\sqrt{\frac{k}{m}}$. 
+
+The general solution is 
+\begin{align*}
+    x(t)=A\cos\omega t+B\sin\omega t
+\end{align*}
+When we differentiate it twice, we obtain a factor of $-\omega^2$. 
+
+\subsubsection{Quantum LC Oscillator}
+The total energy of an LC circuit is,
+\begin{align*}
+    E=\frac{1}{2}Li^2+\frac{q^2}{2C}=\frac{1}{2}L\dot{q}^2+\frac{q^2}{2C}
+\end{align*}
+
+We can treat $q$ as the position coordinate of a block with `mass' $L$ and `sping constant' $1/C$ .
+
+In this analogy the momentum coupled to the charge is
+\begin{align*}
+    L\dot{q}=LI=\Phi
+\end{align*}
+which is the flux through the inductor. 
+
+For the convenience of later discussion with Josephson junctions, which act as nonlinear inductors, we take the node flux to be the coordinate. The node flux is defined by
+\begin{align*}
+    \phi(t)=\int^t \mathrm{d}\tau V(\tau)
+\end{align*}
+such that the potential difference across the capacitor is $V(t)=\dot{\phi}$.
+
+The total energy becomes, in this new representation,
+\begin{align*}
+    E=\frac{1}{2}C\dot{\phi}^2+\frac{\phi^2}{2L}
+\end{align*}
+
+This is an oscillator with $\phi$ as the position coordinate of the block with `mass' C and `sping constant' $1/L$. The momentum coupled to the node flux $\phi$ reads
+\begin{align*}
+    C\dot{\phi}=CV=Q
+\end{align*}
+which is the charge with the sign convention chosen above.
+
+The conditions that an LC oscillator circuit fabricated with the technology of microelectronic chip can be treated as a macroscopic quantum system is 
+
+Lumped element assumption (one collective degree of freedom):
+\begin{enumerate}
+    \item The typical parameters are $L = 10$nH and $C = 1$pF.
+    \item They lead to a resonant frequency $\omega_0/(2\pi) \simeq  1.6$GHz in the microwave range.
+    \item The size of the circuit is a few hundred μm, much less than the microwave wavelength.
+\end{enumerate}
+
+Negligible environmental effects:
+\begin{enumerate}
+    \item Dilution fridge: $T \approx 20 $mK, so $k_B T \ll \hbar \omega_0$.
+    \item Superconducting circuit, low dissipation.
+    \item High quality factor reduces the influence of the measuring environment (modeled by an admittance $Y (\omega)$ in parallel) of the LC oscillator.
+\end{enumerate}
+
+
+
+\subsection{Operator Algebra of Harmonic Oscillators}
+For quantum harmonic oscillators, we need to solve the time-independent 1D Schroedinger equation
+\begin{align*}
+    H\psi(x)=\left[ -\frac{\hbar^2}{2m}\frac{\mathrm{d}^2}{\mathrm{d}x^2}+\frac{m\omega^2}{2}x^2 \right]\psi(x)=E\psi(x)
+\end{align*}
+with a parabolic potential $U(x)=\frac{m\omega^2}{2}x^2$. 
+
+To solve the equation, we must find the allowed functions that satisfy both the differential equation and the boundary conditions $[\psi(\pm \infty)=0]$, nd the corresponding energies $E$.
+
+In the following, we introduce a pair of ladder operators $a$, $a^\dagger$ to solve the eigenstate problem.
+\begin{enumerate}
+    \item The energy levels are equally spaced, like a ladder,
+    \begin{align*}
+        E_n=\left( n+\frac{1}{2} \right)\hbar\omega
+    \end{align*}
+    \item The corresponding wave functions are Gaussian tapered:
+    \begin{align*}
+        \psi_n(x)=e^{-\frac{m\omega}{2\hbar}x^2}H_n\left( \sqrt{\frac{m\omega}{\hbar}}x \right)
+    \end{align*}
+    where $H_n(x )$ is a Hermite polynomial. 
+\end{enumerate}
+
+\subsubsection{Algebraic Solution with Ladder Operators}
+Begin with the Hamiltonian
+\begin{align*}
+    H=\frac{P^2+m^2\omega^2X^2}{2m}
+\end{align*}
+Rewrite this as [notice $a^2+b^2=(a+ib)(a-ib)$]
+\begin{align*}
+    H\approx\frac{1}{2m}(P+im\omega X)(P-im\omega X)
+\end{align*}
+But
+\begin{align*}
+    (P+im\omega X)(P-im\omega X)=&(P^2+m^2\omega^2 X^2)\\
+    &+i\omega(XP-PX)
+\end{align*}
+Recall $X$ and $P = i\hbar \frac{\mathrm{d}}{\mathrm{d}x}$ are operators (matrices). They do not commute. In fact,
+\begin{align*}
+    [X,\ P]\equiv XP-PX=i\hbar
+\end{align*}
+So we have
+\begin{align*}
+    H=\frac{1}{2m}(P+im\omega X)(P-im\omega X)+\frac{1}{2}\hbar\omega
+\end{align*}
+This motivates us to define two new operators
+\begin{align*}
+    a&= \frac{i}{\sqrt{2m\omega\hbar}}(P-im\omega X)\\
+    a^\dagger&=\frac{-i}{\sqrt{2m\omega\hbar}}(P+im\omega X)
+\end{align*}
+
+They are called the lowering and raising operators, which are Hermitian conjugates of each other. We can also define a Hermitian operator $N = a^\dagger a$. They satisfy the following commutation relations
+\begin{align*}
+    [a,\ a^\dagger]&\equiv aa^\dagger-a^\dagger a=1 \\
+    [a,\ N]&=  aN-Na=a\\
+    [a^\dagger,\ N]&=a^\dagger N-Na^\dagger=-a^\dagger
+\end{align*}
+With these operators, we can write
+\begin{align*}
+    H=\hbar\omega\left( a^\dagger a+\frac{1}{2} \right)=\hbar\omega\left( N+\frac{1}{2} \right)
+\end{align*}
+We will first show that the ground-state energy is $E_0=\frac{\hbar\omega}{2}$
+
+Assume we know the ground state $\ket{\psi_0}$, and
+\begin{align*}
+    N\ket{\psi_0}=N_0\ket{\psi_0}
+\end{align*}
+\begin{enumerate}
+    \item From $[a,\ N] = a$, we have $Na = a(N - 1)$. So,
+    \begin{align*}
+        N(a\ket{\psi_0})=a(N-1)\ket{\psi_0}=(N_0-1)(a\ket{\psi_0})
+    \end{align*}
+    \item This appears to imply that $a\ket{\psi_0}$ is an eigenstate of N with eigenvalue $N_0 - 1$; this cannot be true, as we assumed the eigenvalue of the ground state to be $N_0$. To avoid contradiction, we must have $a\ket{\psi_0} = 0$, i.e., $\ket{\psi_0}$ is annihilated by $a$.
+    \item Therefore, we must have $N_0=0$, as 
+    \begin{align*}
+        N\ket{\psi_0}=a^\dagger a\ket{\psi_0}=0
+    \end{align*}
+\end{enumerate}
+
+Up to a constant factor, this yields, for the ground state wave function $\psi_0(x)$
+\begin{align*}
+    (P-im\omega X)\psi_0(X)=0
+\end{align*}
+Replacing $P$ by $-i\hbar\frac{\mathrm{d}}{\mathrm{d}x}$ , we obtain
+\begin{align*}
+    \frac{\mathrm{d}\psi_0}{\mathrm{d}x}=-\frac{m\omega X}{\hbar}\psi_0(x)
+\end{align*}
+The differential equation can be satisfied, indeed, by
+\begin{align*}
+    \psi_0(x)=e^{-\frac{m\omega}{2\hbar}x^2}
+\end{align*}
+
+Now, knowing the ground state $\ket{\psi_0}$, we can write down all eigenstates (labeled by $\ket{\psi_n}$) through iteration. 
+\begin{enumerate}
+    \item From $[a^\dagger,\ N]=-a^\dagger$, we have
+    \begin{align*}
+        N a^\dagger&= a^\dagger (N+1)\\
+        \text{or }N(a^\dagger \ket{\psi_n})&=a^\dagger(N+1)\ket{\psi_n}
+    \end{align*}
+    \item For $n=0$, we define $\ket{\tilde{\psi}_1}=a^\dagger \ket{0}$ and find
+    \begin{align*}
+        N\ket{\tilde{\psi}_1}&=N(a^\dagger \ket{\psi_0})=a^\dagger(N+1)\ket{\psi_0}=a^\dagger \ket{\psi_0}\\
+        &=\ket{\tilde{\psi}_1}
+    \end{align*}
+    In other words, the eigenvalue of $N$ is 1 for $\ket{\tilde{\psi}_1}$. 
+    \item We can continue to iterate and obtain, in general, $\ket{\tilde{\psi}_n}=a^\dagger \ket{\tilde{\psi}_{n-1}}$ with n being the eigenvalue of $N$.
+\end{enumerate}
+
+The eigenstates $\ket{\tilde{\psi}_n}$ are not normalized. In fact,
+\begin{align*}
+    \braket{\tilde{\psi}_1|\tilde{\psi}_1}=\braket{\psi_0|aa^\dagger|\psi_0}&=\braket{\psi_0|a^\dagger a+1|\psi_0}=1\\
+    \braket{\tilde{\psi}_2|\tilde{\psi}_2}=\braket{\psi_1|aa^\dagger|\psi_1}&=\braket{\psi_1|a^\dagger a+1|\psi_1}=2\\
+    &\vdots \\
+    \braket{\tilde{\psi}_n|\tilde{\psi}_n}=\braket{\psi_{n-1}|aa^\dagger|\psi_{n-1}}&=\braket{\psi_{n-1}|a^\dagger a+1|\psi_{n-1}}=n!
+\end{align*}
+where we used $[a, a^\dagger] ≡ aa^\dagger - a^\dagger a = 1$. 
+
+Therefore, we can define normalized eigenstates as
+\begin{align*}
+    \ket{n}\equiv \ket{\psi_n}=\frac{(a^\dagger)^n}{\sqrt{n!}}\ket{\psi_0}
+\end{align*}
+
+Therefore, we just solve the eigenvalue problem of $H = \hbar \omega(N + \frac{1}{2})$. The eigenenergies are (called a ladder)
+\begin{align*}
+    E_n=\hbar\omega\left( n+\frac{1}{2} \right),\ n=0,1,2,\dots
+\end{align*}
+The eigenstates satisfy
+\begin{align*}
+    a^\dagger \ket{n}&=\sqrt{n+1}\ket{n+1}\\
+    a\ket{n}&=\sqrt{n}\ket{n-1}\\
+    N\ket{n}=a^\dagger  a\ket{n}&=a^\dagger \sqrt{n}\ket{n-1}=n\ket{n}
+\end{align*}
+
+Therefore, the operator method can replace solving the Schroedinger equation completely. All wave functions can be obtained by the operator algebra. 
+\begin{enumerate}
+    \item Up to a constant factor, we have
+    \begin{align*}
+        \psi_1(x)\sim (P+im\omega X)\psi_0(x)\sim\left( \sqrt{\frac{m\omega}{\hbar}}x \right) \psi_0(x)
+    \end{align*}
+    \item Similarly, we have
+    \begin{align*}
+        \psi_2(x)&\sim (P+im\omega X)\psi_1(x)\\
+        &\sim \left[ 2 \left( \sqrt{\frac{m\omega}{\hbar}}x \right)^2 -1 \right]\psi_0(x)
+    \end{align*}
+\end{enumerate}
+
+The polynomials of $\sqrt{m\omega/\hbar }x$ are known as \textbf{Hermite polynomials} $H_n(x )$.

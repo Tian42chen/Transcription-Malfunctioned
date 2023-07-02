@@ -1,0 +1,49 @@
+\newpage
+\section{Query Processing}
+\subsection{Overview}
+\subsubsection{Basic Steps in Query Processing}
+ P3
+\paragraph{Parsing and translation}
+ P4
+\paragraph{Evaluation}
+ P4
+\paragraph{Optimization}
+ P5-8
+
+\subsection{Measures of Query Cost}
+\subsubsection{Three Points}
+ P10
+\subsubsection{Measures of Query Cost}
+ P11-13
+
+\subsection{Selection Operation}
+\subsubsection{Basic algorithms}
+ P15-17
+\subsubsection{Selections Using Indices and equality}
+ P18-21
+\subsubsection{Selections Involving Comparisons}
+ P22
+\subsubsection{Implementation of Complex Selections}
+ P23
+
+\subsubsection{Algorithms for Complex Selections}
+ P24-25
+
+\subsection{Sorting}
+ P27
+
+\subsubsection{External Sort-Merge}
+ P29-34
+
+\subsection{Join Operation}
+ P36
+\subsubsection{Nested-Loop Join}
+ P37
+
+seek is random read IO
+
+\subsubsection{Block Nested-Loop Join}
+$M-2$, 2 is the space for the buffers of the inner relation and the output.
+
+\subsubsection{Merge Join}
+Assuming that $b_b$ buffer blocks are allocated to each relation

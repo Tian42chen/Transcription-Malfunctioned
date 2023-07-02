@@ -1,0 +1,397 @@
+\section[The Foundations: Logic and Proofs]{The Foundations: Logic and Proofs (逻辑与证明)}
+
+\subsection{Proposition and Connective(命题与连接)}
+
+\subsubsection{Proposition}
+
+\begin{definition}
+    \textcolor{light_red}{Proposition(命题)} is a statement that is either true or false, but not both. 
+\end{definition}
+\begin{enumerate}
+    \item True value: T, F. 
+    \item Latters are used to denote proposition:
+    
+    $p,q,r,c\dots$. 
+    \item Atom and Compound Proposition. 
+\end{enumerate}
+
+\subsubsection{Logical Operators(Connective)}
+
+\begin{enumerate}
+    \item Negation(否定, not $p$): $\neg p$.
+    \begin{table}[H]
+        \centering
+        \begin{tabular}[c]{|c|c|}\hline
+            $p$ & $\neg p$\\ \hline
+            T&F\\F&T \\ \hline
+        \end{tabular}
+        \caption{Negation}
+    \end{table}
+
+    \item Conjunction(合取, $p$ and $q$): $p \land q$
+    \begin{table}[H]
+        \centering
+        \begin{tabular}[c]{|cc|c|}\hline
+            $p$&$q$&$p\land q$\\ \hline
+            T & F & F \\
+            F & T & F \\
+            T & T & T \\
+            F & F & F \\ \hline
+        \end{tabular}
+        \caption{Conjunction}
+    \end{table}
+
+    \item Disjunction(析取, $p$ or $q$): $p \lor q$
+    \begin{table}[H]
+        \centering
+        \begin{tabular}[c]{|cc|c|}\hline
+            $p$&$q$&$p\lor q$\\ \hline
+            T & F & T \\
+            F & T & T \\
+            T & T & T \\
+            F & F & F \\ \hline
+        \end{tabular}
+        \caption{Disjunction}
+    \end{table}
+    
+    \item Implication(蕴含, If $p$ then $q$): $p\longrightarrow q$
+    \begin{table}[H]
+        \centering
+        \begin{tabular}[c]{|cc|c|}\hline
+            $p$&$q$&$p\longrightarrow q$\\ \hline
+            T & F & F \\
+            F & T & T \\
+            T & T & T \\
+            F & F & T \\ \hline
+        \end{tabular}
+        \caption{Implication}
+    \end{table}
+
+    \item Biconditional (当且仅当, $p$ If and only if $q$): $p \longleftrightarrow q$
+    \begin{table}[H]
+        \centering
+        \begin{tabular}[c]{|cc|c|}\hline
+            $p$&$q$&$p \longleftrightarrow q$\\ \hline
+            T & F & F \\
+            F & T & F \\
+            T & T & T \\
+            F & F & T \\ \hline
+        \end{tabular}
+        \caption{Biconditional}
+    \end{table}
+\end{enumerate}
+
+Remark: 
+\begin{enumerate}
+    \item Highest Priorities: $\neg$, then $\lor,\land$, then $\longrightarrow, \longleftrightarrow$.
+    \item $\uparrow, \downarrow$ is functionally complete. 
+\end{enumerate}
+
+\subsection{Formula(公式)}
+\begin{definition}
+    The formal definition of a \textcolor{light_red}{formula} (also called a well formed formula, or wff) as follows: 
+    \begin{enumerate}
+        \item Each atom proposition is a formula.
+        \item The connective of formulas is formula.
+        \item Any other is not a formula. 
+    \end{enumerate}
+\end{definition}
+
+\subsubsection{Classification of Proposition Formula}
+\begin{enumerate}
+    \item Tautology(永真式, 重言式) e.g. $p \longrightarrow p\lor q$. 
+    \item Contradiction(永假式) e.g.$p\land \neg p $.
+    \item Contingence(连接式, 有真有假) e.g. $p\longrightarrow q$. 
+\end{enumerate}
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \node [circle, draw=black, fill=light_red,text width=6em,text centered] (t) at (-2,0) {Tautology};
+        \node [circle, draw=black, fill=light_blue, text width=6em,text centered] (c) at (2,0) {Contradiction};
+        \node at (0,1.1) {Contingence};
+
+        \draw (-4,-1.4) rectangle (4,1.4);
+    \end{tikzpicture}
+    \caption{Propositional Formula}
+\end{figure}
+
+\subsubsection{Calcualte}
+\begin{enumerate}
+    \item truth table
+    \item Calcualte
+    \item Formula
+\end{enumerate}
+
+\subsection{Propositional Equivalences}
+The number of truth table involving variables \\ $p_1, p_2, \cdots, p_n$ is only $2^{2^n}$, but the number of the formulae involving them is infinity. 
+
+\begin{definition}
+    Formulae $A$ and $B$ are called \textcolor{light_red}{logically equivalent} if $A\longleftrightarrow B$ is tautology, denoted by $A\Longleftrightarrow B$. 
+\end{definition}
+
+e.g.
+\begin{itemize}
+    \item $p\longrightarrow q \Longleftrightarrow \neg p \lor q$
+    \item $p\longleftrightarrow q \Longleftrightarrow (p\longrightarrow q)\land (q\longrightarrow p )\Longleftrightarrow (\neg p \lor q)\land (\neg q \lor p)$
+\end{itemize}
+
+\subsubsection{Some important equvialences}
+
+\scalebox{0.76}{ %缩小整个内容
+    \parbox{0.58\textwidth}{ %延长内容的水平宽度
+        \begin{align*}
+            \begin{array}{lcc}
+                \text{Identity laws(单位元)} & p\lor F \Longleftrightarrow p & p\land T \Longleftrightarrow p\\
+                \text{Domination laws(零)} & p\lor T \Longleftrightarrow T & p\land F \Longleftrightarrow F\\
+                \text{Idempotent laws(幂等)} & p\lor p \Longleftrightarrow p & p\land p \Longleftrightarrow p \\
+                \text{Complementation laws} &\neg (\neg p) \Longleftrightarrow p  \\
+                \text{Commutative laws(交换)} & p\lor q \Longleftrightarrow q \lor p & p\land q \Longleftrightarrow q\land p\\
+                \text{Associative laws(结合)} & \multicolumn{2}{c}{p\lor (q\lor r) \Longleftrightarrow (p\lor q)\lor r}\\
+                & \multicolumn{2}{c}{p\land (q \land r) \Longleftrightarrow (p\land q)\land r}\\
+                \text{Distributive laws(分配)} & \multicolumn{2}{c}{p\land (q\lor r) \Longleftrightarrow (p\land q) \lor (p\land r)}\\
+                \text{Laws of excluded middle(排中)}& p\land \neg p \Longleftrightarrow F & p\lor \neg p\Longleftrightarrow T\\
+                \text{Absorption laws(吸收)}& \multicolumn{2}{c}{p \land (p\lor q)\Longleftrightarrow p}\\
+                & \multicolumn{2}{c}{p\lor (p\land q)\Longleftrightarrow p }\\
+                \text{De Morgan's laws}& \multicolumn{2}{c}{\neg(p\lor q)\Longleftrightarrow \neg p \land \neg q}\\
+                &\multicolumn{2}{c}{\neg(p\land q \Longleftrightarrow \neg p\lor \neg q)}
+            \end{array}
+        \end{align*}
+    }
+}
+
+% \subsubsection{Normal Form}
+\subsubsection{Disjunctive Normal Form(DNF, 析取范式)}
+\begin{definition}
+    Conjunctive Clauses and Disjunctive Normal Form
+    \begin{enumerate}
+        \item \textcolor{light_red}{Literal}: Atom proposition and its negation. 
+        \item \textcolor{light_red}{Conjunctive clauses}: Conjunctions with literals.
+        \item \textcolor{light_red}{Disjunctive nromal form}: Disjunctions with conjunctive clauses. 
+    \end{enumerate}
+\end{definition}
+
+In general, a formula in DNF is 
+\begin{align*}
+    (A_{1_1}\land A_{1_2}\land\cdots A_{1_{n1}})\lor \cdots \lor (A_{k_1}\land A_{k_2}\land\cdots A_{k_{nk}})\\
+    \text{where $A_{i_j}$ are literals.} 
+\end{align*}
+
+\begin{theorem}
+    Any formula A is tautologically equivalent to some formula in disjunctive normal form. 
+\end{theorem}
+
+\subsubsection{Full Disjunctive Form(主析取范式)}
+\begin{definition}
+    A \textcolor{light_red}{minterm} is a conjunction of literals in which each variable is represented exactly once. 
+\end{definition}
+
+Properties of the Minterms:
+\begin{enumerate}
+    \item For n variables, there are only $2^n$ minterms, and each minterm is true for exactly one assignment. 
+    \item If $A$ and $B$ are two distinct minterms $\Longrightarrow$\\
+    $ A\land B\Longleftrightarrow F$
+\end{enumerate}
+
+\begin{definition}
+    If a boolean function is expressed as a disjunction of minterms, it's said to be in \textcolor{light_red}{full disjunctive form}.
+\end{definition}
+
+Remark: 
+\begin{enumerate}
+    \item Tautology $A \Longleftrightarrow \lor_{i=0}^{2^{n-1}}m_i$ .
+    \item Can obtain full disju form by using truth table. 
+    \item \{$\neg, \lor,\land$\} is functionally complete.
+\end{enumerate}
+
+Conjunctive Normal Form (CNF) and DNF are dual.
+
+\subsection{Methods of Proof}
+
+定理, 公理, 引理, 推论, 猜想 etc.
+\begin{align*}
+    (p_1\land p_2 \land \cdots \land p_n)\longrightarrow q \,\text{is tauto or not. }\\
+    \Longleftrightarrow (p_1\land p_2 \land \cdots \land p_n)\Longrightarrow q
+\end{align*}
+
+\begin{enumerate}
+    \item Law of detachment or modus ponens(假言推断)
+    \begin{align*}
+        \because& p\longrightarrow q \\&p\\
+        \therefore& q
+    \end{align*}
+    \item Modus tollens(逆否)
+    \begin{align*}
+        \because& p\longrightarrow q \\ & \neg q \\
+        \therefore & \neg p
+    \end{align*}
+    \item Rule of Addition(附加)
+    \begin{align*}
+        \because& p\\
+        \therefore & p\lor q
+    \end{align*}
+    \item Rule of simplification(简化)
+    \begin{align*}
+        \because& p\land q\\
+        \therefore & p
+    \end{align*}
+    \item Rule of conjunction(合取)
+    \begin{align*}
+        \because& p\\ & q \\
+        \therefore & p\land q
+    \end{align*}
+    \item Rule of hypothetical syllogism(三段论)
+    \begin{align*}
+        \because& p\longrightarrow q \\ & q\longrightarrow r \\
+        \therefore & p\longrightarrow r
+    \end{align*}
+    \item Rule of disjunctive syllogism(析取三段论)
+    \begin{align*}
+        \because& p\lor q \\ & \neg p \\
+        \therefore & q
+    \end{align*}
+    \item x(潘解原理)
+    \begin{align*}
+        \because& p\lor q \\ & \neg p\lor r \\
+        \therefore & q\lor r
+    \end{align*}
+\end{enumerate}
+
+Remark: 
+\begin{enumerate}
+    \item \begin{align*}
+        &(p_1\land p_2 \land \cdots \land p_n)\longrightarrow (p\rightarrow q)\\
+        \Longleftrightarrow &(p_1\land p_2 \land \cdots \land p_n\land p)\longrightarrow q
+    \end{align*}
+    \item \begin{align*}
+        &(p_1\land p_2 \land \cdots \land p_n)\longrightarrow q\\
+        \Longleftrightarrow&\neg (p_1\land p_2 \land \cdots \land p_n) \lor \neg(\neg q)\\
+        \Longleftrightarrow& \neg (p_1\land p_2 \land \cdots \land p_n \land \neg q)
+    \end{align*}
+\end{enumerate}
+
+\subsection{Predicates and Quantifiers(谓词与量化)}
+
+\subsubsection{Predicates}
+\begin{definition}
+    A statement of the form $P(x_1,x_2,\cdots,x_n)$ is the value of the \textcolor{light_red}{propositional function} P at n-tuple $(x_1,x_2,\cdots,x_n)$, and P is also called a \textcolor{light_red}{predicate}. \\
+    $x_1,x_2,\cdots,x_n$ is an element of a set D. 
+\end{definition}
+
+\subsubsection{Quantifiers}
+\begin{align*}
+    Predicates  \xrightarrow{Quantification} Propositions 
+\end{align*}
+
+Domain(论域):
+\begin{itemize}
+    \item Universal quantifiers: For all $x, p(x)$: $\forall x, p(x)$
+    \item Existential quantifiers: For some $x,p(x)$: $\exists x, p(x)$
+\end{itemize}
+
+Remark:
+\begin{enumerate}
+    \item If $x_1, x_2, \cdots, x_n$, then
+    \begin{align*}
+        \forall x, P(x) \Longleftrightarrow P(x_1) \land P(x_2) \land \cdots \land P(x_n)\\
+        \exists x, P(x) \Longleftrightarrow P(x_1) \lor P(x_2) \lor \cdots \lor P(x_n)\\
+    \end{align*}
+    \item \begin{align*}
+        &\forall x\forall y, p(x,y)\Longleftrightarrow \forall y\forall x, p(x,y)\\
+        &\exists x\exists y, p(x,y)\Longleftrightarrow \exists y\exists x, p(x,y)\\
+        \text{But}\,&\forall x\exists y, p(x,y)\nLeftrightarrow  \exists y\forall x, p(x,y)\\
+    \end{align*}
+\end{enumerate}
+
+\subsubsection{Banding Variables(辖域)}
+
+\begin{definition}
+    When a quantifier is used on the variable x or when we assign a variable to this variable.
+    \begin{itemize}
+        \item this occurrence of the variable is bound.
+        \item other occurrence of the variableis free.
+    \end{itemize}
+\end{definition}
+
+Remark:
+\begin{enumerate}
+    \item All the variables that occur in a propositional function must be bound to turn it into a proposition. 
+    \item Rename bounded variables and free variables in formula logically equivalence. 
+\end{enumerate}
+
+\subsubsection{Classification of Predicates Formula}
+\begin{enumerate}
+    \item Tautology: All true.
+    \item Contradiction: All false.
+    \item Contingence: neither a tautology nor a contradiction. 
+\end{enumerate}
+
+\subsubsection{Some improtant Equivalent Predicates Formula}
+\begin{enumerate}
+    \item De Morgan's laws:
+    \begin{enumerate}
+        \item For predicates:
+        \begin{align*}
+            \neg \forall x, p(x) &\Longleftrightarrow \exists x, \neg p(x)\\
+            \neg \exists x, p(x) &\Longleftrightarrow \forall x, \neg p(x)
+        \end{align*}
+        \item For quantifiers:
+        \begin{align*}
+            \forall x, (p(x)\land q(x)) &\Longleftrightarrow (\forall x, p(x)) \land (\forall x, q(x))\\
+            \exists x, (p(x)\lor q(x)) &\Longleftrightarrow (\exists x, p(x)) \lor (\exists x, q(x))
+        \end{align*}
+
+        But
+
+        \begin{align*}
+            \forall x, (p(x)\lor q(x)) &\Longleftarrow (\forall x, p(x)) \lor (\forall x, q(x))\\
+            \exists x, (p(x)\land q(x)) &\Longrightarrow (\exists x, p(x)) \land (\exists x, q(x))
+        \end{align*}
+    \end{enumerate}
+    \item More logical equivalence: When x isn't occurring in A,
+    \begin{enumerate}
+        \item \begin{align*}
+            A\land \forall x, q(x) &\Longleftrightarrow \forall x , (A\land q(x))\\
+            A\lor \forall x, q(x) &\Longleftrightarrow \forall x , (A\lor q(x))\\
+            \star \forall x, q(x) \longrightarrow A &\Longleftrightarrow \exists x , (q(x)\longrightarrow A )\\
+            A \longrightarrow \forall x, q(x)  &\Longleftrightarrow \forall x , A (\longrightarrow q(x) )\\
+        \end{align*}
+        \item \begin{align*}
+            A\land \exists x, q(x) &\Longleftrightarrow \exists x , (A\land q(x))\\
+            A\lor \exists x, q(x) &\Longleftrightarrow \exists x , (A\lor q(x))\\
+            \star \exists x, q(x) \longrightarrow A &\Longleftrightarrow \forall x , (q(x)\longrightarrow A )\\
+            A \longrightarrow \exists x, q(x)  &\Longleftrightarrow \exists x , A (\longrightarrow q(x) )\\
+        \end{align*}
+    \end{enumerate}
+\end{enumerate}
+
+\subsubsection{Prenex Normal Forms}
+\begin{definition}
+    A formula is in \textcolor{light_red}{prenex normal form} if it is of the form 
+    \[ Q_1 x_1 Q_2 x_2 \cdots Q_n x_n B\]
+    when $Q_i(i=1,2,\cdots,n)$ is $\forall$ or $\exists$ and B is quantifier free. (Not unique)
+\end{definition}
+
+\subsubsection{Methods of Proof}
+\begin{enumerate}
+    \item Universal instantiation(UI)
+    \begin{align*}
+        \because &\forall x \in D , P(x)\\ &d\in D\\
+        \therefore &P(d)
+    \end{align*}
+    \item Universal generalization(UG)
+    \begin{align*}
+        \because &P(d) \text{ for any } d \in D\\
+        \therefore & \forall x, P(x)
+    \end{align*}
+    \item Existential instantiation(EI)
+    \begin{align*}
+        \because & \exists x \in D\\ & P(x)\\
+        \therefore & P(d) \text{ for some } d \in D 
+    \end{align*}
+    \item Existential generalization(EG)
+    \begin{align*}
+        \because & P(d) \text{ for some } d \in D\\
+        \therefore & \exists x, P(x)
+    \end{align*}
+\end{enumerate}

@@ -1,0 +1,112 @@
+\section[Counting]{Counting (计数)}
+\subsection{The Basics of Counting}
+
+\subsubsection{The Sum Rule}
+\begin{theorem}
+    If $A_1,A_2,\cdots,A_m$ are disjoint sets, then the number of elements in the union of these sets is the sum of the number of elements in them.
+    \[ \left| A_1\cup A_2\cup \cdots \cup A_m \right|=|A_1|+|A_2|+\cdots+|A_m| \]
+\end{theorem}
+
+\subsubsection{The Product Rule}
+\begin{theorem}
+    If $A_1,A_2,\cdots,A_m$ are disjoint sets, then the number of elements in the cartesian product of these sets is the product of the number of elements in each set. 
+    \[ \left| A_1\times A_2\times \cdots \times A_m \right|=|A_1|\cdot |A_2|\cdot \cdots\cdot |A_m| \]
+\end{theorem}
+
+\subsection{The Pigeonhole Principle}
+\begin{theorem}[The Pigeonhole Principle]\quad \\
+    If k+1 or more objects are placed into k boxes then there is at least one box containing two or more of the objects. 
+\end{theorem}
+
+\begin{theorem}[The Generalized Pigeonhole]\quad \\
+    If N objects are placed into k boxes then there is at least one box containing at least $\left\lceil \frac{N}{k} \right\rceil$ objects. 
+\end{theorem}
+
+\subsubsection{Some Elegant Applications of Pigeonhole Principle}
+
+\begin{definition}
+    Suppose that $a_1,\cdots,a_N$ is a sequence of real number.
+    \begin{itemize}
+        \item A \highlight{subsequence} of this sequence is a sequence of the form $a_{i_1}, \cdots, a_{i_m}$, where $1\le i_1 < \cdots < i_m \le N$.
+        \item A sequenceis called \highlight{strictly increasing} if each term is lager than the one that precedes it, and it is called \highlight{strictly decreasing} if each term is smaller than the one that precedes it. 
+    \end{itemize}
+\end{definition}
+
+\begin{theorem}
+    Every sequence of $n^2+1$ distinct real numbers contains a subsequence of length $n+1$ that is either strictly increasing or strictly decreasing. 
+\end{theorem}
+
+\subsection{Permutations and Combinations}
+\subsubsection{Permutations (排列)}
+\begin{definition}
+    Given a set of distinct objects \\
+    $X=\left\{ x_1,\cdots, x_n \right\}$
+    \begin{itemize}
+        \item a \highlight{permutation} of X is an ordered arrangement of $x_1, \cdots, x_n$.
+        \item a \highlight{r-permutation}, where $r\le n$ is an ordering of a subset of r-elements of X.
+        \item The number of r-permutations of a set of distinct elements is denoted by $P(n,r)$.
+    \end{itemize}
+\end{definition}
+
+\begin{theorem}
+    \[ P(n,r)=\frac{n!}{(n-r)!} \]
+    In particular, note taht $P(n,n)=n!$.
+\end{theorem}
+
+\subsubsection{Combinations}
+\begin{definition}
+    Let $X=\left\{ x_1,x_2,\cdots, x_n \right\}$ be a set containing $n$ distinct elements. 
+    \begin{itemize}
+        \item an \highlight{r-combination} of X is an unordered selection of r-elements of X.
+        \item the number of r-combinations of a set n distinct elements is denoted by $C(n,r)$.
+    \end{itemize}
+\end{definition}
+\begin{theorem}
+    \[ C(n,r)=\frac{n!}{(n-r)!r!}=\frac{P(n,r)}{r!} \]
+\end{theorem}
+
+\subsubsection{Binomial Coefficients}
+
+\begin{theorem}[Binomial Theorem]
+    If a and b are real numbers and n is a positive integer, then 
+    \begin{align*}
+        (a+b)^n=&C(n,0)a^n b^0 + C(n,1)a^{n-1} b^1 + \cdots \\
+        &+C(n,n-1)a^1 b^{n-1} + C(n,n)a^0 b^n
+    \end{align*}
+\end{theorem}
+
+\begin{theorem}[Pascal's Identity]
+    Let n and k be positive integers with $n\ge k $, then
+    \[ C(n+1,k)=C(n,k)+C(n,k-1) \]
+\end{theorem}
+
+\begin{theorem}
+    Let n be a positive integer, then
+    \[ \sum_{k=0}^n C(n,k)=2^n \]
+\end{theorem}
+
+\begin{theorem}[Vanderomnde's Identity]
+    Let m,n and r be nonnegative integers with r not exceeding either m or n , then
+    \[ C(m+n,r)=\sum_{k=0}^r C(m,r-k)C(n,k) \]
+\end{theorem}
+
+\subsection{Generalized Permutations and Combinations}
+
+\subsubsection{Permutations with Repetition}
+\begin{theorem}
+    The number of r-permutations of a set of n objects with repetition allowed is $n^r$. 
+\end{theorem}
+
+\subsubsection{Combinations with repetition}
+\begin{theorem}
+    There are $C(n+r-1,r)$ or $C(n+r-1,n-1)$ r-combinations from a set with n elements when repetition of elements is allowed. 
+\end{theorem}
+
+\subsubsection{Distributing Objects into Boxes}
+\begin{theorem}
+    The number of ways to distribute n distinguishable objects into k distinguishable boxes so that $n_i$ objects are placed into box $i$, $i=1,2,\cdots,k$ equals
+    \[ \frac{n!}{n_1!n_2!\cdots n_k!} \]
+\end{theorem}
+
+\subsection{Generating Permutations and Combinations}
+$\left(\enspace{}^{\circ}\;\forall\;{}_{\circ}\enspace\right)$

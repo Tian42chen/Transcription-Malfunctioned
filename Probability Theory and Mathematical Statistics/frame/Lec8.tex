@@ -1,0 +1,80 @@
+\newpage
+\section{假设检验}
+
+\subsection{假设检验的过程}
+\subsubsection{利用拒绝域}
+\begin{enumerate}
+    \item 提出假设(原假设$H_0$ $\longleftrightarrow$ 备择假设 $H_1$). 
+    \item 提出检验统计量和拒绝域形式.
+    \item 在给定显著性水平 $\alpha$下, 根据 Neyman-Pearson 原则求出拒绝域的临界值.
+    \item 根据实际样本观测值作出判断. 
+\end{enumerate}
+
+\subsubsection{利用\texorpdfstring{$P\_$}.值}
+\begin{enumerate}
+    \item 提出假设(原假设$H_0$ $\longleftrightarrow$ 备择假设 $H_1$). 
+    \item 提出检验统计量和拒绝域形式.
+    \item 计算检验统计量的观测值与$P\_$值. 
+    \item 根据$P\_$值和显著性水平$\alpha$, 作出判断
+    \begin{itemize}
+        \item 若$P\_ \le \alpha$, 则拒绝原假设.
+        \item 若$P\_ \ge \alpha$, 则接受原假设
+    \end{itemize}
+\end{enumerate}
+
+\subsection{两类错误}
+\begin{enumerate}
+    \item 第I类错误: 拒绝真实的原假设. 
+    \item 第II类错误: 接受错误的原假设. 
+\end{enumerate}
+
+\subsubsection{Neyman-Pearson原则}
+首先控制犯第I类错误的概率不超过显著性水平$\alpha$, 再寻找检验, 使得犯第II类错误的概率尽可能小. 
+
+\subsection{\texorpdfstring{$P\_$}.值计算}
+设检验统计量为H, 检验统计量的观测值为h. 
+\begin{enumerate}
+    \item (双边检验)$H_0:\, \theta=\theta_0,\, H_1:\, \theta\ne\theta_0$\\
+    若检验统计量太大或太小时拒绝, \\
+    令$p=P(H\ge h|\theta=\theta_0)$, 则$P\_=2\min(p,1-p)$. 
+    \item (左边检验)$H_0:\, \theta\ge\theta_0,\, H_1:\, \theta<\theta_0$\\
+    若检验统计量太小时拒绝, 则$P\_=P(H\le h|\theta=\theta_0 )$. 
+    \item (右边检验)$H_0:\, \theta\le\theta_0,\, H_1:\, \theta > \theta_0$\\
+    若检验统计量太大时拒绝, 则$P\_=P(H\ge h|\theta=\theta_0 )$. 
+\end{enumerate}
+
+\subsection{正态总体均值、方差的置信区间与假设检验}
+
+\begin{table*}[htb]
+    \centering
+    \begin{tabular}[c]{|cccccccc|}\hline
+        \multicolumn{1}{|c|}{ } & 枢轴量 & 待估参数 & 置信区间 & 原假设 & 拒绝域(代入真值) & 检验统计量值 & $P\_$值 \\ \hline
+        \multicolumn{1}{|c|}{\multirow{3}{2em}{一个正态总体}} & & & & & & & \\
+        \multicolumn{1}{|c|}{ }& & & & & & & \\
+        \multicolumn{1}{|c|}{ }& & & & & & & \\ \hline
+        \multicolumn{1}{|c|}{\multirow{3}{2em}{两个正态总体}} & & & & & & & \\
+        \multicolumn{1}{|c|}{ }& & & & & & & \\
+        \multicolumn{1}{|c|}{ }& & & & & & & \\ \hline
+    \end{tabular}
+    \caption{正态总体均值、方差的置信区间与假设检验}
+\end{table*}
+
+\subsection{拟合优度检验}
+步骤:
+\begin{enumerate}
+    \item 提出原假设$H_0: \, X\sim p(x;\theta_1,\dots,\theta_r)$ (或 $X\sim f(x;\theta_1,\dots,\theta_r)$). 
+    \item 求极大似然估计$\hat{\theta}_1,\dots,\hat{\theta}_r$, 如果没有未知参数，跳过这一步. 
+    \item 在$H_0$下, 总体$X$取值的全体分成$k$个两两不
+    相交的子集$A_1,\dots,A_k$, 以$n_i(i=1,\dots,k)$记样本观察值$x_1,\dots,x_n$中落在$A_i$的个数 (\highlight{实际频数}). (一般题中已给出)
+    \item 计算当$H_0$为真 (用第2步的$\hat{\theta}_1,\dots,\hat{\theta}_r$或真值) 时 $A_i$ 发生的概率估计值 $\hat{p}_i=P_{H_0}(A_i),\,i=1,\dots,k$, 称$n\hat{p}_i$ (或$np_i$) 为\highlight{理论频数}.\\
+    \highlight{检验: $np_i\ge 5$, 否则合并子集并转到步骤3. }
+    \item 检验统计量
+    \begin{align*}
+        \chi^2=\sum_{i=1}^k\frac{(n_i-np_i)^2}{np_i}=\sum_{i=1}^k \frac{n_i^2}{np^i}-n
+    \end{align*}
+    \item 拒绝域
+    \begin{align*}
+        \chi^2\ge \chi_{\alpha}^2(k-r-1)
+    \end{align*}
+    此时拒绝原假设. 
+\end{enumerate}

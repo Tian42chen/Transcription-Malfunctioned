@@ -1,0 +1,55 @@
+\section[Graphs]{Graphs (图)}
+
+\subsection{Introduction to Graphs}
+
+\subsubsection{Types of Graphs}
+\begin{definition}
+    \begin{enumerate}
+        \item A \highlight{simple graph (简单图)} $G=(V,E)$ consists of $V$, a nonempty set of vertices and $E$, a set of unordered pair of distinct elements of $v$ called edges. 
+        \item A \highlight{multigraph (重图)} $G=(V,E)$ consists of a set $V$ of vertices and a set $E$ of edges which has \highlight{multiple or parallel edges}. 
+        \item A \highlight{pseudograph (伪图)} $G=(V,E)$ consists of a set $V$ of vertices and a set of $E$ of edges which has loops and multiple edges. 
+    \end{enumerate}
+    \begin{itemize}
+        \item The multiple or parallel edges: 
+        \begin{align*}
+            f:\, E\rightarrow \left\{ \left\{u,v\right\}|u,v\in V,u\ne v \right\}
+        \end{align*}
+        $e_1,e_2$ are called multiple edges if $f(e_1)=f(e_2)$. 
+        \item The loop: 
+        \begin{align*}
+            f:\, E\rightarrow \left\{ \left\{u,v\right\}|u,v\in V \right\}
+        \end{align*}
+        $e$ is a loop if $f(e)=\left\{u,u\right\}=\left\{u\right\}, u\in V$.
+    \end{itemize}
+\end{definition}
+
+\begin{definition}
+    \begin{enumerate}
+        \item A \highlight{directed graph} $G=(V,E)$ consists of a set of vertices $V$, and a set of edges $E$ taht ordered pairs of elements of $V$.
+        \item A \highlight{directed multigraph} $G=(V,E)$ consists of a set of vertices $V$, and a set of edges $E$ taht ordered pairs of elements of $V$ and has multiple edges.
+    \end{enumerate}
+
+    The multiple edges: 
+    \begin{align*}
+        f:\,E\rightarrow \left\{ (u,v)| u,v\in V,u\ne v \right\}
+    \end{align*}
+    $e_1,e_2$ are called multiple edges if $f(e_1)=f(e_2)$.
+\end{definition}
+
+\ref{GT}
+
+\begin{table*}[htb]
+    \centering
+    \caption{Graph Terminology}
+    \label{GT}
+    \begin{tabular}[c]{|c|c|c|c|}\hline
+        Type & Edges & Multiple Edges Allowed? & Loop Allowed?\\\hline
+        Simple Graph & Undirected & No & No \\
+        Multigraph & Undirected & Yes & No\\
+        Pseudograph & Undirected & Yes & Yes\\
+        Directed Graph & Directed & No & Yes\\
+        Directed Multigraph & Directed & Yes & Yes\\\hline
+    \end{tabular}
+\end{table*}
+
+\subsection{Graph Terminology}

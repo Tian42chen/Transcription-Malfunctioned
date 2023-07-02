@@ -1,0 +1,559 @@
+\newpage
+\section{SQL}
+
+\subsection{Introduction}
+Structured Query Language (SQL, 结构化查询语言), called Structured English QUEry Language (SEQUEL). 
+
+\subsubsection{SQL Conformance Level}
+SQL Conformance levels (标准符合度) can be classified into 4 categories:
+\begin{enumerate}
+    \item Entry level SQL (入门级)
+    \item Transitional SQL (过渡级)
+    \item Intermediate SQL (中间级)
+    \item Full SQL (完全级)
+\end{enumerate}
+
+\subsubsection{SQL Operations}
+SQL includes several parts:
+\begin{itemize}
+    \item Data-Definition Language (DDL)
+    \item Data-Manipulation Language (DML)
+    \item Data-Control Language (DCL)
+\end{itemize}
+
+\subsection{Data Definition Language (DDL)}
+e.g. 
+\begin{lstlisting}[language=sql]
+CREATE TABLE branch(
+    branch_name char(15) not null,
+    branch_city varchar(30),
+    assets numeric(8,2),
+    primary key (branch_name)
+);
+\end{lstlisting}
+
+
+The main functions of DDL contain:
+\begin{itemize}
+    \item Define the schema for each relation
+    \item Define the domain of values associated with each attribute
+    \item Define the integrity constraints
+    \item Define the physical storage structure of each relation on disk
+    \item Define the indices to be maintained for each relations
+    \item Define the view on relations    
+\end{itemize}
+
+\subsubsection{Domain types in SQL}
+
+\begin{itemize}
+    \item char(n): Fixed length character string, with user-specified length.
+    \item varchar(n): Variable length character strings, with user-specified
+    maximum length n.
+    \item int: Integer (a finite subset of the integers that is machine-
+    dependent).
+    \item smallint: Small integer (a machine-dependent subset of the integer
+    domain type).
+    \item numeric(p, d): Fixed point number, with user-specified precision of p
+    digits, with d digits to the right of decimal point.
+    \item real, double precision: Floating point and double-precision floating point numbers,\\ with machine-dependent precision.
+    \item float(n): Floating point number,\\ with user-specified precision of at least n digits.
+    \item Null values are allowed in all the domain types. Declaring an
+    attribute to be not null prohibits null values for that attribute.
+\end{itemize}
+\begin{itemize}
+    \item date: Dates, containing a (4 digits) year, month and date.
+    \item Time: Time of day, in hours, minutes and seconds.
+    \item timestamp: date plus time of day.
+\end{itemize}
+
+
+SQL中有许多函数用于处理各种类型的数据及其类型转换, 但各数据库系统中函数的标准化程度不高. 
+\subsubsection{Create table}
+An SQL relation is defined using the create table command:
+\begin{lstlisting}[language=sql]
+CREATE TABLE r(
+    A1 D1, ..., An Dn,
+    (integrity constraint1),
+    ...,
+    (integrity constraintk)
+)
+\end{lstlisting}
+
+\textbf{Integrity Constraints in Create Table}
+\begin{itemize}
+    \item Not null
+    \item Primary key $(A_1, \dots, A_n)$
+    \item Check$(P)$, where $P$ is a predicate
+\end{itemize}
+
+e.g. 
+\begin{lstlisting}[language=sql]
+CREATE TABLE branch(
+    branch_name char(20) not null,
+    branch_city char(30),
+    assets integer,
+    primary key (branch_name),
+    check (assets >= 0)
+);
+
+CREATE TABLE branch2(
+    branch_name char(20)
+    primary key,
+    branch_city char(30),
+    assets integer,
+    check (assets >= 0)
+);
+\end{lstlisting}
+
+
+\subsubsection{Drop and alter table}
+\textbf{Drop:}
+
+The drop table command deletes all information about the dropped relation from the database. 
+\begin{lstlisting}[language=sql]
+DROP TABLE r;
+\end{lstlisting}
+Be careful to use the DROP command. 
+
+\textbf{Alter:}
+
+The alter table command is used to add attributes to an existing relation.
+\begin{lstlisting}[language=sql]
+ALTER TABLE r ADD A D;
+ALTER TABLE r ADD (A1 D1, ..., An Dn);
+\end{lstlisting}
+where $A$ is the name of the attribute to be added to relation $r$, and $D$ is the domain of $A$.
+
+The alter table command can also be used to drop attributes of a relation. 
+\begin{lstlisting}[language=sql]
+ALTER TABLE r DROP A;
+\end{lstlisting}
+where $A$ is the name of an attribute in relation $r$.
+
+The alter table command can also be used to modify the attributes of a relation. e.g. 
+\begin{lstlisting}[language=sql]
+ALTER TABLE branch MODIFY (
+    branch_name char(30), 
+    assets not null
+);
+\end{lstlisting}
+
+\subsubsection{Create index}
+\begin{lstlisting}[language=sql]
+CREATE INDEX <i-name> 
+ON <_table-name> (<attribute-list>);
+
+CREATE UNIQUE INDEX <i-name> 
+ON <_table-name> (<attribute-list>);
+
+DROP INDEX <i-name>;
+\end{lstlisting}
+
+\subsection{Basic Structure}
+
+A typical SQL query has the form:
+\begin{lstlisting}[language=sql]
+SELECT A1, A2, ..., An
+FROM r1, r2, ..., rm
+WHERE P;
+\end{lstlisting}
+where $A_i$: attribute, $r_i$: relations, and $P$: predicate. 
+
+This query is equivalent
+\begin{align*}
+    \prod_{A_1, A_2, \dots,A_n}\left( \sigma_P(r_1 \times r_2\times \dots \times r_m) \right)
+\end{align*}
+
+\subsubsection{The select clause}
+WHERE 可选, 命名用 \_, -报错, 关键词不分大小写. 
+
+SQL allows duplicates. To force the elimination of duplicates
+\begin{lstlisting}[language=sql]
+SELECT distinct branch-name
+FROM loan;
+\end{lstlisting}
+By default, duplicates are allowed, i.e., all is the default.
+\begin{lstlisting}[language=sql]
+SELECT all branch-name
+FROM loan;
+\end{lstlisting}
+
+An asterisk * in the select clause denotes all attributes.
+\begin{lstlisting}[language=sql]
+SELECT * FROM loan;
+\end{lstlisting}
+
+The select clause can contain arithmetic expressions
+\begin{lstlisting}[language=sql]
+SELECT loan_number, branch_name, amount * 100
+FROM loan;
+\end{lstlisting}
+
+\subsubsection{The where clause}
+The WHERE clause specifies conditions that the result must satisfy. e.g. 
+\begin{lstlisting}[language=sql]
+SELECT loan_number
+FROM loan
+WHERE branch_name = ‘Perryridge’ and amount > 1200;
+\end{lstlisting}
+
+In WHERE clause, comparison results can be combined using the
+logical connectives including AND, OR, and NOT, as well as a BETWEEN comparison operator. e.g.
+\begin{lstlisting}[language=sql]
+SELECT loan_number
+FROM loan
+WHERE amount BETWEEN 90000 AND 100000;
+\end{lstlisting}
+
+\subsubsection{The from clause}
+Find the Cartesian product. e.g. 
+\begin{lstlisting}[language=sql]
+SELECT customer_name, borrower.loan_number, amount
+FROM borrower, loan
+WHERE borrower.loan_number = loan.loan_number and
+branch_name = ‘Perryridge’;
+\end{lstlisting}
+loan(loan-number, branch-name, amount)\\
+borrower(customer-name, loan-number)
+
+
+\subsubsection{The rename operation}
+\textbf{Column Rename: }
+\begin{lstlisting}[language=sql]
+old_name as new_name
+
+SELECT  customer_name, 
+        borrower.loan_number as loan_id, 
+        amount
+FROM borrower, loan;
+\end{lstlisting}
+
+\textbf{Tuple Variables: }for simplification. 
+\begin{lstlisting}[language=sql]
+SELECT  customer_name, 
+        T.loan_number, 
+        S.amount
+FROM borrower as T, loan as S
+WHERE T.loan_number = S.loan_number;
+\end{lstlisting}
+
+or for discrimination
+\begin{lstlisting}[language=sql]
+SELECT distinct T.branch_name
+FROM branch as T, branch as S
+WHERE T.assets > S.assets and S.branch_city = ‘Brooklyn’
+\end{lstlisting}
+
+\subsubsection{String operations}
+SQL includes a string-matching operator. 
+\begin{itemize}
+    \item \% --- matches any substring (likes * in the file system).
+    \item \_ --- matches any character (like ? in the file system).
+\end{itemize}
+e.g. 
+\begin{lstlisting}[language=sql]
+SELECT customer_name
+FROM customer
+WHERE customer_name LIKE ‘%泽%’;
+\end{lstlisting}
+Match the name “Main\%”
+\begin{lstlisting}[language=sql]
+LIKE ‘Main\%’ escape ‘\’; 
+\end{lstlisting}
+
+
+
+\subsubsection{Ordering the display of tuples}
+We may specify desc for descending order or asc for ascending order, and for each attribute, ascending order is the default.
+\begin{lstlisting}[language=sql]
+select bra_name from loan
+order by bra_name desc;
+\end{lstlisting}
+
+
+\subsubsection{Duplicates}
+Select statement in SQL also supports the multiset operators.
+
+\subsection{Set Operations}
+Each of the operations including UNION, INTERSECT, and EXCEPT automatically eliminates duplicates. To retain all duplicates, we can use the corresponding multiset versions including UNION ALL, INTERSECT ALL, and EXCEPT ALL.
+
+\subsection{Aggregate Functions}
+These functions (see below) operate on the multiset values of a relation’s column, and return a value.
+\begin{itemize}
+    \item avg(col): average value
+    \item min(col): minimum value
+    \item max(col): maximum value
+    \item sum(col): sum of values
+    \item count(col): number of values
+\end{itemize}
+
+e.g. Find the average account balance for each branch.
+\begin{lstlisting}[language=sql]
+SELECT branch_name, avg(balance) avg_bal
+FROM account
+GROUP BY branch_name; 
+\end{lstlisting}
+
+e.g. Find the names of all branches located in city Brooklyn where the average account balance is more than \$1,200.
+\begin{lstlisting}[language=sql]
+SELECT A.branch_name, avg(balance)
+FROM account A, branch B
+WHERE A.branch_name = B.branch_name and branch_city =‘Brooklyn’
+GROUP BY A.branch_name
+HAVING avg(balance) > 1200;
+\end{lstlisting}
+
+Attributes in select clause outside of aggregate functions must appear in group by list.
+
+\subsection{Summary}
+The format of SELECT statement: 
+\begin{lstlisting}[language=sql]
+SELECT <[DISTINCT] c1, c2, ...>
+FROM <r1, ...>
+[WHERE <condition>]
+[GROUP BY <c1, c2, ...> [HAVING <cond2>]]
+[ORDER BY <c1 [DESC] [, c2 [DESC|ASC], ...]>];
+\end{lstlisting}
+
+The execution order of SELECT:
+
+\hl{From $\rightarrow$ where $\rightarrow$ group (aggregate) $\rightarrow$ having $\rightarrow$ \\select $\rightarrow$ distinct $\rightarrow$ order by. }
+
+Aggregate functions cannot be used in where clause directly.
+
+\subsection{Null Values}
+Null is a special marker used in SQL. The result of any arithmetic expression involving `null' is null. Any comparison with null returns ``unknown''. 
+
+Result of where clause predicate is treated as false if it evaluates to unknown.
+
+e.g. Find all loan number which appears in the loan relation with null values for amount.
+\begin{lstlisting}[language=sql]
+SELECT loan_number
+FROM loan
+WHERE amount is null;
+\end{lstlisting}
+
+All aggregate operations except count(*) ignore tuples with null values on the aggregated attributes.
+
+\subsection{Nested Subqueries (嵌套子查询)}
+A subquery is a select\_from\_where expression that is nested within another query. 
+
+e.g. Find all customers who have both an account and a loan at the bank.
+\begin{lstlisting}[language=sql]
+SELECT distinct customer_name
+FROM borrower
+WHERE customer_name in (
+    SELECT customer_name
+    FROM depositor
+);
+\end{lstlisting}
+
+e.g. Find all customers who have loans at a bank but do not have an account at the bank.
+\begin{lstlisting}[language=sql]
+SELECT distinct customer_name
+FROM borrower
+WHERE customer_name not in (
+    SELECT customer_name
+    FROM depositor
+);
+\end{lstlisting}
+
+
+\subsubsection{Set comparison}
+\textbf{Definition of Some Clause: }
+\begin{align*}
+    C \braket{comp} \text{some } r \Leftrightarrow \exists\  t \in r, C \braket{comp} t \text{ holds}
+\end{align*}
+where $\braket{comp}$ could be $<, \le, >, \ge, =$ and $\ne$.
+
+(=some) equiv in, ($\ne$ some) not equiv not in.
+
+\textbf{Definition of All Clause: }
+\begin{align*}
+    C \braket{comp} \text{all } r \Leftrightarrow \forall\  t \in r, C \braket{comp} t \text{ holds}
+\end{align*}
+
+(=all) not equiv in, ($\ne$ all) equiv not in.
+
+\subsubsection{Test for empty relations}
+The exists construct returns the value true if the argument subquery is non-empty.
+\begin{align*}
+    \text{exists }r &\Leftrightarrow r \ne \emptyset\\
+    \text{not exists }r &\Leftrightarrow r = \emptyset
+\end{align*}
+
+\subsubsection{Test for absence of duplicate tuples}
+The unique construct tests whether a subquery has any duplicate tuples in its result. 
+
+unique and not unique
+
+\subsection{Views}
+Provide a mechanism to hide certain data from the view of certain users. To create a view we use the command:
+\begin{lstlisting}[language=sql]
+CREATE VIEW <v_name> AS
+SELECT c1, c2, ... FROM ...; 
+CREATE VIEW <v_name> (c1, c2, ...) AS
+SELECT e1, e2, ... FROM ...; 
+\end{lstlisting}
+
+Benefits of using views: Security, Easy to use, support logical independent. 
+
+To drop view: 
+\begin{lstlisting}[language=sql]
+DROP VIEW <v_name>;
+\end{lstlisting}
+
+View and Logical Data Independence. 
+
+\subsection{Derived Relations (派生表)}
+
+e.g. 
+\begin{lstlisting}[language=sql]
+SELECT branch_name, avg_bal
+FROM (
+    SELECT branch_name, avg(balance)
+    FROM account
+    GROUP BY branch_name
+) as result (branch_name, avg_bal)
+WHERE avg_bal > 500;
+\end{lstlisting}
+
+``as'' is must. 没用到也需要别名。  
+
+\subsubsection{With Clause}
+\begin{lstlisting}[language=sql]
+WITH max_balance(_value) as
+    SELECT max(balance)
+    FROM account
+SELECT account_number
+FROM account, max_balance
+WHERE account.balance = max_balance._value;
+\end{lstlisting}
+
+``WITH'' defines a local view and in ``WHERE'' use the local view. 
+
+\subsubsection{Complex Query Using With Clause}
+Use two ``WITH''. 
+
+\subsection{Modification of the Database}
+\subsubsection{Deletion}
+\begin{lstlisting}[language=sql]
+DELETE FROM <_table|_view>
+[WHERE <condition>]
+\end{lstlisting}
+
+在同一SQL语句内, 除非外层查询的元组变量引入内层查询, 否则层查询只进行一次. 
+
+\subsubsection{Insertion}
+\begin{lstlisting}[language=sql]
+INSERT INTO <_table|_view> [(c1,c2,...)]
+VALUES (e1,e2,..)
+
+INSERT INTO <_table|_view> [(c1,c2,...)]
+SELECT e1,e2,...
+FROM ...
+\end{lstlisting}
+
+The ``select from where'' statement is fully evaluated before any of its results are inserted into the relation.
+
+\subsubsection{Updates}
+\begin{lstlisting}[language=sql]
+UPDATE <_table|_view>
+SET <c1=e1[, c2=e2, ...]> 
+[WHERE <condition>]
+\end{lstlisting}
+
+\textbf{Case Statement for Conditional Updates}
+
+e.g. 
+\begin{lstlisting}[language=sql]
+UPDATE account
+SET balance = case
+    when balance <= 10000
+    then balance * 1.05
+    else balance * 1.06
+end
+\end{lstlisting}
+
+\textbf{Update of a View}
+
+建立在单个基本表上的视图, 且视图的列对应表的列, 称为``行列视图''
+\begin{itemize}
+    \item View 是虚表, 对其进行的所有操作都将转化为对基表的操作. 
+    \item 查询操作时, VIEW与基表没有区别, 但对VIEW的更新操作有严格限制, 如只有行列视图, 可更新数据. 
+\end{itemize}
+
+\subsubsection{Indexes}
+\begin{lstlisting}[language=sql]
+create table student(
+    ID varchar (5),
+    name varchar (20) not null,
+    dept_name varchar (20),
+    tot_cred numeric (3,0) default 0,
+    primary key (ID)
+)
+
+create index studentID_index on student(ID)
+\end{lstlisting}
+
+Indices are data structures used to speed up access to records with specified values for index attributes. 
+
+\subsubsection{Transactions}
+A transaction is a sequence of queries and data update statements executed as a single logical unit. Transactions are started implicitly and terminated by one of
+\begin{itemize}
+    \item COMMIT WORK: makes all updates of the transaction permanent in the database.
+    \item ROLLBACK WORK: undoes all updates performed by the transaction
+\end{itemize}
+
+The four properties of transaction are required: atomicity, isolation, consistency, durability. 
+
+
+\subsection{Joined Relations}
+
+Join operations take as input two relations and return as a result another relation.
+\begin{itemize}
+    \item Join condition --- defines which tuples in the two relations match, and what attributes are present in the result of the join. 
+    \begin{lstlisting}[language=sql,title={Join Conditions}]
+Natural on <predicate>
+using (A1,A2,...,An)
+    \end{lstlisting}
+    
+    \item Join type --- defines how tuples in each relation that do not match any tuple in the other relation (based on the join condition) are treated.
+    \begin{table}[H]
+        \centering
+        \begin{tabular}[c]{|r|}\hline
+            \makecell[c]{Join Types} \\ \hline
+            inner join \\
+            left outer join \\
+            right outer join \\
+            full outer join \\ \hline
+        \end{tabular}
+    \end{table}
+\end{itemize}
+
+\subsubsection{Combination of Join Type and Join Condition}
+\begin{itemize}
+    \item Natural join: 
+    \begin{lstlisting}[language=sql]
+R natural {inner join, left join, right join, full join} S
+    \end{lstlisting}
+    
+    \item Unnatural join: 
+    \begin{lstlisting}[language=sql]
+R {inner join, left join, right join, full join} S
+ON <predicate>
+USING (A1,A2,...,An)
+    \end{lstlisting}
+\end{itemize}
+Key word Inner, outer is optional. 
+\begin{itemize}
+    \item Natural join: 以同名属性相等作为连接条件
+    \item Inner join: 只输出匹配成功的元组
+    \item Outer join: 还要考虑不能匹配的元组
+\end{itemize}
+
+\subsubsection{Joined Relations in SQL}
+\begin{itemize}
+    \item 非自然连接, 容许不同名属性的比较, 且结果关系中不消去重名属性. 
+    \item 使用using的连接类似于natural连接, 但仅以using列出的公共属性为连接条件. 
+\end{itemize}

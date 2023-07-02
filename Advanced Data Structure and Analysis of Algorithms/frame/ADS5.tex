@@ -1,0 +1,74 @@
+\newpage
+\section{Binomial Queue}
+A binomial queue is not a heap-ordered tree, but rather a collection of heap-ordered trees, known as a forest. Each heap-ordered tree is a \hl{binomial tree}. 
+
+A binomial tree of height 0 is a one-node tree. A binomial tree, $B_k$, of height $k$ is formed by attaching a binomial tree, $B_{k-1}$, to the root of another binomial tree, $B_{k-1}'$. 
+
+$B_k$ consists of a root with $k$ children, which are $B_0$, $\dots$, $B_{k-1}$. $B_k$ has exactly $2^k$ nodes. The number of nodes at depth $d$ is $\begin{pmatrix}
+    k\\d
+\end{pmatrix}$ (Binomial coefficient).
+
+A priority queue of any size can be uniquely represented by a collection of binomial trees. (二进制)
+
+\subsection{Operations}
+
+\subsubsection{FindMin}
+The minimun key is in one of the roots. There are at most $\left\lceil \log N \right\rceil$ roots, hence $T_p=O(\log N)$. Or just remember the minimun, it's $O(1)$. 
+
+\subsubsection{Merge}
+二进制加法. 合并是任意的. $T_p=O(\log N)$. 
+Must keep the trees in the binomial queue sorted by height.
+
+\subsubsection{Insert}
+If the smallest nonexistent binomial tree is $B_i$ , then $T_p=Const(i+1)$. Performing $N$ Inserts on an initially empty binomial queue will take $O(N)$ worst-case time.  Hence the average time is constant.
+
+\subsubsection{DeleteMin}
+\begin{enumerate}
+    \item FindMin in $B_k$
+    \item Remove $B_k$ from H gets $H'$
+    \item Remove root from $B_k$ gets $H''$
+    \item Merge ($H'$,$H''$)
+\end{enumerate}
+
+\subsection{Implementation}
+\begin{lstlisting}[language={c++},title={Binomial Queue}]
+typedef struct BinNode *Position;
+typedef struct Collection *BinQueue;
+typedef struct BinNode *BinTree;
+
+struct BinNode{
+    ElementType Element;
+    Position LeftChild;
+    Position NextSibling;
+};
+
+struct Collection{
+    int CurrentSize;/* total number of nodes */
+    BinTree TheTrees[MaxTrees];
+};
+\end{lstlisting}
+
+\begin{lstlisting}[language={c++},title={MergeTrees}]
+BinTree MergeTrees(BinTree T1, BinTree T2){
+    if(T1->Element>T2->Element) return MergeTrees(T2, T1);
+    T2->NextSibling=T1->LeftChild;
+    T1->LeftChild=T2;
+    return T1;
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language={c++},title={Merge}]
+BinQueue Merge(BinQueue H1, BinQueue H2){
+
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language={c++},title={DeleteMin}]
+BinQueue DeleteMin(BinQueue H){
+
+}
+\end{lstlisting}
+\subsection{Analysis}
+\begin{claim}
+A binomial queue of $N$ elements can be built by $N$ successive insertions in $O(N)$ time. 
+\end{claim}

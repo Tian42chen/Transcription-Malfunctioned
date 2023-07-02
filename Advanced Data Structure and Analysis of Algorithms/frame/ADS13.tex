@@ -1,0 +1,171 @@
+\newpage
+\section{Randomized Algorithms}
+\begin{enumerate}\small
+    \item What to Randomize?
+    \subitem Average-case Analysis: The world behaves randomly --- randomly generated input solved by traditional algorithm
+    \subitem Randomized Algorithms: The algorithm behaves randomly --- make random decisions as the algorithm processes the worst-case input
+    \item Why Randomize?
+    \subitem Efficient deterministic algorithms that always yield the correct answer are a special case of 
+    \begin{itemize}
+        \item efficient randomized algorithms that only need to yield the correct answer with high probability. \item randomized algorithms that are always correct, and run efficiently in expectation. 
+    \end{itemize}
+\end{enumerate}
+
+\subsection{A Quick Review}
+\begin{itemize}
+    \item $Pr[A]:=$ the probability of the event $A$
+    \item $\bar{A}:=$ the complementary of the event $A$ ($A$ did not occur )
+    \begin{align*}
+        Pr[A]+Pr[\bar{A}]=1
+    \end{align*}
+    \item $E[X]:=$ the expectation (the ``average value'') of the random variable X
+    \begin{align*}
+        E[X]=\sum_{j=0}^\infty j \cdot Pr[X=j]
+    \end{align*}
+\end{itemize}
+
+\subsection{The Hiring Problem}
+\begin{itemize}
+    \item Hire an office assistant from headhunter 
+    \item Interview a different applicant per day for $N$ days
+    \item Interviewing Cost = $C_i$  $\ll$  Hiring Cost = $C_h$
+    \item Analyze interview \& hiring cost 
+\end{itemize}
+Assume M people are hired.
+
+Total Cost: $O(NC_i + MC_h)$
+
+\subsubsection{Naïve Solution}
+\begin{lstlisting}[language={c++}]
+int Hiring(EventType C[], int N){ /* candidate 0 is a least-qualified dummy candidate */  
+    int Best = 0;
+    int BestQ = the quality of candidate 0;
+    for(i=1;i<=N;i++){
+        Qi = interview(i); /* Ci */
+        if(Qi>BestQ){
+            BestQ = Qi;
+            Best = i;
+            hire(i);  /* Ch */
+        }
+    }
+    return Best;
+}
+\end{lstlisting}
+Worst case: The candidates come in increasing quality order $O(NC_h)$
+
+\subsubsection{Assume candidates arrive in random order}
+Randomness assumption: any of first $i$ candidates is equally likely to be best-qualified so far. 
+\begin{align*}
+    X &= \text{number of hires}\\
+    E[X]&=\sum_{j=1}^N j\cdot Pr[X=j]\\
+    X_i&=\left\{ \begin{array}[c]{ll}
+        1 & \text{if candidate $i$ is hired}\\
+        0 & \text{if candidate $i$ isn't hired}
+    \end{array} \right.\\
+    \Rightarrow&X=\sum_{i=1}^N X_i \\
+    & E[X_i]=Pr[\text{candidate $i$ is hired}]=\frac{1}{i}\\
+    \Rightarrow&E[X]=E\left[ \sum_{i=1}^NX_i \right]=\sum_{i=1}^N E[X_i]\\
+    \Rightarrow& O(C_h \ln N + N C_i)
+\end{align*}
+Radomized Algorithm: takes time to randomly permute the list of candidates;
+
+\paragraph{Radomized Permutation Algorithm}\quad 
+
+\textbf{Target}: Permute array $A[]$. 
+
+Assign each element $A[ i ]$ a random priority $P[ i ]$, and sort. 
+\begin{lstlisting}[language={c++}]
+void PermuteBySorting(ElemType A[], int N){
+    for(i=1;i<=N;i++)
+        A[i].P = 1 + rand()%(`$N^3$`); 
+        /* makes it more likely that all priorities are unique */
+    Sort A; /* using P as the sort keys*/
+}
+\end{lstlisting}
+\begin{claim}
+    PermuteBySorting produces a uniform random permutation of the input, assuming all priorities are distinct.
+\end{claim}
+
+\subsubsection{Online Hiring Algorithm – hire only once}
+\begin{lstlisting}[language={c++}]
+int OnlineHiring(EventType C[], int N, int k ){
+    int Best = N;
+    int BestQ = -`$\infty$` ;
+    for(i=1;i<=k;i++){
+        Qi = interview(i);
+        if(Qi>BestQ)BestQ = Qi;
+    }
+    for(i=k+1;i<=N;i++){
+        Qi = interview(i);
+        if(Qi>BestQ){
+            Best = i;
+            break;
+        }
+    }
+    return Best;
+}
+\end{lstlisting}
+
+$S_i:=$ the $i$-th applicant is the best. 
+
+$S_i$ is true if
+\begin{align*}
+    &\{ A:= \text{the best one is at position $i$} \} \\
+    \cap &\{ B:=  \text{no one at positions $k+1 \sim i-1$ are hired} \}    
+\end{align*}
+$A$ and $B$ are independent. 
+
+\begin{align*}
+    Pr[S_i]&=Pr[A\cap B]=Pr[A]\cdot Pr[B]\\
+    &=\frac{1}{N}\frac{k}{(i-1)}=\frac{k}{N(i-1)}\\
+    Pr[S]&=\sum_{i=k+1}^N Pr[S_i]=\sum_{i=k+1}^N\frac{k}{N(i-1)}=\frac{k}{N}\sum_{i=k}^{N-1}\frac{1}{i}
+\end{align*}
+
+The probability we hire the best qualified candidate for a given $k$:
+\begin{align*}
+    \frac{k}{N}\ln\left( \frac{N}{k} \right)\le Pr[S] \le \frac{k}{N}\ln\left( \frac{N-1}{k-1} \right)
+\end{align*}
+
+The best value of $k$ to maximize the above probability:
+\begin{align*}
+    f(k)&=\frac{k}{N}\ln\left( \frac{N}{k} \right)\\
+    f'(k)&=\frac{1}{N}\ln\left( \frac{N}{k} \right)-\frac{1}{N}=0\\
+    k&=\frac{N}{e}\\
+    f_{max}\left(\frac{N}{e}\right)&=\frac{1}{e}
+\end{align*}
+
+\subsection{Quicksort}
+Deterministic Quicksort
+\begin{itemize}
+    \item $\Theta (N^2)$ worst-case running time
+    \item $\Theta(N \log N)$ average case running time, assuming every input permutation is equally likely    
+\end{itemize}
+
+Central splitter $:=$ the pivot that divides the set so that each side contains at least $n/4$
+
+Modified Quicksort $:=$ always select a central splitter before recursions
+
+\begin{claim}
+    The expected number of iterations needed until we find a central splitter is at most 2.
+\end{claim} 
+
+\begin{align*}
+    Pr[\text{find a central splitter}]=\frac{1}{2}
+\end{align*}
+
+Type $j$ : the subproblem $S$ is of type $j$ if
+\begin{align*}
+    N\left( \frac{3}{4} \right)^{j+1}\le |S|\le N\left( \frac{3}{4} \right)^j
+\end{align*}
+
+
+\begin{claim}
+    There are at most $\left( \frac{4}{3} \right)^{j+1}$ subproblems of type $j$.
+\begin{align*}
+    &\left.\begin{array}[c]{l}
+        E[T_{type\ j}]=O\left( N\left( \frac{3}{4} \right)^j \right)\times \left( \frac{4}{3} \right)^{j+1}=O(N)\\
+        \text{Number of different types }=\log_{4/3}N=O(\log N)
+    \end{array}\right\}\\
+    &=O(N\log N)
+\end{align*}
+\end{claim} 

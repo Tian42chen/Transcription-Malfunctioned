@@ -1,0 +1,243 @@
+\documentclass{source/Paper}
+
+\begin{document}
+\tableofcontents
+% \newpage
+\section{Basic Knowledge 1}
+舍入误差, Taylor展开, 均值定理. 以及一些迭代公式与stable的问题. 
+
+    \subsection{Mean value theorem}
+
+    \subsection{Taylor expansion}
+
+    \subsection{Roundoff  error}
+
+\section{Solution of Equations}
+    分析收敛与稳定(Convergence + Stability)
+
+    \subsection{Solution of equations with one variable 2}
+    不动点法, 二分法, 牛顿法
+    \subsubsection{二分法}
+    \begin{theorem}
+        $f \in C[a,b]$ and $f(a)f(b)<0$. A sequence $\{p_n\}(n=0,1,2,\cdots)$ approximating a zero p of f with 
+        $\left| p_n-p \right|\le\frac{b-a}{2^n}$, where $n\ge1$.
+    \end{theorem}
+
+    不能有重根, 多根. 
+
+    \subsubsection{不动点}
+    \begin{align*}
+        f(x)=0 \Longleftrightarrow &x=g(x)
+    \end{align*}
+
+    \begin{theorem}
+        $g\in [a,b]$, $\exists g'(x)$ and $g'(x)=k$, $k\in(0,1)$, $p_n=g(p_{n-1})$, 数列收敛于唯一点
+    \end{theorem}
+
+    有\begin{align*}
+        &\left| p_n-p \right|\le \frac{1}{1-k}\left| p_{n+1}-p_n \right|\\
+        &\left| p_n-p \right|\le \frac{k^n}{1-k}\left| p_1-p_0 \right|
+    \end{align*}
+
+    \subsubsection{牛顿迭代}
+
+    \begin{theorem}
+        $f\in C^2[a,b]$, $p\in[a,b]$, f(p)=0, $f'(p)\ne 0$, $\exists \delta>0$, $\{p_n\}$, $p_0\in[p-\delta,p+\delta]$
+    \end{theorem}
+
+    \begin{align*}
+        p_n=p_{n-1}-\frac{f(p_{n-1})}{f'(p_{n-1})}, n\ge 1
+    \end{align*}
+
+    \subsubsection{误差}
+    \begin{theorem}
+        $\{p_n\}$收于p, $\exists \alpha, \lambda >0$, \[\lim_{n \to \infty} \frac{\left| p_{n+1}-p \right|}{\left| p_n-p \right|^{\alpha}}=\lambda\]
+    \end{theorem}
+    
+    $\{p_n\}$converges to $p$ of order(阶) $\alpha$, with asymptotic error constant(渐进误差常数) $\lambda$.
+
+    解决牛顿重根降阶, 将根变位: 
+    \begin{align*}
+        g(x)=x-\frac{f(x)f'(x)}{f'^2(x)-f(x)ff''(x)}
+    \end{align*}
+
+    \subsection{Direct Matrix Solver 6}
+    高斯消元(会不可用的情况), LU分解, 其他分解
+    \begin{align*}
+        A\vec{x}=b
+    \end{align*}
+    \subsubsection{高斯消元}
+    可解性见线代. 
+
+    \subsubsection{LU分解}
+    若$\left| L \right|=1$, 则分解唯一. 用$L\vec{y}=\vec{b}$, 再$U\vec{x}=\vec{y}$求解. 
+
+    \subsection{Iterative Matrix Solver 7}
+    雅可比, 高斯-赛德尔方法, 松弛迭代
+    \subsubsection{范数}
+    向量范数
+    \begin{enumerate}
+        \item $\left\| \vec{x} \right\|_1=\sum_{i=1}^{n}\left| x_i\right|$
+        \item $\left\| \vec{x} \right\|_2=\sqrt{\sum_{i=1}^{n}\left| x_i\right|^2}$
+        \item $\left\| \vec{x} \right\|_p=(\sum_{i=1}^{n}\left| x_i\right|^p)^{\frac{1}{p}}$
+        \item $\left\| \vec{x} \right\|_{\infty}=\max_{1\le i\le n}\left| x_i\right|$
+    \end{enumerate}
+
+    矩阵范数
+    \begin{enumerate}
+        \item Frobenius Norm: $\left\| A \right\|_F=\sqrt{\sum_{i=1}^n\sum_{j=1}^n\left|a_{ij}\right|^2}$
+        \item Natural Norm(operator norm): 
+        \begin{align*}
+            \left\| A \right\|_p&=\max_{\vec{x}\ne0}\frac{\left\| A\vec{x} \right\|_p}{\left\| \vec{x} \right\|_p}\\
+            &=\max_{\left\| \vec{x} \right\|_p=1}\left\| A\vec{x} \right\|_p
+        \end{align*}
+        \begin{enumerate}
+            \item $\left\| A \right\|_{\infty}=\max_{1\le i\le n}\sum_{j=1}^n\left| a_{ij} \right|$
+            \item $\left\| A \right\|_{1}=\max_{1\le j\le n}\sum_{i=1}^n\left| a_{ij} \right|$
+            \item $\left\| A \right\|_{2}=\sqrt{\lambda_{max}(A^T A)}$(spectral norm)(谱范数)
+        \end{enumerate}
+
+    \end{enumerate}
+
+    \subsubsection{Jacobi迭代}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.18\textwidth]{DLU}
+        \caption{A=(D-L-U)}
+    \end{figure}
+    
+    $\vec{x}^{(k)}=D^{-1}(L+U)\vec{x}^{(k-1)}+D^{-1}\vec{b}$
+
+    \subsubsection{Gauss-Seidel迭代}
+    $\vec{x}^{(k)}=(D-L)^{-1}U\vec{x}^{(k-1)}+(D-L)^{-1}\vec{b}$
+
+
+    \subsubsection{松弛迭代}
+
+    $\vec{x}^{(k)}=(D-\omega L)^{-1}[(1-\omega)D+\omega U]\vec{x}^{(k-1)}+(D-\omega L)^{-1}\omega\vec{b}$
+
+    \begin{enumerate}
+        \item 若 $a_{ii}\ne 0$, 且 $\rho(T_{\omega})\ge |\omega-1|$, 迭代要求 $0<\omega<2$
+        \item 若A正定, 且$0<\omega<2$, 则迭代收
+        \item 若A正定且三对角, $\rho(T_g)=[\rho(T_j)]^2<1$, 则$\omega=\frac{2}{1+\sqrt{1-[\rho(T_j)]^2}}$最优, 且有$\rho(T_{\omega})=\omega-1$
+    \end{enumerate}
+
+    \subsubsection{迭代收敛}
+    $\vec{x}^{(k)}=T\vec{x}^{(k-1)}+\vec{C}$
+
+    $\vec{e}^{(k)}=T^k\vec{e}^{(0)}$
+
+    当且仅当$\rho(T)<1$时收. $\rho(T)=max|\lambda|$(最大特征值)
+
+    误差
+    \begin{align*}
+        \left\| \vec{x}-\vec{x}^{(k)} \right\|\le \frac{\left\| T \right\|^k}{1-\left\| T \right\|}\left\| \vec{x}^{(1)}-\vec{x}^{(0)} \right\|
+    \end{align*}
+
+    $A(\vec{x}+\delta\vec{x})=\vec{b}+\delta\vec{b}$, 
+    \begin{align*}
+        \frac{\left\| \delta\vec{x} \right\|}{\left\| \vec{x} \right\|}\le \left\| A \right\|\left\| A^{-1} \right\|\frac{\left\| \delta\vec{b} \right\|}{\left\| \vec{b} \right\|}
+    \end{align*}
+
+    $K(A)=\left\| A \right\|\left\| A^{-1} \right\|$被叫做条件数/放大因子. 
+    \begin{enumerate}
+        \item 若A对称, $K(A)_2=\frac{\max |\lambda|}{\min |\lambda|}$
+        \item $K(A)_p\ge1$
+        \item 若A正交矩($A^{-1}=A^T$), $K(A)_2=1$
+        \item $K(\alpha A)=K(A)$
+        \item $K(RA)_2=K(AR)_2=K(A)_2$
+    \end{enumerate}
+
+    \subsection{Initial value problem 5}
+    (微分方程)Euler, Runge-kutta, multi-step, 隐式与显示
+
+\section{Interpolation and approximation}
+    插值与逼近, 分析Error
+
+    \subsection{interpolation 3}
+    Lagrange polynomial, Piecewise polynomial, 其他多项式
+
+    \subsubsection{Lagrange多项式}
+    \begin{align*}
+        P(x)&=\sum_{k=0}^nf(x_k)L_{n,k}(x) \\
+        L_{n,k}(x)&=\prod_{i=0,i\ne k}^n\frac{x-x_i}{x_k-x_i}\\
+        &=\left\{ \begin{matrix}
+            0, & x=x_i, &i\ne k \\
+            1, & x=x_k
+        \end{matrix} \right.
+    \end{align*}
+
+    $R_n(x)=\frac{f^{(n+1)(\xi_x)}}{(n+1)!}\prod_{i=0}^n(x-x_i)$
+
+    Lagrange多项式是唯一的. 
+
+    \subsubsection{Neville’s Method}
+    定义$P_{m_1,\cdots, m_k}(x)$为 $x_{m_1},\cdots, x_{m_k}$插值
+    \begin{align*}
+        P(x)=\frac{(x-x_j)P_{0,\cdots,j-1,j+1,\cdots,k}(x)-(x-x_i)P_{0,\cdots,i-1,i+1,\cdots,k}(x)}{x_i-x_j}
+    \end{align*}
+
+    \subsubsection{Newton’s Divided Differences}
+    \begin{align*}
+        f[x_0,\cdots,x_{k+1}]=\frac{f[x_0,\cdots,x_{k}]-f[x_0,\cdots,x_{k-1},x_{k+1}]}{x_k-x_{k+1}}
+    \end{align*}
+
+    $f(x)=N_n(x)+R_n(x)$, 
+    \begin{align*}
+        N_n(x)=& f\left(x_{0}\right)+f\left[x_{0}, x_{1}\right]\left(x-x_{0}\right)+f\left[x_{0}, x_{1}, x_{2}\right]\left(x-x_{0}\right)\left(x-x_{1}\right)\\
+        &+\ldots +f\left[x_{0}, \ldots,x_{n}\right]\left(x-x_{0}\right) \ldots\left(x-x_{n-1}\right) \\
+        R_n(x)=& f\left[x, x_{0}, \ldots, x_{n}\right]\left(x-x_{0}\right) \ldots\left(x-x_{n-1}\right)\left(x-x_{n}\right)
+    \end{align*}
+
+    \subsubsection{Hermite插值}
+    \begin{align*}
+        H_{2n+1}(x)&=\sum_{i=0}^n f(x_i)h_i(x)+\sum_{i=0}^nf'(x_i)\hat{h}_i(x)\\
+        h_i(x)&=\delta_{ij}, h'_i(x)=0\\
+        \hat{h}_i(x)&=0, \hat{h}'_i(x)=\delta_{ij}\\
+        R_n(x)&=\frac{f^{(2n+2)}(\xi_x)}{(2n+2!)\prod_{i=0}^n(x-x_i)^2}
+    \end{align*}
+
+    \subsubsection{Cubic Spline}
+    S(x)
+    \begin{enumerate}
+        \item $S_i(x)$为$[x_i,x_{i+1}]$区间
+        \item $S(x_i)=f(x_i)$, (n+1)个
+        \item $S_{i+1}(x_{i+1})=S_i(x_{i+1})$, (n-1)个
+        \item $S'_{i+1}(x_{i+1})=S'_i(x_{i+1})$, (n-1)个
+        \item $S''_{i+1}(x_{i+1})=S''_i(x_{i+1})$, (n-1)个
+    \end{enumerate}
+    (具体见笔记)
+
+    更多条件:
+    \begin{enumerate}
+        \item $S'(a)=f'(x_0), S'(b)=f'(x_n)$ 导数边界
+        \item $S''(a)=f''(x_0), S''(b)=f''(x_n)$ 为0时叫Natural Spline
+        \item $S'(a^+)=S'(b^-)$
+    \end{enumerate}
+
+    \subsection{Numerical differentiation and Numerical integration 4}
+    数值微分与数值积分, 很多法则
+
+    \subsection{approximation 8}
+    Least squares, Orthogonal polynomials, Chebyshev polynomial
+    
+
+    
+\section{误差}
+\begin{enumerate}
+    \item 舍入误差(计算机带来的)
+    \item 真值误差(解方程)
+    \item 截断误差(插值与逼近)
+\end{enumerate}
+
+Lagrange polynomial
+\begin{align*}
+    R_n(x)=\frac{f^{(n+1)}(\xi_x)}{(n+1)!}\prod_{i=0}^{n}(x-x_i)
+\end{align*}
+
+Taylor expansion
+\begin{align*}
+    R_n(x)=\frac{f^{(n+1)}(\xi_x)}{(n+1)!}(x-x_0)^{n+1}
+\end{align*}
+
+\end{document}

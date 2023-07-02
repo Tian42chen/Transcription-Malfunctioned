@@ -1,0 +1,142 @@
+\newpage
+\section{Local Search}
+Solve problems approximately --- aims at a local optimum. 
+
+Framework of Local Search:
+\begin{itemize}\small
+    \item Loacl 
+    \subitem Define neighborhoods in the feasible set. 
+    \subitem A local optimum is a best solution in a neighborhood. 
+    \item Search 
+    \subitem Start with a feasible solution and search a better one within the neighborhood. 
+    \subitem A local optimum is achieved if no improvement is possible. 
+\end{itemize}
+
+Neighbor Relation:
+\begin{itemize}\small
+    \item  $S \sim S'$ : $S'$ is a neighboring solution of $S$ --- $S'$ can be obtained by a small modification of $S$.
+    \item  $N(S)$: neighborhood of $S$ --- the set $\{ S': S \sim S' \}$.
+\end{itemize}
+\begin{lstlisting}[language={c++}]
+SolutionType Gradient_descent(){
+    Start from a feasible solution S in FS;
+    MinCost=cost(S);
+    while(1){
+        S_=Search(N(S)); /* find the best S_ in N(S) */
+        CurrentCost=cost(S_);
+        if(CurrentCost<MinCost){
+            MinCost=CurrentCost;    
+            S=S_;
+        }
+        else  break;
+    }
+    return S;
+}
+\end{lstlisting}
+
+\subsection{The Vertex Cover Problem}
+Given an undirected graph $G = (V, E)$. Find a minimum subset $S$ of $V$ such that for each edge $(u, v)$ in $E$, either $u$ or $v$  is in $S$.
+
+\begin{itemize}
+    \item Feasible solution set $FS$ : all the vertex covers. 
+    \item $cost(S)=|S|$
+    \item $S\sim S'$: Each vertex cover $S$ has at most $|V|$ neighbors
+    \item Search: Start from $S = V$; delete a node and check if $S'$ is a vertex cover with a smaller cost.
+\end{itemize}
+
+\subsection{Simulated Annealing}
+The material is cooled very gradually from a high temperature, allowing it enough time to reach equilibrium at a succession of intermediate lower temperatures.
+
+\subsection{Hopfield Neural Networks}
+Graph $G = (V, E)$ with integer edge weights $w$ (positive or negative).
+\begin{itemize}
+    \item If $w_e < 0$, where $e = (u, v)$, then $u$ and $v$ want to have the same state($\pm 1$). 
+    \item if $w_e > 0$ then $u$ and $v$ want different states.
+\end{itemize}
+The absolute value $|w_e|$ indicates the strength of this requirement.
+
+Find a sufficiently good configuration $S$ of the network --- an assignment of the state $s_u$ to each node $u$. 
+
+\begin{definition}
+    In a configuration $S$, edge $e = (u, v)$ is good if $w_e s_u s_v < 0$ ($w_e < 0$ iff $s_u = s_v$ ); otherwise, it is bad.
+\end{definition}
+\begin{definition}
+    In a configuration $S$, a node $u$ is satisfied if the weight of incident good edges $\ge$ weight of incident bad edges.
+    \begin{align*}
+        \sum_{u,v:e=(u,v)\in E}w_es_us_v\le 0
+    \end{align*}
+\end{definition}
+\begin{definition}
+    A configuration is stable if all nodes are satisfied. 
+\end{definition}
+
+\subsubsection{State-flipping Algorithm}
+\begin{lstlisting}[language={c++}]
+ConfigType State_flipping(){
+    Start from an arbitrary configuration S;
+    while(!IsStable(S)){
+        u = GetUnsatisfied(S);
+        su = -su;
+    }
+    return S;
+}
+\end{lstlisting}
+\begin{claim}
+    The state-flipping algorithm terminates at a stable configuration after at most $\displaystyle W = \sum_e|w_e|$ iterations.
+\end{claim}
+
+Related to Local Search:
+\begin{itemize}
+    \item Problem:  To maximize $\Phi$.
+    \item Feasible solution set FS: configurations
+    \item $S\sim S'$: $S'$ can be obtained from $S$ by flipping a single state
+\end{itemize}
+\begin{claim}
+    Any local maximum in the state-flipping algorithm to maximize $\Phi$ is a stable configuration.
+\end{claim}
+
+\subsection{The Maximum Cut Problem}
+Given an undirected graph $G = (V, E)$ with positive integer edge weights $w_e$, find a node partition $(A, B)$ such that the total weight of edges crossing the cut is maximized.
+\begin{align*}
+    w(A,B):=\sum_{u\in A, v\in B}w_{uv}
+\end{align*}
+
+Related to Local Search:
+\begin{itemize}
+    \item Problem:  To maximize $\displaystyle \Phi(S)=\sum_{e\text{ is good}}|w_e|$.
+    \item Feasible solution set FS: any partition $(A, B)$ 
+    \item $S\sim S'$: $S'$ can be obtained from $S$ by moving one node from $A$ to $B$, or one from $B$ to $A$.
+\end{itemize}
+A special case of Hopfield Neural Network with $w_e$ all being positive. 
+
+\begin{claim}
+    Let $(A, B)$ be a local optimal partition and let $(A^*, B^*)$ be a global optimal partition.  Then $w(A, B) \ge \frac{1}{2} w(A^*, B^*)$.
+\end{claim}
+Unless P = NP, no $17/16$(1.0625) approximation algorithm for MAX-CUT.
+
+\subsubsection{Big-improvement-flip}
+Only choose a node which, when flipped, increases the cut value by at least
+\begin{align*}
+    \frac{2\varepsilon}{|V|}w(A,B)
+\end{align*}
+\begin{claim}
+    Upon termination, the big-improvement-flip algorithm returns a cut $(A, B)$ so that
+    \begin{align*}
+        (2+\varepsilon)w(A, B)\ge w(A^*, B^*)
+    \end{align*}
+\end{claim}
+
+Since $\forall x\ge 1$, we have $\left( 1+\frac{1}{x} \right)^x\ge 2$, so the objective function doubles at least every $\frac{n}{\varepsilon}$  flips.
+
+\begin{claim}
+    The big-improvement-flip algorithm terminates after at most $O\left( \frac{n}{\varepsilon}\log W \right)$ flips.
+\end{claim}
+
+\subsubsection{K-L heuristic}
+A better local, k-flip. 
+\begin{enumerate}
+    \item [Step 1] make 1-flip as good as we can - $O(n)$ $\Rightarrow$ $(A_1, B_1)$ and $v_1$
+    \item [Step k] make 1-flip of an unmarked node as good as we can - $O(n-k+1)$ $\Rightarrow$ $(A_k, B_k)$ and $v_1, \dots, v_k$
+    \item [Step n] $(A_n, B_n)=(B, A)$
+\end{enumerate}
+Neighborhood of $(A, B) = \{ (A_1, B_1), \dots, (A_{n-1}, B_{n-1}) \}$ - $O(n^2)$
