@@ -101,7 +101,8 @@
 	%行距
 	\linespread{1.2}
 	%目录深度
-	\setcounter{secnumdepth}{3}
+	\setcounter{secnumdepth}{4}
+	\setcounter{tocdepth}{4}
 %
 
 %多级标题
