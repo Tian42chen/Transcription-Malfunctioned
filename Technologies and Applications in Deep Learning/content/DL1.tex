@@ -50,7 +50,13 @@ $f(\cdot; \theta)$:
     \item 多层感知机 (MLP): $>3$层, 单层就叫fc即可
     \item 卷积神经网络 (CNN): 局部特征带有噪声
     \item 循环神经网络 (RNN): 越后期的输入影响越大
-    \item Transformer: 自注意力 %TODO 补图
+    \item Transformer: 自注意力 
+    \begin{figure}[!htb]
+        \centering
+        \includegraphics[width=0.14\textwidth]{pic/DL1/Transformer.png}
+        \caption{Transformer}
+    \end{figure}
+    
     \item 图网路 (GNN): 顶点与边都是特征
 \end{enumerate}
 
@@ -99,10 +105,10 @@ $C' \gg C$
 \begin{align*}
     v^T W \rightarrow S
 \end{align*}
-词典$v\in R^{5\times 1}$, $W\in R^{5\times 128}$, $S \in R^{5\times 128}$
+词典$v\in \mathbb{R}^{5\times 1}$, $W\in \mathbb{R}^{5\times 128}$, $S \in \mathbb{R}^{5\times 128}$
 
 \paragraph{点云 (point cloud or point set)}
-不规则无序的三维点集合 $P \in R^{N\times 3}$, 点位置连续但点不连续
+不规则无序的三维点集合 $P \in \mathbb{R}^{N\times 3}$, 点位置连续但点不连续
 
 \paragraph{点云视频}
 点集合列表, 三维点 (不规则, 无序, 位置连续)+一维时间 (规则有序, 位置离散)
@@ -118,7 +124,7 @@ $C' \gg C$
 
 \subsection{大作业背景介绍}
 
-找相关区域, 然后对其进行编码找特征. 使用自注意力追踪. 
+Transformer 找相关区域, 然后对其进行编码找特征. 使用自注意力追踪. 
 
 三维动作点云需要时空解耦
 
