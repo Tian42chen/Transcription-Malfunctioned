@@ -1,4 +1,4 @@
-\LoadClass[twoside,twocolumn]{ctexart}
+\LoadClass[twoside,twocolumn, 10pt]{ctexart}
 %宏包
 \RequirePackage{xeCJK}
 \RequirePackage{graphicx}
