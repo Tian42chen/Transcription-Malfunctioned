@@ -1,0 +1,28 @@
+\newpage
+\section{三维点云理解}
+\subsection{静态点云}
+\subsubsection{任务}
+分类+分割
+\subsubsection{挑战}
+对无序的不变性
+
+\subsubsection{建模}
+\paragraph{PointNet}
+对坐标求特征后过maxpooling. 
+
+有个变换矩阵, 但这个矩阵是全局的, 不可能有用. 
+
+\paragraph{PointNet++}
+$\left(\enspace{}^{\circ}\;\forall\;{}_{\circ}\enspace\right)$
+
+\paragraph{DGCNN} 动态图卷积神经网络—处理图数据
+
+\subsection{点云视频}
+\subsubsection{任务}
+动作识别+语义分割
+\subsubsection{建模}
+\paragraph{PSTNet++}
+帧级 Attention, 隐含假设所有点在所有帧中都出现了
+
+\paragraph{PST-Transformer}
+视频级 Attention
