@@ -1,0 +1,116 @@
+\newpage
+\section{生成模型}
+输入: 一堆向量, 表示特征
+
+输出: 图片
+
+什么是好的生成模型? 给定训练集, 产生与训练集同分布的样本. 
+%TODO 补图
+\begin{align*}
+    G^*=\arg \min_G Div(P_G, P_{data})
+\end{align*}
+
+
+\subsection{Variational AutoEncoder(VAE)}
+\subsubsection{AutoEncoder(AE)}
+图像有冗余, 所以可以降维. 
+%TODO　补图
+\begin{align*}
+    loss=\| x-\hat{x} \|_2
+\end{align*}
+
+Why VAE: 填补训练中没有的数据. 
+
+\subsubsection{Denoising AutoEncoder (DAE)}
+输入: 有噪音的图像
+
+输出: 图像
+
+但输入输出仍是一一对应的关系. 
+
+\subsubsection{VAE}
+%TODO 补图
+
+Encoder 输出 $\mu, \sigma$, 即输出一个预测输入的正态分布. 
+
+重参数化, 从标准正态分布采样, 然后将标准正态分布变为目标正态分布, 以此就可以求得导数. 
+\begin{align*}
+    N(0,1)\rightarrow N(\mu, \sigma)
+\end{align*}
+
+loss 为 KL 散度, 目的是想让Encoder输出的预测更接近标准正态分布($\sigma \rightarrow 1$), 因为纯Encoder会更倾向于$\sigma \rightarrow 0$ (退化为 AE). 
+\begin{align*}
+    loss=
+\end{align*}
+
+\subsubsection{数学推导}
+
+KL散度
+\begin{align*}
+    D_{KL}(P||Q)=P\log \left(\frac{P}{Q}\right)
+\end{align*}
+衡量两个分布之间的距离. 
+
+极大似然估计, $\int_z q(z|x)dz=1$, $P(z,x)=P(z|x)P(x)=P(x|z)P(z)$
+\begin{align*}
+    P(x)&=\int_z P(z)P(x|z)dz\\
+    L&=\sum_x\log P(x) \text{ 尽量大}\\
+    \log P(x)&=\int_z q(z|x)\log P(x)dz\\
+    &=\int_z q(z|x) \log\left( \frac{P(z,x)}{P(z|x)} \right)dz\\
+    &=\int_z q(z|x) \log\left( \frac{P(z,x)}{q(z|x)}\frac{q(z|x)}{P(z|x)} \right)dz\\
+    &=\int_z q(z|x) \log\left( \frac{P(z,x)}{q(z|x)} \right)dz\\
+    &+\underbrace{\int_z q(z|x) \log\left( \frac{q(z|x)}{P(z|x)} \right) dz}_{D_{KL}(q(z|x)||P(z|x))}\\
+    &\ge\int_z q(z|x) \log\left( \frac{P(z|x)P(z)}{q(z|x)} \right) dz
+\end{align*}
+$P(z)$为正态分布, $x|z \sim N(\mu(z), \sigma(z))$, $\mu(z), \sigma(z)$为待估计的参数. 
+
+\begin{align*}
+    L_b&=\int_z q(z|x) \log\left( \frac{P(z|x)P(z)}{q(z|x)} \right)dz \\
+    &=\underbrace{\int_z q(z|x) \log\left( \frac{P(z)}{q(z|x)} \right) dz}_{-D_{KL}(q(z|x)|| P(z))}+\underbrace{\int_z q(z|x) \log P(x|z) dz}_{\|x-\bar{x} \|_2}\\
+    &\le \int_z q(z|x) \log P(x|z) dz
+\end{align*}
+当$D_{KL}(q(z|x)|| P(z))=0$时取等号. 最大化其下界, 近似最大化其最大值
+
+\subsubsection{总结}
+
+
+\subsection{GAN}
+输入: 取自特定分布的随机噪声
+
+输出: 采样自训练样本分布图像
+
+即从特定分布到图像的映射
+
+生成器与判别器(生成器与VAE的decoder其实是一样的)
+
+\subsubsection{训练}
+使用minmax方式联合训练
+\begin{align*}
+    \min_{\theta_g}\max_{\theta_d}\left[ \mathbb{E}  \right]
+\end{align*}
+先优化$\theta_d$再优化$\theta_g$. 
+
+
+交替完成
+\begin{enumerate}
+    \item G
+    \item G
+    
+    \subitem 但这个函数不是很好
+
+    \subitem 小寄巧:取最大值
+    \begin{align*}
+        \max E -\log(D(G(z)))
+    \end{align*}
+\end{enumerate}
+
+\subsubsection{证明}
+
+极大化似然估计等价于最小化KL散度
+
+\begin{align*}
+    \theta^*&=
+\end{align*}
+
+
+\subsection{Diffusion model}
