@@ -1,22 +1,22 @@
 \newpage
 \section{Image Classification pipeline}
 
-Problem: Semantic Gap (计算机与人看到的完全不一样)
+\textbf{Problem}: Semantic Gap (计算机与人看到的完全不一样)
 
-Challenges:
+\textbf{Challenges}:
 \begin{enumerate}
-    \item Viewpoint variation
-    \item Illumination
-    \item Deformation
-    \item Occlusion
-    \item Background Clutter
-    \item Intraclass variation
+    \item Viewpoint variation (视点变化)
+    \item Illumination (光照)
+    \item Deformation (形变)
+    \item Occlusion (遮挡)
+    \item Background Clutter (杂乱背景)
+    \item Intraclass variation (类内变化)
 \end{enumerate}
 
-An image classifier: 
+\textbf{An image classifier}: 
 no obvious way to hard-code the algorithm for recognizing a cat, or other classes. 一个尝试是找角落(有一定的不变性, 但不多)
 
-Data-Driven Approach:
+\textbf{Data-Driven Approach}:
 \begin{enumerate}
     \item Collect a dataset of images and labels
     \item Use Machine Learning to train a classifier
@@ -31,7 +31,7 @@ Predict the label of the most similar training image(然后预测为最接近记
 Example Dataset CIFAR10 
 \subsubsection{Distance Metric} to compare images 
 
-L1 distance:
+\textbf{L1 distance}:
 \begin{align*}
     d_1(I_1, I_2)=\sum_p |I_1^p -I_2^p|
 \end{align*}
@@ -48,7 +48,7 @@ Instead of copying label from nearest neighbor, take \textbf{majority vote} from
 \end{figure}
 
 \subsubsection{Distance Metric}
-L2 (Euclidean) distance
+\textbf{L2 (Euclidean) distance}:
 \begin{align*}
     d_2(I_1, I_2)=\sqrt{\sum_p(I_1^p-I_2^p)^2}
 \end{align*}
@@ -56,7 +56,7 @@ L2 (Euclidean) distance
 \subsubsection{Hyperparameters}
 choices about the algorithm that we set rather than learn. Must try them all out and see what works best
 
-Setting Hyperparameters: 
+\paragraph{Setting Hyperparameters}: 
 \begin{enumerate}
     \item Choose hyperparameters that work best on the data 过拟合训练集
     \item Split data into train and test, choose hyperparameters that work best on test data 过拟合测试集
@@ -64,10 +64,10 @@ Setting Hyperparameters:
     \item Cross-Validation (Useful for small datasets, but not used too frequently in deep learning) Split data into folds, try each fold as validation and average the results
 \end{enumerate}
 
-k-Nearest Neighbor on images never used.
+\paragraph{k-Nearest Neighbor on images never used}
 \begin{enumerate}
     \item Very slow at test time
-    \item Distance metrics on pixels are not informative
+    \item Distance metrics on pixels are not informative (这种距离定义不太好)
     \item Curse of dimensionality (训练的点需要尽可能覆盖空间, 但这不太可能)
 \end{enumerate}
 

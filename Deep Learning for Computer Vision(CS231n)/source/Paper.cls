@@ -119,7 +119,7 @@
 	\titleformat*{\section}{\large\bfseries}
 	\titleformat*{\subsection}{\normalsize\bfseries}
 	\titleformat*{\subsubsection}{\normalsize\slshape}
-	\titleformat*{\paragraph}{\small\bfseries}
+	\titleformat*{\paragraph}{\normalsize\bfseries}
 	%多级标题间隔
 	\titlespacing{\section}{0pt}{*1.5}{*1.5}
 	\titlespacing{\subsection}{2em}{*1}{*1}
