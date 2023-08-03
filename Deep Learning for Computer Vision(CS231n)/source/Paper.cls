@@ -101,7 +101,7 @@
 	%行距
 	\linespread{1.2}
 	%目录深度
-	\setcounter{secnumdepth}{4}
+	\setcounter{secnumdepth}{3}
 	\setcounter{tocdepth}{4}
 %
 
@@ -110,7 +110,7 @@
 	\titlecontents{section}[0pt]{\addvspace{1pc}\bfseries}{\thecontentslabel\quad}{}{\titlerule*[8pt]{$\cdot$}\contentspage}
 	\titlecontents{subsection}[1em]{\vspace{0.1cm}\normalsize}{\thecontentslabel\quad}{}{\titlerule*[8pt]{$\cdot$}\contentspage}
 	\titlecontents{subsubsection}[2em]{\vspace{0.1cm}\small}{\thecontentslabel\quad}{}{\titlerule*[8pt]{$\cdot$}\contentspage}
-	\titlecontents{paragraph}[2em]{\vspace{0.1cm}\small}{\thecontentslabel\quad}{}{\titlerule*[8pt]{$\cdot$}\contentspage}
+	\titlecontents{paragraph}[2em]{\vspace{0.1cm}\small}{\thecontentslabel\quad}{\quad\quad\quad}{\titlerule*[8pt]{$\cdot$}\contentspage}
 	%多级标题命名格式
 	\renewcommand\thesection{\Roman{section}}
 	\renewcommand\thesubsection{\arabic{subsection}.}
