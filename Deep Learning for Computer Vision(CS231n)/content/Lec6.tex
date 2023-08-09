@@ -107,7 +107,6 @@ Probelm: 计算需要 $\exp$.
 Problem: 参数翻倍. 
 
 \subsection{Data Preprocessing}
-\subsubsection{Step 1: Preprocess the data}
 \begin{figure}[!htb]
     \centering
     \includegraphics[width=0.42\textwidth]{pic/Lec6/Preprocess the data}
@@ -119,8 +118,8 @@ Problem: 参数翻倍.
 尝试: 
 \begin{enumerate}
     \item 若权重全初始化为0, 则大多数神经元会被同化(输入输出相同, 获得的梯度相同)
-    \item 若权重被初始化为一个随机小值(标准差为0.01的Gaussian随机), 对小网络还行, 对深度的网络不行.  因为输出会渐渐变小(因为小的参数), 导致网络会向0坍缩. 且因为参数小, 梯度也很小, 传播下来也坍缩为0了. 
-    \item 若权重被初始化为一个随机值(标准差为1的Gaussian随机), 几乎所有神经元都完全饱和, 梯度会消失. 
+    \item 若权重被初始化为一个随机小值(平均值为0, 标准差为0.01的Gaussian随机), 对小网络还行, 对深度的网络不行.  因为输出会渐渐变小(因为小的参数), 导致网络会向0坍缩. 且因为参数小, 梯度也很小, 传播下来也坍缩为0了. 
+    \item 若权重被初始化为一个随机值(平均值为0, 标准差为1的Gaussian随机), 几乎所有神经元都完全饱和, 梯度会消失. 
     \item 目的是使每一层的激活值的方差保持相同, 从而防止梯度爆炸或消失(数学推导假定线性激活). 
     \item 多个$/2$对ReLU进行调整. 
 \end{enumerate}
@@ -154,4 +153,36 @@ Problem: 参数翻倍.
 
 
 \subsection{Babysitting the Learning Process}
-% \subsection{Hyperparameter Optimization}
+确认 loss 是合理的, 在特定的初始化下loss可以估计, 确认未训练的网络loss符合估计. 比如对于使用 Softmax loss 的 10 个类别的分类器, 初始的 loss 应该为 $-\ln \left( \frac{e^{0.1}}{10*e^{0.1}} \right)= -\ln 0.1 \approx 2.3$. 当再加入正则化时, loss也理应提升. 
+
+\subsubsection{Try to train}
+\begin{enumerate}
+    \item 确保可以过拟合极小的数据. 
+    \item 从小的正则化与学习率开始
+    \subitem 学习率过小, loss不下降 (但准确率可能上升, 因为还是有在学的)
+    \subitem 学习率过大, loss会爆炸
+\end{enumerate}
+
+\subsection{Hyperparameter Optimization}
+\subsubsection{Cross-validation strategy}
+在训练集上训练, 然后在测试集上测试. 在测试集上:
+\begin{enumerate}
+    \item 仅训练几个 epochs 来粗略观察参数是否有效
+    \item 更长的训练, 更细的调整. 
+\end{enumerate}
+当调整后的 loss 超过原loss3倍以上, 可以不用再试了. 
+
+可以调整:
+\begin{itemize}
+    \item 参数分布 (linear or log )
+    \item 参数范围
+    \item 参数的采样 (网格或随机)
+\end{itemize}
+
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=0.309\textwidth]{pic/Lec6/learning rate.png}
+    \caption{learning rate}
+\end{figure}
+
+loss 不变后突然下降: 可能是因为初始化不好. 
