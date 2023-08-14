@@ -177,12 +177,21 @@ Problem: 参数翻倍.
     \item 参数分布 (linear or log )
     \item 参数范围
     \item 参数的采样 (网格或随机)
+    \begin{figure}[!htb]
+        \centering
+        \includegraphics[width=0.42\textwidth]{pic/Lec6/Hyperparameter search}
+        \caption{Hyperparameter search}
+    \end{figure}
 \end{itemize}
+
 
 \begin{figure}[!htb]
     \centering
     \includegraphics[width=0.309\textwidth]{pic/Lec6/learning rate.png}
     \caption{learning rate}
+    \label{learning rate}
 \end{figure}
 
-loss 不变后突然下降: 可能是因为初始化不好. 
+loss 不变后突然下降: 可能是因为初始化不好. 不同的学习率也会导致loss不同的行为, 如 \textbf{Figure} \ref{learning rate}. 
+
+若训练集准确率远高于测试集, 那说明是过拟合, 需要调整诸如正则化之类的东西. 若二者相似但不够高, 可能需要提升模型容量之类的. 
