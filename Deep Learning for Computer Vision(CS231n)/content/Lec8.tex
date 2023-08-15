@@ -1,0 +1,42 @@
+\newpage
+\section{Deep Learning Software}
+\subsection{CPU vs GPU}
+GPU for parallels
+
+\subsection{The point of deep learning frameworks}
+\begin{enumerate}
+    \item Easily build big computational graphs
+    \item Easily compute gradients in computational graphs
+    \item Run it all efficiently on GPU (wrap cuDNN etc)
+\end{enumerate}
+
+\subsection{PyTorch}
+Three Levels of Abstraction:
+\begin{enumerate}
+    \item Tensor: 命令式数组, 在GPU中
+    \item Variable: 计算图的结点, 存储数据与梯度
+    \item Module: 网络层, 可能存储状态或可学习权重
+\end{enumerate}
+
+用法看文档吧
+
+\subsection{Static vs Dynamic Graphs}
+
+\subsubsection{Static}
+\begin{enumerate}
+    \item Optimization: 静态图可以优化计算图的结构.
+    \item Serialization: 可序列化计算图, 这样部署时更加便利. 
+\end{enumerate}
+
+\subsubsection{Dynamic}
+\begin{enumerate}
+    \item Conditional: 动态图对条件处理较为方便, 如果是静态图则需要特殊的向量操作来等价. 
+    \item Loops: 方便与递过计算, 如果是静态图则也需要特殊的向量操作来等价. 
+\end{enumerate}
+
+Applications:
+\begin{itemize}
+    \item Recurrent networks
+    \item Recursive networks
+    \item Modular Networks
+\end{itemize}
