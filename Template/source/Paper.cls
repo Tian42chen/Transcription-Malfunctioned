@@ -1,4 +1,4 @@
-\LoadClass[twoside,twocolumn]{ctexart}
+\LoadClass[twoside,twocolumn, 10pt]{ctexart}
 %宏包
 \RequirePackage{xeCJK}
 \RequirePackage{graphicx}
@@ -101,7 +101,7 @@
 	%行距
 	\linespread{1.2}
 	%目录深度
-	\setcounter{secnumdepth}{4}
+	\setcounter{secnumdepth}{3}
 	\setcounter{tocdepth}{4}
 %
 
@@ -110,7 +110,7 @@
 	\titlecontents{section}[0pt]{\addvspace{1pc}\bfseries}{\thecontentslabel\quad}{}{\titlerule*[8pt]{$\cdot$}\contentspage}
 	\titlecontents{subsection}[1em]{\vspace{0.1cm}\normalsize}{\thecontentslabel\quad}{}{\titlerule*[8pt]{$\cdot$}\contentspage}
 	\titlecontents{subsubsection}[2em]{\vspace{0.1cm}\small}{\thecontentslabel\quad}{}{\titlerule*[8pt]{$\cdot$}\contentspage}
-	\titlecontents{paragraph}[2em]{\vspace{0.1cm}\small}{\thecontentslabel\quad}{}{\titlerule*[8pt]{$\cdot$}\contentspage}
+	\titlecontents{paragraph}[2em]{\vspace{0.1cm}\small}{\thecontentslabel\quad}{\quad\quad\quad}{\titlerule*[8pt]{$\cdot$}\contentspage}
 	%多级标题命名格式
 	\renewcommand\thesection{\Roman{section}}
 	\renewcommand\thesubsection{\arabic{subsection}.}
@@ -119,7 +119,7 @@
 	\titleformat*{\section}{\large\bfseries}
 	\titleformat*{\subsection}{\normalsize\bfseries}
 	\titleformat*{\subsubsection}{\normalsize\slshape}
-	\titleformat*{\paragraph}{\small\bfseries}
+	\titleformat*{\paragraph}{\normalsize\bfseries}
 	%多级标题间隔
 	\titlespacing{\section}{0pt}{*1.5}{*1.5}
 	\titlespacing{\subsection}{2em}{*1}{*1}
