@@ -79,6 +79,12 @@ fit residual $F(x) = H(x) - x$ instead of $H(x)$ directly.
     \caption{Residual}
 \end{figure}
 
+这样有两个好处:
+\begin{enumerate}
+    \item 若初始化所有权重为0, 则表示此模块不进行计算, 这让网络更容易不使用不必要的层. 在使用 L2 正则时, 会让所有权重趋向于0, 在传统网络中权重为0是无意义的, 但在残差网络中, 趋向于0鼓励网络不使用不必要的层. 
+    \item 在梯度的传递中, 可以使用直接的链接更快速的传递上层的梯度, 降低了训练的难度. 
+\end{enumerate}
+
 \subsection{Other architectures}
 \subsubsection{NiN (Network in Network)}
 卷积层配合MLP. 
