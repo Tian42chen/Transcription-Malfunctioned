@@ -93,6 +93,9 @@
 	\renewcommand\figurename{\textbf{Figure}}
 	%目录居中
 	\renewcommand*\contentsname{\hfill Contents \hfill}
+	% 图片按章节编号
+	\numberwithin{figure}{section}
+	\numberwithin{table}{section}
 %
 
 %页面参数
