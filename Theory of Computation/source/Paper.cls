@@ -20,6 +20,7 @@
 \RequirePackage{accsupp}
 \RequirePackage{diagbox}
 \RequirePackage{amsmath}
+\RequirePackage{amsthm}
 \RequirePackage{mathtools}
 % \RequirePackage{unicode-math}
 \RequirePackage{extarrows}
@@ -37,7 +38,8 @@
 % \RequirePackage{pgfplots}
 \RequirePackage[hidelinks]{hyperref}
 
-\usetikzlibrary{positioning,arrows.meta,quotes}
+\usetikzlibrary{automata,positioning}
+\usetikzlibrary{arrows.meta,quotes}
 \usetikzlibrary{shapes}
 \usetikzlibrary{bayesnet}
 \usetikzlibrary{decorations.pathreplacing}
@@ -64,7 +66,7 @@
 
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{definition}{Definition}[section]
-\newtheorem{proof}{Proof}[section]
+% \newtheorem{proof}{Proof}[section]
 \numberwithin{equation}{section}
 
 \hypersetup{
@@ -94,9 +96,13 @@
 	\renewcommand\figurename{\textbf{Figure}}
 	%目录居中
 	\renewcommand*\contentsname{\hfill Contents \hfill}
-	% 图片按章节编号
+	%图表图片按章节编号
 	\numberwithin{figure}{section}
 	\numberwithin{table}{section}
+	%proof 标题
+	\renewcommand{\proofname}{Proof}
+	%proof QED symbol
+	\renewcommand\qedsymbol{QED}
 %
 
 %页面参数
