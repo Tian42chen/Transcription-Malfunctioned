@@ -84,8 +84,8 @@ OS设计与实现没有明确输入输出. Start by defining goals and specifica
 \subsubsection{Mechanism and Policy} %TODO 读 2.7.2 P80
 Important principle to separate: (分离策略与机制)
 \begin{itemize}
-    \item Policy: What will be done? 策略（确定具体做什么事）
-    \item Mechanism: How to do it? 机制（定义做事方式）
+    \item Policy: What will be done? 策略（确定具体做什么事, 部分输入信息）
+    \item Mechanism: How to do it? 机制（定义做事方式, 模型）
 \end{itemize}
 
 \subsection{Operating System Structure}
@@ -94,12 +94,12 @@ Important principle to separate: (分离策略与机制)
 仅帮助人类理解. 
 \begin{figure}[!htb]
     \centering
-    \includegraphics[width=0.309\textwidth]{pic/OS2/Layered Operating System}
+    \includegraphics[width=0.22\textwidth]{pic/OS2/Layered Operating System}
     \caption{Layered Operating System}
 \end{figure}
 
-\subsubsection{UNIX}
-Monolithic structure (宏内核) 
+\subsubsection{Monolithic structure}
+(宏内核) e.g. UNIX
 \begin{figure}[!htb]
     \centering
     \includegraphics[width=0.42\textwidth]{pic/OS2/Traditional UNIX system structure}
@@ -107,7 +107,7 @@ Monolithic structure (宏内核)
 \end{figure}
 
 \subsubsection{Microkernel System Structure}
-微内核. 把很多操作分到 user code 之中. 
+(微内核) 把很多操作分到 user code 之中. 
 Benefits: 代码少, 稳定, 易移植. 
 Detriments: 效率变低 (Performance overhead). 
 
@@ -118,11 +118,43 @@ Detriments: 效率变低 (Performance overhead).
     \caption{Architecture of A Typical Microkernel}
 \end{figure}
 
+\subsubsection{Kernel Modules}
+(内核模块) 现代常用. 提供扩展内核的能力(loadable kernel modules, LKM). 
+
+\subsubsection{Other Structures}
+\paragraph{Exokernel} (外核) 高度简化kernel, 只负责资源分配, 提供了低级的硬件操作, 必须通过定制library供应用使用. 高性能, 但定制化library难度大, 兼容性差. 
+
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=0.22\textwidth]{pic/OS2/Exokernel.png}
+    \caption{Exokernel}
+\end{figure}
+
+\paragraph{Unikernel} (单核), 来自 include OS. 静态连接所有的 OS 代码. 适用于云服务, app 的 boots, 启动耗时只需几十ms. 达到\textbf{高可用}.  
+
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=0.42\textwidth]{pic/OS2/Unikernel.png}
+    \caption{Unikernel}
+\end{figure}
 
 
+\subsection{Virtual Machines}
+(虚拟机) 虚拟机算是分层方法的自然结果. 其把底层的硬件与OS都视为自己的硬件. 有全虚拟化(解释执行) 与 物理虚拟化(底层执行). 
 
-% \subsection{Virtual Machines}
-% \subsection{Operating System Generation}
-% \subsection{System Boot}
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=0.42\textwidth]{pic/OS2/virtual machines..png}
+    \caption{A computer running (a) a single operating system and (b) three virtual machines.}
+\end{figure}
+
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=0.42\textwidth]{pic/OS2/Different Techniques}
+    \caption{Different Techniques}
+\end{figure}
+\newpage
+\quad
+
 
 
