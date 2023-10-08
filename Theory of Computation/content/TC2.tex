@@ -1,0 +1,298 @@
+\newpage
+\section{Finite Automata}
+有限状态机. state diagram
+
+\begin{figure}[!htb]
+    \centering
+    \begin{tikzpicture}[shorten >=1pt, node distance=2cm, on grid, auto]
+        \node[state,initial]  (q_0)                      {$q_0$};
+        \node[state]          (q_1) [above right=of q_0] {$q_1$};
+        \node[state]          (q_2) [below right=of q_0] {$q_2$};
+        \node[state,accepting](q_3) [below right=of q_1] {$q_3$};
+    
+        \path[->] (q_0) edge              node        {0} (q_1)
+                        edge              node [swap] {1} (q_2)
+                  (q_1) edge              node        {1} (q_3)
+                        edge [loop left]  node        {0} ()
+                  (q_2) edge              node [swap] {0} (q_3)
+                        edge [loop above] node        {1} ();
+    \end{tikzpicture}
+    \caption{example state diagram}
+\end{figure}
+
+initial state is unique, Finial state may be several. 
+
+\subsection{Definition}
+
+\begin{definition}
+    A finite automata $M=(K, \Sigma, \delta, s, F)$. 
+    \begin{itemize}
+        \item $\Sigma$: input alphabet
+        \item $K$: a \textbf{finite} set of states
+        \item $s\in K$: initial state
+        \item $F\subseteq K$: the set of finial states
+        \item $\delta$: transition function
+        \begin{align*}
+            \delta: K \times \Sigma \rightarrow K
+        \end{align*}
+        $K$ current state, $\Sigma$ symbol, $K$ next state. 
+    \end{itemize}
+\end{definition}
+
+
+之前的 symbol 对之后的结果不会有影响.
+
+\begin{definition}[configuration]
+    A configuration is any element of $K\times \Sigma^*$
+    (current state 与 unread input 作用)
+\end{definition}
+
+\begin{definition}[yields in one step]
+    $(q,w)\vdash_M (q', w')$ if $w=aw'$ for some $a\in \Sigma$ and $\delta(q, a)=q'$. 
+\end{definition}
+每走一步, 所携带的输入会减少. 
+
+\begin{definition}[yields]
+    $(q,w)\vdash_M^* (q', w')$ if $(q,w)\vdash_M(q', w')$ or $(q,w)\vdash_M\cdots \vdash_M(q', w')$
+\end{definition}
+
+
+\begin{definition}
+    $M$ accepts $w\in \Sigma^*$ if $(s,w)\vdash_M^*(q,e)$ for some $q\in F$
+\end{definition}
+
+\begin{definition}
+    \begin{align*}
+        L(M)=\{ w\in \Sigma^*: M\text{ accepts }w \}
+    \end{align*}
+    $M$ accepts $L(M)$. 
+\end{definition}
+
+$M$ accepts $L$ iif
+\begin{align*}
+    \left\{ \begin{array}{ll}
+        w\in L & M\text{ accepts }w\\
+        w\notin L & M\text{ doesn't accept }w
+    \end{array} \right.
+\end{align*}
+
+\begin{definition}
+    A language is regular if it's accept by some finite automata. 
+\end{definition}
+
+e.g. 
+\begin{align*}
+    \{ w\in\{ 0,1 \}^*: w \text{ contains $101$ as a substring}\}
+\end{align*} is regular? yes.
+
+\begin{tikzpicture}[shorten >=1pt, node distance=2cm, on grid, auto]
+    \node[state,initial]  (q_0)                      {$q_0$};
+    \node[state]          (q_1) [right=of q_0] {$q_1$};
+    \node[state]          (q_2) [right=of q_1] {$q_2$};
+    \node[state,accepting](q_3) [right=of q_2] {$q_3$};
+
+    \path[->] (q_0) edge node [swap] {1} (q_1)
+                    edge [loop above] node {0} ()
+              (q_1) edge              node        {0} (q_2)
+                    edge [bend right] node [swap] {1} (q_0)
+              (q_2) edge node {1} (q_3)
+                    edge [bend left] node {0} (q_0)
+              (q_3) edge [loop above] node {0,1} ();
+\end{tikzpicture}
+
+\subsection{Regular Operations}
+\begin{definition}[Regular Operations]\quad
+
+    \begin{itemize}
+        \item Union $A\cup B=\{ w: w\in A \text{ or }w \in B \}$
+        \item Concatenation $A\cdot B=\{ ab: a\in A\text{ and }b \in B \}$
+        \item Star $A^*=\{ w_1 w_2\cdots w_k :w_i \in A\text{ and }k\ge 0 \}$
+    \end{itemize}
+\end{definition}
+
+regular language 在这些操作下是封闭的. 
+
+\begin{theorem}
+    If $A$ and $B$ are regular, so is $A\cup B$. 
+\end{theorem}
+\begin{proof}
+    $\exists M_A=(K_A, \Sigma_A, \delta_A, s_A, F_A)$ accepts $A$, $\exists M_B=(K_B, \Sigma_B, \delta_B, s_B, F_B)$ accepts $B$.
+    
+    For $M_U=(K_U, \Sigma_U, \delta_U, s_U, F_U)$, 
+    \begin{itemize}
+        \item $\Sigma_U=\Sigma_A \cup \Sigma_B$
+        \item $K_U=K_A\times K_B$
+        \item $s_U=(s_A, s_B)$
+        \item $F_U=\{ (q_A, q_B) \in K_A\times K_B:q_A\in F_A\text{ or }q_B\in F_B \}$
+        \item $\delta_U$: $\forall$ $q_A\in K_A$, $q_B\in K_B$, $a\in \Sigma_U$, $\delta_U((q_A, q_B), a)=(\delta_A(q_A,a), \delta_B(q_B, a))$
+    \end{itemize}
+\end{proof}
+
+\subsection{Non-determinism}
+deterministic finite automata (DFA) 给 $(s,w)$, 输出唯一. 
+
+Non-deterministic finite automata (NFA)
+
+\begin{tikzpicture}[shorten >=1pt, node distance=2cm, on grid, auto]
+    \node[state,initial]  (q_0)                      {$q_0$};
+    \node[state] (q_1) [right=of q_0] {$q_1$};
+    \node[state, accepting] (q_2) [right=of q_1] {$q_2$};
+
+    \path[->] (q_0) edge node [swap] {a,b} (q_1)
+                    edge [loop above] node {a} ()
+              (q_1) edge              node        {a,e} (q_2)
+                    edge [bend right] node [swap] {b} (q_0)
+            ;
+\end{tikzpicture}
+
+\begin{enumerate}
+    \item several choise for next state 
+    \item e-transition
+\end{enumerate}
+NFA 是 $\Delta$, 对应的是关系. 
+\begin{align*}
+    \Delta=\{ (q_0, a, q_1), (q_1,e,q_2), \dots \}
+\end{align*}
+
+\begin{definition}
+    A NFA is a 5-tuple $(K,\Sigma, \Delta, s, F)$. 
+
+    transition relation $\Delta\subseteq K\times \Sigma \cup \{ e \}\times K$.  
+\end{definition}
+
+NFA's configuration and step is same as DFA. 
+
+NFA 路径有很多条, 存在一条读完的路就算接受. 
+
+\begin{definition}
+    $M$ accepts $w$ if $(s,w)\vdash_M^* (q,e)$ for some $q\in F$
+\end{definition}
+
+\begin{definition}
+    \begin{align*}
+        L(M)=\{ w\in\Sigma^*: M\text{ accepts }w \}
+    \end{align*}
+    $M$ accepts $L(M)$.
+\end{definition}
+
+NFA 类似于 Parallel, 分支就是分裂进程. Magic: Always make the right guess.
+
+e.g. $L=\{ w\in \{a,b \}^*:$ the second symbol from the end of $w$ is $b \}$
+
+\begin{tikzpicture}[shorten >=1pt, node distance=2cm, on grid, auto]
+    \node[state,initial]  (q_0)                      {$q_0$};
+    \node[state] (q_1) [right=of q_0] {$q_1$};
+    \node[state, accepting] (q_2) [right=of q_1] {$q_2$};
+
+    \path[->] (q_0) edge node [swap] {b} (q_1)
+                    edge [loop above] node {a,b} ()
+              (q_1) edge              node        {a,b} (q_2)
+            ;
+\end{tikzpicture}
+
+\begin{theorem}
+    \begin{align*}
+        \forall\text{ DFA }M \Rightarrow \exists\text{ NFA }M'\ s.t.\ L(M)=L(M')\\
+        \forall\text{ NFA }M \Rightarrow \exists\text{ DFA }M'\ s.t.\ L(M)=L(M')
+    \end{align*}
+\end{theorem}
+第一条显然. Idea: 构造 DFA, 可以模拟NFA分支计算. 第二条:
+\begin{proof}
+    \begin{align*}
+        \forall&\text{ NFA }M=(K,\Sigma, \Delta, s, F), \\
+        \exists&\text{ DFA }M'=(K',\Sigma', \delta', s', F')
+    \end{align*}
+    \begin{itemize}
+        \item $\Sigma'=\Sigma$
+        \item $K'=2^K=\{ Q:Q\subseteq K \}$
+        \item $F'=\{ Q\subseteq K:Q\cap F\ne \emptyset \}$
+        \item $s'=E(s)$, 
+        \subitem $\forall q\in K, E(q)=\{ p\in K:(q,e)\vdash_M^* (p,e) \}$
+        \item $\forall Q\subseteq K$, $a\in \Sigma^*$,
+        \begin{align*}
+            \delta'(Q,a)=\bigcup_{q\in Q}\bigcup_{p:(q,a,p)\in\Delta}E(p)
+        \end{align*}
+    \end{itemize}
+\end{proof}
+$E(q)$ 相当于在 $q$ 零步之内(不耗费输入的字符)能到达的结点. 
+
+\begin{theorem}
+    DFA $M'$ accepts $w$ $\iff$ NFA $M$ accepts $w$. 
+\end{theorem}
+\begin{claim}
+    $\forall$ $p,q \in K$ and $w\in\Sigma^*$, $(p,w)\vdash_M^*(q,e)$ $\iff$ $(E(p),w)\vdash_{M'}^*(Q,e)$ for some $Q\ni  q$
+\end{claim}
+
+\begin{proof}
+    by induction on $|w|$. 
+\end{proof}
+
+
+\begin{proof}
+    
+    NFA  $M$ accepts \\
+    $\iff$ $(s,w)\vdash_M^*(q,e)$ with $q\in F$.\\
+    $\iff$ $(E(s),w)\vdash_{M'}^*(Q,e)$ with $Q\ni q (Q\in F')$\\
+    $\iff$ DFA $M'$ accepts $w$. 
+\end{proof}
+
+e.g. 
+
+NFA:
+
+\begin{tikzpicture}[shorten >=1pt, node distance=2cm, on grid, auto]
+    \node[state,initial]  (q_0)                      {$q_0$};
+    \node[state, accepting] (q_1) [right=of q_0] {$q_1$};
+
+    \path[->] (q_0) edge node {b} (q_1)
+                    edge [loop above] node {a} ()
+              (q_1) edge [bend left] node  {e} (q_0)
+            ;
+\end{tikzpicture}
+
+DFA:
+
+\begin{tikzpicture}[shorten >=1pt, node distance=2cm, on grid, auto]
+    \node[state,initial]  (q_0)                      {$\{q_0\}$};
+    \node[state, accepting] (q_1) [below=of q_0] {$\{q_1\}$};
+    \node[state, accepting] (q_0q_1) [right=of q_0] {$\{q_0, q_1\}$};
+    \node[state] (empty) [right=of q_1] {$\emptyset$};
+
+    \path[->] (q_0) edge [bend left] node {b} (q_0q_1)
+                    edge [loop above] node {a} ()
+              (q_0q_1) edge [bend left] node {a} (q_0)
+                       edge [loop right] node {b} ()
+                (q_1) edge node {a,b} (empty)
+            ;
+\end{tikzpicture}
+
+$\{q_1\}$ 与 $\emptyset$ 可省略. 
+
+\begin{definition}
+    A language is regular if it's accept by some non-deterministic finite automata. 
+\end{definition}
+
+\begin{theorem}\label{Concatenation}
+    If $A$ and $B$ are regular, so is $A\cdot B$
+\end{theorem}
+\begin{proof}
+    $\exists M_A=(K_A, \Sigma_A, \Delta_A, s_A, F_A)$ accepts $A$, $\exists M_B=(K_B, \Sigma_B, \Delta_B, s_B, F_B)$ accepts $B$.
+
+    For $M^{\circ}=(K^{\circ}, \Sigma^{\circ}, \Delta^{\circ}, s^{\circ}, F^{\circ})$, 
+    \begin{itemize}
+        \item $\Sigma^{\circ}=\Sigma_A\cup \Sigma_B$
+        \item $K^{\circ}=K_A\cup K_B$
+        \item $s^\circ=s_A$
+        \item $F^\circ=F_B$
+        \item $\Delta^\circ=\Delta_A \cup \Delta_B \cup \{ (q,e,s_B):q\in F_A \}$
+    \end{itemize}
+\end{proof}
+
+
+\begin{theorem}\label{Star}
+    If $A$ is regular, so is $A^*$
+\end{theorem}
+
+\begin{proof}%TODO
+    
+\end{proof}
