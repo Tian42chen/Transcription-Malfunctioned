@@ -66,6 +66,8 @@
 
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{definition}{Definition}[section]
+\newtheorem{claim}{Claim}[theorem]
+% \newtheorem{claimproof}{Proof of claim}[theorem]
 % \newtheorem{proof}{Proof}[section]
 \numberwithin{equation}{section}
 
