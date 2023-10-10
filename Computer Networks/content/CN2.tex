@@ -55,7 +55,7 @@ data rate 是使用 analogue bandwidth 最终传输结果.
 Channel Capacity --- the maximum rate at which data can be transmitted over a given communication path or channel under given conditions.
 
 Four related concepts:
-\begin{enumerate}
+\begin{enumerate}\small
     \item Data rate (bps)
     \item Bandwidth (Hz)
     \item Noise
@@ -77,6 +77,8 @@ The optimal pulse shape: %(C 是 capacity, B 是 bandwidth)
     \item Binary: \textcolor{light_red}{$C = 2B$} (V=2)
     \item Multilevel Signaling: \textcolor{light_red}{$C = 2B \log_2 V$} ($V$ is the number of discrete signal or voltage levels)
 \end{itemize}
+where $C$ is maximum signaling rate, $B$ is bandwidth. 
+
 提升信号种类的数量可以提升data rate. 但提升有限度, 且会被在传输中的 noise and other impairment 限制. 
 
 \subsubsection{Shannon Capacity}
@@ -142,7 +144,133 @@ three variations:
 
 \paragraph{Radio Transmission} Radio frequency (RF) waves 
 
-\paragraph{Microwave Transmission} 传输是直线. 
+\paragraph{Microwave Transmission} 传输是直线. 有 multipath fading 现象. 需要批准, 但有 unlicensed 波段 e.g. ISM and U-NII. 
+
+\paragraph{Infrared/Light  Transmission} 不可穿过固体, 但不需要批准, 可随意使用. 但易受 对流气流 干扰. 
+
+\subsubsection{Satellites}
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=0.42\textwidth]{pic/CN2/communication satellites and some of their properties}
+    \caption{communication satellites and some of their properties}
+\end{figure}
+
+e.g. 星链
+
+\paragraph{Satellites vs. Fiber} For Satellites
+\begin{itemize}
+    \item Rapid deployment
+    \item For communication in places where the terrestrial infrastructure is poorly
+    developed.
+    \item When broadcasting is essential
+\end{itemize}
 
 \subsection{Digital modulation and multiplexing}
+Channels 所携带的是 analog signals (模拟信号), 人们使用 analog signals 表示 bits, 称为 digital modulation (数字调制). 
+
+有两种策略来将bits转换为 signal:
+\begin{enumerate}\small
+    \item Baseband transmission (for wired channels): 依据 信令速率(the signaling rate) 占用频率. 
+    \item Passband transmission (for wireless and optical channels): Amplitude, phase and frequency modulation (调幅, 调相, 调频), 使用频率携带信号. 即调整 $A\cos (2\pi f+\theta)$ 中的 $A, f, \theta$ 来携带信息. 
+\end{enumerate}
+
+\subsubsection{Baseband Transmission}
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=0.42\textwidth]{pic/CN2/Line codes.png}
+    \caption{Line codes (重点)}
+\end{figure}
+
+\paragraph{Non-Return to Zero (NRZ)} positive voltage 表示 1, negative voltage 表示 0. 对于光纤, 有光为 1, 无光为0. 
+
+但会有衰减和失真 (attenuated and distorted), receiver 会将 信号采样映射到最近的表示. 传输速率为 B bits/sec 时, 至少需要 B/2 Hz 带宽. 
+
+可以提升电压种类来提升一次传输的 bit. 
+{\small
+\begin{align*}
+    \text{The bit rate} = \text{the symbol rate} \times \text{the number of bits per symbol}
+\end{align*}}
+%TODO 有科普性论文 R.L. Freeman, “Bits, symbols, bauds, and bandwidth,” IEEE Communication Magazine, pp.96-99, Apr. 1998.
+
+\paragraph{Manchester}但NRZ定位错误信号解析也会错误, 所以衍生策略:
+\begin{enumerate}
+    \item 额外传输时钟
+    \item 仅传输信号与时钟的异或 (时钟的频率一致). 
+\end{enumerate}
+Many Ethernet technologies use Manchester encoding. 但其带宽高. 
+
+\paragraph{NRZ Invert (NRZI)} 1时电平翻转, 0时保持不变. 
+
+但易受攻击, 所以使用加密. 异或一个双方已知的 pseudorandom, 以保证01数量相近. 
+
+\paragraph{Bipolar encoding}Balanced signals 无直流分量, 因为直流分量会衰减, 所以这是个优点. 用两个 voltage 表示 1, 0 voltage 表示 0. 
+
+\subsubsection{Passband Transmission}
+传输 $x(t)$, 发出的信号是 $x(t)\cos (2\pi f_c t)$, 接受时调到 $f_c$ 将信号处理成 $x(t)\cos^2 (2\pi f_c t)=x(t)\frac{1+\cos (4\pi f_c t)}{2}$, 然后过滤 $4\pi f_c t$ 高频的信号, 就会留下 $\frac{x(t)}{2}$. 
+
+\begin{align*}
+    \lambda f=c=3\times 10^8 m/s
+\end{align*}
+将 $f$调大, $\lambda$ 就会较小, 便于发送. 
+
+
+
+Can modulate the amplitude, frequency or phase of the carrier signal:
+\begin{enumerate}
+    \item ASK (Amplitude Shift Keying): 
+    \item FSK (Frequency Shift Keying): 
+    \item PSK (Phase Shift Keying): 
+\end{enumerate}
+%TODO P61-62 补图补描述
+
+结合上者来传输更多信号. 
+
+%TODO P63, QPSK 的 V=4
+
+编码规则使用 Gray Code, 如此一位出错的影响不大. 
+
+\paragraph{FDM (Frequency Division Multiplexing)} FDMA: Even for wires, placing a signal in a given frequency band is useful to let different kinds of signals coexist on the channel. 不同信号用不同频率. 
+
+\paragraph{OFDM (Orthogonal FDM)} 信号可重叠. 
+
+\paragraph{TDM (Time Division Multiplexing)}一个时间一个信号. 但同传输的信号需要同步. 
+
+\paragraph{CDM (Code Division Multiplexing)}需要两路时钟. 将每个 bit  time 分为 多个间隔称 chips, 一般 64/128 chips per bit, 然后每个 station 使用唯一的chip sequence (Walsh codes), sequence要求正交. 
+
+%TODO P75
+
 \subsection{Three examples of communication examples}
+\subsubsection{Public Switch Telephone Network (PSTN) }
+The telephone system consists of three major components:
+\begin{enumerate}
+    \item Local loops: telephone modem, ADSL, fiber
+    \item Trunks (digital fiber optic links connecting switching offices) --- main consideration problem is multiplexing (FDM and TDM)
+    \item Switching offices (where calls are moved from one trunk to  another) --- two switching ways
+\end{enumerate}
+
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=0.42\textwidth]{pic/CN2/PSTN}
+    \caption{PSTN}
+\end{figure}
+
+\paragraph{Local Loop} Telephone modems: 转换二进制流与模拟信号 (modulator demodulator). 对于 4000Hz 需要每秒采样 8000 次 (Nyquist sampling). 下载一般比上传高. 
+
+%TODO P79之后摸了
+
+\paragraph{Trunks}传输的是 digital information(e.g. bits). Accomplished with :
+\begin{itemize}\small
+    \item SONET: the TDM system used for fiber optics
+    \item FDM is applied to fiber optics (wavelength division multiplexing)
+\end{itemize}
+
+\paragraph{Switching} Circuit Switching: a dedicated physical path. Packet Switching: store-and-forward. 
+
+
+\paragraph{Circuit Switching vs. Packet Switching}
+%TODO P105
+
+\subsubsection{Cellular Networks}
+
+
+\subsubsection{Cable Networks}
