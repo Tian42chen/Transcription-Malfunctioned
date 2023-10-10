@@ -142,6 +142,12 @@ Detriments: 效率变低 (Performance overhead).
 \subsection{Virtual Machines}
 (虚拟机) 虚拟机算是分层方法的自然结果. 其把底层的硬件与OS都视为自己的硬件. 有全虚拟化(解释执行) 与 物理虚拟化(底层执行). 
 
+有两种:
+\begin{enumerate}
+    \item bare-metal Hypervisor (裸金属): 在硬件上架构 Hypervisor, 然后架构 虚拟机, 性能高. 
+    \item Hosted Hypervisor: 在 OS 上架构 Hypervisor 后架构 虚拟机. 
+\end{enumerate}
+
 \begin{figure}[!htb]
     \centering
     \includegraphics[width=0.42\textwidth]{pic/OS2/virtual machines..png}
