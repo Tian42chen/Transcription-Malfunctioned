@@ -28,13 +28,13 @@ kernel (内核), 始终正在运行的程序. 其他的要么是系统程序(OS�
 
 \paragraph{Computer-System Operation}\quad
 
-\begin{enumerate}%TODO P28-29 补一下
+\begin{enumerate}
     \item I/O devices and the CPU can execute concurrently. 
-    \item 设备通过控制器管理. 
-    \item 有 local buffer. IO 通过其与 memory 交换 data. 
-    \item CPU 控制 data 的移动
-    \item IO 通过
-    \item 使用 interrupt 通知
+    \item Each device controller is in charge of a particular device type.
+    \item Each device controller has a local buffer.
+    \item CPU moves data from/to main memory to/from local buffers
+    \item I/O is from the device to local buffer of controller.
+    \item Device controller informs CPU that it has finished its operation by causing an interrupt (via system bus).
 \end{enumerate}
 
 
