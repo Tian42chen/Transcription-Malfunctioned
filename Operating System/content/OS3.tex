@@ -20,6 +20,8 @@ heap增长需要 OS 操作, stack 是已分配的一块空间, 在其内增长, 
     \caption{Layout of a process in memory}
 \end{figure}
 
+kernel stack 与 程序的 stack 不是一个. 每个 process 对应一个 kernel stack. 
+
 \subsubsection{Process State}
 As a process executes, it changes state:
 \begin{itemize}\small
@@ -55,7 +57,7 @@ Information associated with each process:
     \includegraphics[width=0.42\textwidth]{pic/OS3/Diagram showing context switch from process to process}
     \caption{Diagram showing context switch from process to process}
 \end{figure}
-二者idle 相交称为 overhead, 是为了 multiprocessing 留的冗余. 
+二者idle 相交称为 overhead, 是为了 multiprocessing 留的冗余. %TODO multiprogramming 与 multiprocessing 的区别
 
 \subsection{Process Scheduling}
 \begin{itemize}
@@ -63,7 +65,7 @@ Information associated with each process:
     \item Ready queue --- set of all processes residing in main memory, ready and waiting to execute
     \item Device queues --- set of processes waiting for an I/O device
 \end{itemize}
-Processes migrate among the various queues. 一个 process 仅能在一个 queue 中. 
+Processes migrate(迁移) among the various queues. 一个 process 仅能在一个 queue 中. 
 
 \subsubsection{Schedulers}
 \begin{itemize}
@@ -82,8 +84,90 @@ Processes can be described as either:
     computations; few very long CPU bursts
 \end{itemize}
 
+\subsubsection{Context Switch}
+当切换进程时, 需要保存当前进程的上下文, 并加载切换进程的上下文. swtch 是特殊的命令, 不是拼写错误.  %TODO read xv6, 7.1
 
-% \subsection{Operations on Processes}
-% \subsection{Cooperating Processes}
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=0.42\textwidth]{pic/oS3/context switch.png}
+    \caption{Switching from one user process to another. In this example, xv6 runs with one CPU (and thus one scheduler thread).}
+\end{figure}
+
+\subsection{Operations on Processes}
+\subsubsection{Process Creation}
+Parent process creates children processes, which, in turn create other processes, forming a tree of processes. Parent and children share all resources. Child duplicate of parent. 
+
+使用 fork() 产生子进程, 基本相当于复制进程. 
+
+wait() 等待子进程的完成, 会返回信息.
+
+exec() 运行另外的程序, 抹杀当前的程序. 
+
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=0.42\textwidth]{pic/OS3/fork.png}
+    \caption{Process creation using the fork() system call}
+\end{figure}
+
+\subsubsection{Process Termination}
+exit() 释放进程占用资源, 并通知子进程, the child gets orphaned and its parent becomes the ``init'' process (PID=1). 
+
+abort()
+
+\subsection{Cooperating Processes}
+有 Independent process 与 Cooperating process. 
+
+Advantages of process cooperation: 
+\begin{itemize}
+    \item Information sharing
+    \item Computation speed-up (Multiple CPUs)
+    \item Modularity
+    \item Convenience
+\end{itemize}
+
+\subsubsection{Producer-Consumer Problem}
+经典的合作模型, 可描述调用关系. 生产者产生信息, 消费者消费信息. 有两种:
+\begin{itemize}
+    \item unbounded-buffer: 信息相比buffer微不足道. 
+    \item bounded-buffer: 信息相比buffer不能忽略. 
+\end{itemize}
+
+以 Bounded-Buffer 为例:
+\begin{itemize}
+    \item Shared-Memory Solution: Shared data. 共享数据. 
+    \begin{minted}{c++}
+        #define BUFFER_SIZE 10
+        typedef struct {
+            . . .
+        } item;
+        item buffer[BUFFER_SIZE];
+        int in = 0;
+        int out = 0;
+    \end{minted}
+    \item Insert() Method
+    \begin{minted}{c++}
+        while (true) {
+            Produce an item;
+            while ((in + 1) % BUFFER_SIZE == out) 
+                ; /* do nothing -- no free buffers */
+            buffer[in] = item;
+            in = (in + 1) % BUFFER_SIZE;
+        }
+    \end{minted}
+    \item Remove() Method
+    \begin{minted}{c++}
+        while (true) {
+            while (in == out)
+                ; //do nothing, nothing to consume
+            Remove an item from the buffer;
+            item = buffer[out];
+            out = (out + 1) % BUFFER SIZE;
+            return item;
+        }
+    \end{minted}
+\end{itemize}
+
+
+
 % \subsection{Interprocess Communication}
 % \subsection{Communication in Client-Server Systems}
