@@ -8,6 +8,7 @@
 \RequirePackage{fancyhdr}
 \RequirePackage{enumitem}
 \RequirePackage{listings}
+\RequirePackage{minted}
 \RequirePackage{xcolor}
 \RequirePackage{array}
 \RequirePackage{float}
@@ -46,6 +47,7 @@
 \definecolor{light_red}{RGB}{209,105,81}
 \definecolor{light_green}{RGB}{58,181,75}
 \definecolor{light_blue}{RGB}{0,153,228}
+\definecolor{light_gray}{RGB}{245,245,245}
 
 \setlength{\headheight}{15pt}
 
@@ -151,33 +153,48 @@
 	% \rhead{学号：\@stuid}
 %
 
-\lstset{
-	language=c++,
-    basicstyle          =   \small\fontspec{Consolas},          % 基本代码风格
-	morekeywords		=	{ll},	%增加高亮
-    keywordstyle        =   \color{blue!90},          % 关键字风格
-    commentstyle        =   \color{green!40!black!60},  % 注释的风格，斜体
-    stringstyle         =   \ttfamily\slshape\color[RGB]{140,81,25},  % 字符串风格
-    % framerule           =   2.5em,
-	rulesepcolor		=	\color{red!20!green!20!blue!20},%代码块边框为淡青色
-	framextopmargin=2pt,framexbottommargin=2pt,abovecaptionskip=-3pt,belowcaptionskip=3pt,%阴影边框设定
-	rulecolor           =   \color{gray!10},  
-	flexiblecolumns     =   flase,                % 别问为什么，加上这个
-    numbers             =   left,   % 行号的位置在左边
-    showspaces          =   false,  % 是否显示空格，显示了有点乱，所以不显示了
-    numberstyle         =   \footnotesize\fontspec{Consolas}\emptyaccsupp,    % 行号的样式，小五号，tt等宽字体
-    showstringspaces    =   false,
-    captionpos          =   t,      % 这段代码的名字所呈现的位置，t指的是top上面
-    frame               =   shadowbox,   % 显示边框
-    tabsize             =   4,
-    breaklines          =   true,   % 自动换行，建议不要写太长的行
-    breakatwhitespace   =   false,       	% 设置自动中断是否只发生在空格处
-    escapeinside        =   ``,     	% 在``里显示中文
-    columns             =   fixed,  % 如果不加这一句，字间距就不固定，很丑，必须
-    % basewidth           =    0.6em,
-    xleftmargin         =    1em,  
-    xrightmargin        =    1em,     % 设定listing左右的空白
+% 代码
+\usemintedstyle{vs}
+\setminted{
+  % frame=lines,
+  framesep=2mm,
+  baselinestretch=1.2,
+  fontsize=\small,
+  linenos,
+  breaklines,
+  autogobble,
+  bgcolor=light_gray,
 }
+%
+
+% \lstset{
+% 	language=c++,
+%     basicstyle          =   \small\fontspec{Consolas},          % 基本代码风格
+% 	morekeywords		=	{ll},	%增加高亮
+%     keywordstyle        =   \color{blue!90},          % 关键字风格
+%     commentstyle        =   \color{green!40!black!60},  % 注释的风格，斜体
+%     stringstyle         =   \ttfamily\slshape\color[RGB]{140,81,25},  % 字符串风格
+%     % framerule           =   2.5em,
+% 	rulesepcolor		=	\color{red!20!green!20!blue!20},%代码块边框为淡青色
+% 	framextopmargin=2pt,framexbottommargin=2pt,abovecaptionskip=-3pt,belowcaptionskip=3pt,%阴影边框设定
+% 	rulecolor           =   \color{gray!10},  
+% 	flexiblecolumns     =   flase,                % 别问为什么，加上这个
+%     numbers             =   left,   % 行号的位置在左边
+%     showspaces          =   false,  % 是否显示空格，显示了有点乱，所以不显示了
+%     numberstyle         =   \footnotesize\fontspec{Consolas}\emptyaccsupp,    % 行号的样式，小五号，tt等宽字体
+%     showstringspaces    =   false,
+%     captionpos          =   t,      % 这段代码的名字所呈现的位置，t指的是top上面
+%     frame               =   shadowbox,   % 显示边框
+%     tabsize             =   4,
+%     breaklines          =   true,   % 自动换行，建议不要写太长的行
+%     breakatwhitespace   =   false,       	% 设置自动中断是否只发生在空格处
+%     escapeinside        =   ``,     	% 在``里显示中文
+%     columns             =   fixed,  % 如果不加这一句，字间距就不固定，很丑，必须
+%     % basewidth           =    0.6em,
+%     xleftmargin         =    1em,  
+%     xrightmargin        =    1em,     % 设定listing左右的空白
+% }
+
 % 头部
 	% \newcommand{\makeheader}{
 	% 	%标题
