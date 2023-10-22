@@ -1,0 +1,185 @@
+\newpage
+
+\section{Regular Expression}
+e.g. $R=(a\cup b ^* a)$, $L(R)=(\{a\}\cup\{b\})^*\circ \{ a \}$. 
+
+\begin{definition}[Regular Expression]
+    Atomic: 
+    \begin{itemize}
+        \item $\phi$: $L(\phi)=\phi$
+        \item $a\in \Sigma$: $L(a)=\{ a \}$
+    \end{itemize}
+
+    Composite $\cup, \circ, *$. 
+    \begin{itemize}
+        \item $R_1 \cup R_2$: $L(R_1 \cup R_2)=L(R_1)\cup L(R_2)$
+        \item $R_1R_2$: $L(R_1R_2)=L(R_1)\circ L(R_2)$
+        \item $R^*$: $L(R^*)=(L(R))^*$
+    \end{itemize}
+    Precedence: $* > \circ > \cup$. 
+\end{definition}
+e.g. 
+\begin{itemize}\small
+    \item $a^*b\cup b^* a=((a^*)b)\cup((b^*)a)$
+    \item $\{ e \}=\phi^*$
+    \item $\{ w\in \{a\cup b\}^*: \text{$w$ starts with $a$ and end with $b$} \}=a(a\cup b)^*b$
+    \item $\{ w\in \{a\cup b\}^*: \text{$w$ has at least two occurrence of $a$} \}=(a\cup b)^*a(a\cup b)^*a(a\cup b)^*$
+\end{itemize}
+
+\begin{theorem}
+    A language $B$ is regular iff there is some regular exp $R$ with $L(R)=B$. 
+\end{theorem}
+Idea: Regular Expression $\iff$ NFA ($L(R)=L(M)$). $R \Longrightarrow M$ 直接转换. $R \Longleftarrow M$ 需要一个算法: 
+\begin{enumerate}
+    \item simplity $M$ so that 
+    \begin{enumerate}
+        \item no arc enters the initial state. (创建一个新的 initial state) 
+        \item only one finial state and no atc leaves it. (新建 finial state)
+    \end{enumerate}
+    \item eliminate states: 仅处理长度为2以内的情景, 递归处理更长的情景. 
+\end{enumerate}
+
+\begin{tikzpicture}[shorten >=1pt, node distance=2cm, on grid, auto]
+    \node[state] (q_1) {$q_1$};
+    \node[state] (q_2) at (4, 0) {$q_2$};
+    \node[state] (q_3) at (2, 2) {$q_3$};
+    \node[state, initial] (q_4) at (-2, 0) {$q_4$};
+    \node[state, accepting] (q_5) at (4, 2) {$q_5$};
+
+    \path[->]   (q_1) edge node {$b$} (q_3)
+                    edge [loop above] node {$a$} ()
+                (q_2) edge node {$b$} (q_1)
+                    edge [loop below] node {$a$} ()
+                (q_3) edge node {$b$} (q_2)
+                    edge [loop above] node {$a$} ()
+                    edge node {$e$} (q_5)
+                (q_4) edge node {$e$} (q_1)
+            ;
+\end{tikzpicture}
+
+\begin{tikzpicture}[shorten >=1pt, node distance=2cm, on grid, auto]
+    % \node[state] (q_1) {$q_1$};
+    \node[state] (q_2) at (4, 0) {$q_2$};
+    \node[state] (q_3) at (2, 2) {$q_3$};
+    \node[state, initial] (q_4) at (-2, 0) {$q_4$};
+    \node[state, accepting] (q_5) at (4, 2) {$q_5$};
+
+    \path[->]   (q_2) edge [bend left] node {$ba^*b$} (q_3)
+                    edge [loop below] node {$a$} ()
+                (q_3) edge node {$b$} (q_2)
+                    edge [loop above] node {$a$} ()
+                    edge node {$e$} (q_5)
+                (q_4) edge node {$a^*b$} (q_3)
+            ;
+\end{tikzpicture}
+
+\begin{tikzpicture}[shorten >=1pt, node distance=2cm, on grid, auto]
+    % \node[state] (q_1) {$q_1$};
+    % \node[state] (q_2) at (4, 0) {$q_2$};
+    \node[state] (q_3) at (2, 2) {$q_3$};
+    \node[state, initial] (q_4) at (0, 2) {$q_4$};
+    \node[state, accepting] (q_5) at (4, 2) {$q_5$};
+
+    \path[->]   (q_3) edge [loop below] node {$ba^*ba^*b$} ()
+                    edge [loop above] node {$a$} ()
+                    edge node {$e$} (q_5)
+                (q_4) edge node {$a^*b$} (q_3)
+            ;
+\end{tikzpicture}
+
+\begin{tikzpicture}[shorten >=1pt, node distance=2cm, on grid, auto]
+    % \node[state] (q_1) {$q_1$};
+    % \node[state] (q_2) at (4, 0) {$q_2$};
+    % \node[state] (q_3) at (2, 2) {$q_3$};
+    \node[state, initial] (q_4) at (0, 2) {$q_4$};
+    \node[state, accepting] (q_5) at (4, 2) {$q_5$};
+
+    \path[->]   (q_4) edge node {$a^*b(a\cup ba^*ba^*b)^*$} (q_5)
+            ;
+\end{tikzpicture}
+
+\begin{proof}$R\Longleftarrow M$
+
+    NFA $M=(K, \Sigma, \delta, s, F)$. 
+    \begin{enumerate}
+        \item $K=\{ q_1, \dots, q_n \}, s=q_{n-1}, F=\{ q_n \}$. 
+        \item $\forall q \& a, (p, a, q_{n-1}) \notin  \Delta$
+        \item $\forall q \& a, (q_n, a, p) \notin \Delta$
+    \end{enumerate}
+
+    $R \text{ s.t. } L(R)=L(M)$. 
+
+    Subproblem: for $i,j \in [1,n]$, for $k\in [1,n]$, define $R_{ij}^k$, 
+    \begin{align*}
+        L(R_{ij}^k)=\{ &w\in \Sigma^*: w\text{ drives $M$ for $q_i$ to $q_j$ } \\
+        &\text{with no intermediate state having index $>k$} \}
+    \end{align*}
+    \begin{algorithm}[H]%TODO $a_i$ 的具体含义, 修格式
+        \begin{algorithmic}
+            \State Goal: $R_{(n-1)n}^{n-2}$
+            \State Base case: $(k=0)$, $a_i=(q_i, a, q_i)\in \Delta$% 不确定
+            \For {$i,j\in [1,n]$} 
+                \If{$i=j$}
+                    \State $R_{ij}^0=\phi^* \cup a_1 \cup a_2 \cup \cdots \cup a_m$
+                \EndIf
+                \If{$i\ne j$}
+                    \State $R_{ij}^0=a_1\cup a_2 \cup \cdots \cup a_m$
+                \EndIf
+            \EndFor
+            \State Recurrence: $R_{ij}^k=R_{ij}^{k-1}\cup R_{1k}^{k-1}\left( R_{kk}^{k-1} \right)^* R_{kj}^{k-1}$
+        \end{algorithmic}
+    \end{algorithm}
+    
+\end{proof}
+
+\begin{theorem}[Pumping theorem]
+    Let $L$ be a regular language. There exists an integer $p\ge 1$ (pumping length), such that $w\in L$ with $|w|\ge p$ can be  divided into 3 parts $w=xyz$, satisfying:
+    \begin{enumerate}
+        \item $\forall i\ge 0$, $xy^iz \in L$
+        \item $|y|>0$
+        \item $|xy|\le p$
+    \end{enumerate}
+\end{theorem}
+\begin{proof}
+    If $L$ is finite,
+    \begin{align*}
+        p=\max_{w\in L}|w|+1
+    \end{align*} 
+
+    Assume $L$ is infinite, $\exists$ DFA $M$ accepting $L$, $p:=\#$ state of $M$. \\
+    Let $w$ be any string in $L$ with $|w|\ge p$, $w=a_1\dots a_n$, $\exists 0\le i<j\le p, q_i=q_j$ and 
+    \begin{align*}
+        x&:=a_1\dots a_i\\
+        y&:=a_{i+1}\dots a_j\\
+        z&:=a_{j+1}\dots a_n
+    \end{align*}
+    \begin{enumerate}
+        \item $\forall k\ge 0, xy^kz\in L$
+        \item $|y|=j-i>0$
+        \item $|xy|=j\le p$
+    \end{enumerate}
+\end{proof}
+
+e.g. $L=\{ 0^n1^n: n\ge 0 \}$ is not regular. 
+\begin{proof}
+    Assume it is regular. Let $p$ be the pumping length given by the pumping theorem. $\forall w\in L$ with $|w|\ge p$,
+    \begin{align*}
+        w=0^p1^p
+    \end{align*}
+    $w$ can be written $w=xyz$ s.t. 
+    \begin{enumerate}
+        \item $\forall i\ge 0$, $xy^iz \in L$
+        \item $|y|>0$
+        \item $|xy|\le p$
+    \end{enumerate}
+
+    (2)(3) \\ 
+    \indent $\Rightarrow$ $y=0^k$ for some $k\ge 1$\\
+    \indent $\Rightarrow$ $xy^0z=0^{p-k}1^p \notin L$\\
+    \indent $\nRightarrow$ (1) 
+\end{proof}
+
+e.g. \\
+$L=\{ w\in \{ 0,1 \}^*: \text{$w$ has equal number of 0's and 1's} \}$ is not regular. 
+
+Assume regular $\Rightarrow$ $L\cap 0^*1^*=\{ 0^n1^n:n\ge 0 \}$ is regular. contradictory. 
