@@ -1,0 +1,195 @@
+\newpage
+\section{Context-free Language}
+Context-free Grammar
+
+e.g. 
+\begin{itemize}
+    \item start symbol: $S$
+    \item rule: $S \to aSb$, $S\to A$, $A\to c$, $A\to e$
+    \begin{itemize}
+        \item non-terminal: $S, A$
+        \item terminal: $a,b,c$
+    \end{itemize}
+\end{itemize}
+
+\subsection{Definition}
+
+\begin{definition}
+    A content-free grammar $G=(V,\Sigma, S, R)$,
+    \begin{itemize}
+        \item $V$ a \textbf{finite} set of symbols
+        \item $\Sigma\subseteq V$: the set of terminals
+        \subitem $V-\Sigma$: the set of non-terminals
+        \item $S\in V-\Sigma$: start symbol
+        \item $R\subseteq (V-\Sigma)\times V^*$: a \textbf{finite} set of rules
+    \end{itemize}
+\end{definition}
+
+\begin{definition}[derive in one step]
+    For any $x,y,u \in V^*$, fo rany $A\in V-\Sigma$,
+    \begin{align*}
+        xAy\Rightarrow_G xuy \text{ if } (A,u)\in R
+    \end{align*}
+\end{definition}
+
+\begin{definition}[a derivation from $w$ to $u$]
+    For any $w,u \in V^*$,
+    \begin{align*}
+        w\Rightarrow_G^*u \text{ if } w=u\text{ or }w\Rightarrow_G \dots \Rightarrow_G u
+    \end{align*}
+\end{definition}
+
+\begin{definition}
+    $G$ generates $w\in \Sigma^*$ if $S\Rightarrow_G^* w$. 
+    \begin{align*}
+        L(G)=\{ w\in \Sigma^*: G\text{ generates }w \}
+    \end{align*}
+    $G$ generates $L(G)$, called content-free language
+\end{definition}
+
+e.g. Show that $\{ w\in \{ a,b \}^*: w=w^R \}$ (回文串) is content-free.\\
+$S\to e|a|b|aSa|bSb$. 
+
+need to proof:
+\begin{itemize}
+    \item if $w\in L(G)$, $w=w^R$. (归纳 $w$ 替换的次数)
+    \item if $w=w^R$, $w\in L(G)$. (归纳 $|w|$)
+\end{itemize}
+
+e.g. have $S\to SS$, $S\to (S)$, $S\to e$, generates $()()$. 
+\begin{itemize}
+    \item $S\Rightarrow SS\Rightarrow (S)S\Rightarrow ()S\Rightarrow()(S)\Rightarrow()()$ (leftmost derivation)
+    \item $S\Rightarrow SS\Rightarrow S(S)\Rightarrow S()\Rightarrow (S)()\Rightarrow ()()$(rightmost derivation)
+\end{itemize}
+parse tree is same. 
+
+\begin{definition}[parse tree]%TODO
+    \quad
+
+    \begin{itemize}
+        \item internal node: non-terminal
+        \item leaves: terminal or $e$, $e$ must be the only child of its parent
+        \item edge: 
+        \item the yield of parse tree: 
+    \end{itemize}
+\end{definition}
+
+e.g. $E\to E+E$, $E\to E\times E$, $E\to a$%TODO 
+
+ambiguous
+
+but $E\to E+T$, $E\to T$, $T\to T \times F$, $T\to F$, $F\to (E)$, $F\to a$
+
+no ambiguous
+
+Fact: $\{ a^ib^jc^k:i=j \text{ or }j=k \}$ inherently language (任意生成此 的 language 都有歧义) 
+
+\subsection{Chomsky nrom form (CNF)}
+
+\begin{definition}
+    A CFG is in Chomsky nrom form (CNF) if every rule is of one of the following forms:
+    \begin{enumerate}
+        \item $S\to e$
+        \item $A\to BC$, $B,C\in V-\Sigma-\{S\}$
+        \item $A\to a$, $a\in \Sigma$
+    \end{enumerate}
+\end{definition}
+
+Observation: Suppose that $G$ is a CFG in CNF. If $G$ generates a string of length $n\ge 1$, \# length if derivation is $2n-1$. 
+
+\begin{theorem}
+    Every CFG has an equivalent CFG in CNF
+\end{theorem}
+sketch of proof: 不满足的几种情况
+\begin{enumerate}
+    \item $S$ appears on the right side of a rule
+    \subitem solution: creat new start symbol $S_0$, let $S_0\to S$
+    \item $A\to e$ for $A\ne S$
+    \subitem solution: e.g. $A\to e$, $B\to ACA$, delete $A\to e$, add $B\to AC$, $B\to CA$, $B\to C$. 所有类似的规则作类似的处理. 
+    \item $A\to B$, for some $B\in V-\Sigma$
+    \subitem solution: If $A\ne S$, the same as $A\to e$. If $A=S$: e.g. $S\to B$, $B\to AC$, $B\to CD$, delete all, add $S\to AC$, $S\to CD$
+    \item $A\to u_1,\dots,u_k$, $k\ge 3, u_i \in V$
+    \subitem solution: delete it, add $A\to u_1V_2$, $V_2\to u_2,\dots,u_k$ and so on. 
+    \item $A\to u_1 u_2$, at least one $u_i \in \Sigma$
+    \subitem solution: e.g. $A\to bC$, delete it, add $A\to BC$, $B\to b$
+\end{enumerate}
+
+\subsection{Pushdown Automata(PDA)}
+PDA $\iff$ CFG. PDA = NFA + stack
+
+have input tape, state control, stack
+
+\begin{definition}[Pushdown Automata]
+    A PDA is a 6-tuple $P=(K, \Gamma, \Sigma, \Delta, s, F)$
+    \begin{itemize}
+        \item $\Gamma$: stack alphabet
+        \item $\Delta$: transition relation: a \textbf{finite} subset of 
+        \begin{align*}
+            (K\times (\Sigma\cup \{ e \})\times\Gamma^*)\times(K\times\Gamma^*)
+        \end{align*}
+        \begin{itemize}
+            \item 1st $K$: current state
+            \item $\Sigma\cup \{ e \}$: current symbol that is read
+            \item 1st $\Gamma^*$: pop string at the top of stack
+            \item 2nd $K$: next state
+            \item 2nd $\Gamma^*$: push a string onto the stack
+        \end{itemize}
+    \end{itemize}
+\end{definition}
+
+e.g. $((p,a,123),(q,45))$, 在状态$p$时, 若读到$a$, 且stack顶有 123, 将 123 pop, 然后压入 45, 状态$p\to q$. $((p,a,e),(q,B))$, 这个 stack 一直满足条件, 顶一定有 $e$. 
+
+\begin{definition}
+    A configuration of $P$ is a member of $K\times \Sigma^*\times \Gamma^*$
+    \begin{itemize}
+        \item current state
+        \item unread input
+        \item stack control
+    \end{itemize}
+\end{definition}
+
+\begin{definition}
+    $(p,x,\alpha)\vdash_P (q,y,\beta)$ if $\exists ((p,a,r), (q,\eta ))\in \Delta$ s.t. 
+    \begin{align*}
+        x&=ay\\
+        \alpha&=r\tau \text{ and }\beta = \eta \tau 
+    \end{align*}
+    for some $\tau \in \Gamma^*$
+\end{definition}
+
+\begin{definition}
+    $(p,x,\alpha)\vdash_P^* (q,y,\beta)$ if $(p,x,\alpha)=(q,y,\beta)$ or $(p,x,\alpha)\vdash_P\cdots\vdash_P(q,y,\beta)$
+\end{definition}
+
+\begin{definition}
+    $P$ accepts $w\in\Sigma^*$ if
+    \begin{align*}
+        (s,w,e)\vdash_P^*(q,e,e)
+    \end{align*}
+    for some $q\in\Gamma$
+    \begin{enumerate}
+        \item finial state
+        \item consume all the input
+        \item empty stack
+    \end{enumerate}
+\end{definition}
+
+\begin{definition}
+    $L(P)=\{ w\in\Sigma^*: P\text{ accepts }w \}$. $P$ accepts $L(P)$
+\end{definition}
+
+e.g. $\{ w\in \{ 0,1 \}^*: \text{\# 0's = \# 1's in } w\}$ 设计 PDA, accepts it. 
+\begin{itemize}
+    \item $K=\{ s\}$
+    \item $F=\{ s\}$
+    \item $\Sigma=\{ 0,1 \}$
+    \item $\Gamma=\{ 0,1 \}$
+    \begin{align*}
+        \Delta=\{&((s,0,1), (s,e))\\
+        &((s,0,e),(s,0))\\
+        &((s,1,0), (s,e))\\
+        &((s,1,e),(s,1))
+         \}
+    \end{align*}
+\end{itemize}
+PDA 是非确定的, 也有猜的能力. 
