@@ -57,7 +57,7 @@ Information associated with each process:
     \includegraphics[width=0.42\textwidth]{pic/OS3/Diagram showing context switch from process to process}
     \caption{Diagram showing context switch from process to process}
 \end{figure}
-二者idle 相交称为 overhead, 是为了 multiprocessing 留的冗余. %TODO multiprogramming 与 multiprocessing 的区别
+二者idle 相交称为 overhead, 是为了 multiprocessing 留的冗余. 
 
 \subsection{Process Scheduling}
 \begin{itemize}
@@ -167,7 +167,64 @@ Advantages of process cooperation:
     \end{minted}
 \end{itemize}
 
+\subsection{Interprocess Communication (IPC)}
+进程间进行通讯. 
 
+Two models for IPC: message passing and shared memory. 
 
-% \subsection{Interprocess Communication}
-% \subsection{Communication in Client-Server Systems}
+Message-passing facility provides two operations:
+\begin{itemize}
+    \item send(message) – message size fixed or variable
+    \item receive(message)
+\end{itemize}
+
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=0.309\textwidth]{pic/OS3/Communications models}
+    \caption{Communications models. (a) Shared memory. (b) Message passing.}
+\end{figure}
+
+\subsubsection{Direct Communication}
+Processes must name each other explicitly:
+\begin{itemize}\small
+    \item \textbf{send} (P, message) – send a message to process P
+    \item \textbf{receive}(Q, message) – receive a message from process Q
+\end{itemize}
+
+\subsubsection{Indirect Communication}
+Messages are directed and received from \textbf{mailboxes} (also referred to as \textbf{ports})
+\begin{itemize}
+    \item Each mailbox has a unique id (well-known ID)
+    \item Processes can communicate only if they share a mailbox
+\end{itemize}
+
+Operations:
+\begin{itemize}
+    \item create a new mailbox
+    \item send and receive messages through mailbox
+    \item destroy a mailbox
+\end{itemize}
+
+Primitives are defined as:
+\begin{itemize}\small
+    \item \textbf{send} (A, message) – send a message to mailbox A
+    \item \textbf{receive}(A, message) – receive a message from mailbox A
+\end{itemize}
+
+\subsubsection{Synchronization}
+Message passing may be either blocking or non-blocking.
+
+Blocking is considered synchronous
+
+Non-blocking is considered asynchronous
+
+\subsubsection{Buffering}
+Queue of messages attached to the link; implemented in one of three ways
+\begin{enumerate}
+    \item Zero capacity – 0 messages
+    \subitem Sender must wait for receiver
+    \item Bounded capacity – finite length of n messages
+    \subitem Sender must wait if link full
+    \item Unbounded capacity – infinite length
+    \subitem Sender never waits
+\end{enumerate}

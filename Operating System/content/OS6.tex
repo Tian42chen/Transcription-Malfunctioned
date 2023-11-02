@@ -1,0 +1,232 @@
+\newpage
+\section{Process Synchronization}
+\subsection{Background}
+Concurrent access to shared data may result in data
+inconsistency. (共享数据上的并发访问导致的不同步)
+
+\begin{code}
+    \begin{minted}{c++}
+        while (true) {
+            /* produce an item and put in nextProduced */
+            while (count == BUFFER_SIZE)
+                ; // do nothing
+            buffer [in] = nextProduced;
+            in = (in + 1) % BUFFER_SIZE;
+            count++;
+        }
+    \end{minted}
+    \caption{Producer}
+\end{code}
+
+\begin{code}
+    \begin{minted}{c++}
+        while (true) {
+            while (count == 0)
+                ; // do nothing
+            nextConsumed = buffer[out];
+            out = (out + 1) % BUFFER_SIZE;
+            count--;
+            /* consume the item in nextConsumed */
+        }
+    \end{minted}
+    \caption{Consumer}
+\end{code}
+
+\subsubsection{Race Condition(竞态条件)}
+多个进程对寄存器中的内容进行并发的访问会发生竞态条件. 
+
+e.g. 当 count 同时 $++\ --$, 其结果会不一致. 
+
+\begin{definition}[Race Condition]
+    A race condition is a situation in which a memory location is accessed concurrently, and at least one access is a write.
+\end{definition}%TODO Section 6.1 of ``xv6: a simple, Unix-like teaching operating system''
+
+\subsection{The Critical-Section Problem}
+To design a protocol that the processes can use to cooperate
+
+\begin{code}
+    \begin{minted}{c++}
+        do{
+            Entry section;
+            Critical section; // 临界区段
+            Exit section;
+            Remainder section;
+        }while(TRUE);
+    \end{minted}
+    \caption{General structure of a typical process $P_j$}
+\end{code}
+
+
+仅在 Critical section 中修改 register. 细粒度的 critical section 并发性更好. 
+
+\subsubsection{Solution to Critical-Section Problem}
+\begin{enumerate}
+    \item Mutual Exclusion (互斥): 对一个 critical section, 仅有一个相关进程可以运行. 
+    \item Progress (空闲让进): If no process is executing in its critical section and there exist some processes that wish to enter their critical section, then the selection of the processes that will enter the critical section next cannot be postponed indefinitely (当无进程处于临界区，可允许一个请求进入临界区的进程立即进入自己的临界区)
+    \item Bounded Waiting (有限等待): 进程运行 entry 请求进入 临界区, 使用 exit 退出. 在请求后, 其他进程进入临界区的次数是有限的, 即等待不会饿死这个进程. 
+\end{enumerate}
+
+
+\subsection{Peterson’s Solution}
+\begin{itemize}
+    \item Two process solution
+    \item Assume that the LOAD and STORE instructions are atomic
+    \item The two processes share two variables
+    \begin{itemize}
+        \item int turn: indicates whose turn it is to enter the critical section
+        \item Boolean flag[2]: is used to indicate if a process is ready to enter the critical section.
+    \end{itemize}
+\end{itemize}
+
+\begin{code}
+    \centering
+    \begin{minted}{c++}
+        while (true) {
+            flag[i] = TRUE;
+            turn = j;
+            while ( flag[j] && turn == j);
+                CRITICAL SECTION;
+            flag[i] = FALSE;
+            REMAINDER SECTION;
+        }
+    \end{minted}
+    \caption{The Algorithm for Process $P_i$}
+\end{code}
+
+\subsection{Synchronization Hardware}
+Many systems provide hardware support for critical section code.
+
+Uniprocessors -- could disable interrupts. 在临界区关中断, 出了后再打开.
+
+Modern machines provide special atomic hardware instructions. 
+
+\subsubsection{Solution using TestAndSet}
+\begin{code}
+    \begin{minted}{c++}
+        bool TestAndSet (bool *target){
+            bool rv = *target;
+            *target = TRUE;
+            return rv:
+        }
+    \end{minted}
+    \caption{TestAndSet Instruction}
+\end{code}
+
+Shared boolean variable lock., initialized to false. 
+ 
+\begin{code}
+    \begin{minted}{c++}
+        while (true) {
+            while(TestAndSet(&lock))
+                ; /* do nothing */
+            critical section;
+            lock = FALSE;
+            remainder section;
+        }
+    \end{minted}
+    \caption{Solution using TestAndSet}
+\end{code}
+
+\subsubsection{Solution using Swap}
+\begin{code}
+    \begin{minted}{c++}
+        void Swap (boolean *a, boolean *b){
+            bool temp = *a;
+            *a = *b;
+            *b = temp:
+        }
+    \end{minted}
+    \caption{Swap Instruction}
+\end{code}
+
+\begin{code}
+    \begin{minted}{c++}
+        while (true) {
+            key = TRUE;
+            while ( key == TRUE)
+                Swap (&lock, &key );
+            critical section;
+            lock = FALSE;
+            remainder section;
+        }
+    \end{minted}
+    \caption{Solution using Swap}
+\end{code}
+
+\subsubsection{Solution with Compare and Swap}
+\begin{code}
+    \begin{minted}{c++}
+        int compare_and_swap(int *value, int expected, int new_value){
+            int tmp = *value;
+            if(*value == expected)*value = new_value;
+            return tmp;
+        }
+    \end{minted}
+    \caption{Compare and Swap Instruction}
+\end{code}
+
+\begin{code}
+    \begin{minted}{c++}
+        while (true) {
+            while (compare_and_swap(&lock, 0, 1) != 0)  
+                ; /* do nothing */
+            critical section;
+            lock = 0;
+            remainder section;
+        }
+    \end{minted}
+    \caption{Solution with CAS}
+\end{code}
+
+
+\subsection{Semaphores(信号量)}
+\begin{itemize}
+    \item Semaphore S -- integer variable
+    \item Two atomic standard operations modify S: wait() and signal(). 
+    \subitem Originally called P() and V(). 
+    \item Can only be accessed via two indivisible (atomic) operations:
+    \begin{code}
+        \begin{minted}{c++}
+            struct Semaphore{
+                int S;
+            public:
+                S(int _S)S(_S){}
+                void wait(){
+                    while(S<=0)
+                        ; // no-op
+                    S--;
+                }
+                void signal(){
+                    S++;
+                }
+            };
+        \end{minted}
+        \caption{Semaphores definition}
+    \end{code}
+    
+\end{itemize}
+
+\subsubsection{Usage as General Synchronization Tool}
+\begin{itemize}
+    \item Binary semaphore -- integer value can range only between 0 and 1; can be simpler to implement (mutex locks)
+    \item Counting (计数) semaphore -- integer value can range over an unrestricted domain
+\end{itemize}
+
+Provides mutual exclusion
+\begin{code}
+    \begin{minted}{c++}
+        Semaphore S(1); // initialized to 1
+        S.wait();
+        Critical Section;
+        S.signal();
+    \end{minted}
+    \caption{Semaphore Usage}
+\end{code}
+
+
+\subsubsection{Semaphore Implementation}
+
+
+
+% \subsection{Classic Problems of Synchronization}
+% \subsection{Monitors}

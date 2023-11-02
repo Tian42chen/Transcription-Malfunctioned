@@ -42,7 +42,7 @@
 \usetikzlibrary{shapes}
 \usetikzlibrary{bayesnet}
 \usetikzlibrary{decorations.pathreplacing}
-\usetikzlibrary{calc}
+\usetikzlibrary{calc, math}
 \tikzset{>=stealth}
 \definecolor{light_red}{RGB}{209,105,81}
 \definecolor{light_green}{RGB}{58,181,75}
@@ -93,6 +93,10 @@
 	\renewcommand\tablename{\textbf{Table}}
 	% 重定义图片编号
 	\renewcommand\figurename{\textbf{Figure}}
+	% 新增环境
+	\newenvironment{code}{\captionsetup{type=listing}}{}
+	%重定义 listing 名称
+	\renewcommand{\listingscaption}{\textbf{Code}}
 	%目录居中
 	\renewcommand*\contentsname{\hfill Contents \hfill}
 	% 图片按章节编号
@@ -158,6 +162,7 @@
 \setminted{
   % frame=lines,
   framesep=2mm,
+  numbersep=4pt,
   baselinestretch=1.2,
   fontsize=\small,
   linenos,
