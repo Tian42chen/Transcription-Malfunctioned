@@ -43,7 +43,7 @@
 \usetikzlibrary{shapes}
 \usetikzlibrary{bayesnet}
 \usetikzlibrary{decorations.pathreplacing}
-\usetikzlibrary{calc}
+\usetikzlibrary{calc, math}
 \tikzset{>=stealth}
 \definecolor{light_red}{RGB}{209,105,81}
 \definecolor{light_green}{RGB}{58,181,75}
@@ -65,7 +65,7 @@
 %
 
 \newtheorem{theorem}{Theorem}[section]
-\newtheorem{definition}{Definition}[section]
+\newtheorem{definition}[theorem]{Definition}
 \newtheorem{claim}{Claim}[theorem]
 % \newtheorem{claimproof}{Proof of claim}[theorem]
 % \newtheorem{proof}{Proof}[section]

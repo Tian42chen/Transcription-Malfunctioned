@@ -287,12 +287,41 @@ $\{q_1\}$ 与 $\emptyset$ 可省略.
         \item $\Delta^\circ=\Delta_A \cup \Delta_B \cup \{ (q,e,s_B):q\in F_A \}$
     \end{itemize}
 \end{proof}
-
+\newpage
 
 \begin{theorem}\label{Star}
     If $A$ is regular, so is $A^*$
 \end{theorem}
 
-\begin{proof}%TODO
+\begin{figure}[!htb]
+    \centering
+    \tikzset{invisible/.style={minimum width=-1mm,inner sep=0mm,outer sep=-0.2mm}}
+    \begin{tikzpicture}[shorten >=1pt, node distance=2cm, on grid, auto]
+        \node[state,initial, accepting]  (q_0) {};
+        \node[state] (q_1) at (2,0) {};
+        \node[state, accepting] (q_2) at (4,0.8) {};
+        \node[state, accepting] (q_3) at (4,-0.8) {};
+        \node [invisible] (q211) at (4.8, 1.5) {};
+        \node [invisible] (q212) at (1.3, 1.5) {};
+        \node [invisible] (q311) at (4.8, -1.5) {};
+        \node [invisible] (q312) at (1.3, -1.5) {};
+
+        % \draw [->] (q_2) to[out=90,in=160, swap] (q_1);
+        \draw (q_2) to [out=-20, in=-60] (q211);
+        \draw (q211) to [out=120, in=60, edge label={$e$}, swap] (q212);
+        \draw [->] (q212) to [out=-120, in=160] (q_1);
+
+        \draw (q_3) to [out=20, in=60] (q311);
+        \draw (q311) to [out=-120, in=-60, edge label={$e$}] (q312);
+        \draw [->] (q312) to [out=120, in=-160] (q_1);
     
-\end{proof}
+        \path[->] (q_0) edge node {$e$} (q_1)
+            ;
+        
+        \draw (1.3, -1.3) rectangle (4.7, 1.3);
+    \end{tikzpicture}
+    \caption{$A^*$}% 这张图画得不容易啊
+\end{figure}
+
+
+正则对 $\cup,\ \cap,\ \bar{},\ \circ,\ *,\ -$ 都封闭. 
