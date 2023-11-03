@@ -1,0 +1,245 @@
+\newpage
+\section{Descent Meethod}
+\subsection{Gradient Descent}
+\subsubsection{Basic Scheme}
+
+\paragraph{Gradient Descent Formulation}We will 
+
+Gradient Method
+\begin{itemize}
+    \item Choose $\bm x_0\in \mathbb{R}^n$
+    \item Iterate $\bm x_{k+1}=\bm x_k-h_k\nabla f(\bm x_k),k=0,1,\dots$
+\end{itemize}
+
+\paragraph{Step Size}\quad 
+\begin{enumerate}
+    \item in advance
+    \item Full relaxation (贪心)
+    \item G-A (折中)
+    \begin{align*}
+        f(\bx_{k+1})\le f(\bx)+ ..\\
+        f(\bx_{k+1})\ge f(\bx)+ ..\\
+    \end{align*}
+    \subitem Geometric interpretation
+\end{enumerate}
+
+\subsubsection{Performance for \texorpdfstring{$C_L^{1,1}(\mathbb{R}^n)$}. }
+\begin{align*}
+    \min_{\bx\in\R^n}f(\bx)
+\end{align*}
+where $f\in C_L^{1,1}(\R^n)$
+
+ref (1.2.5)
+\begin{align*}
+    f(\by)\le f(\bx)-h\left( 1-\frac{h}{2}L \right)\norm{\nabla f(\bx)}^2
+\end{align*}
+Remark: $\forall h\in \left( 0,\frac{2}{L} \right)$, $h\left( 1-\frac{h}{2}L \right)\norm{\nabla f(\bx)}^2\ge 0$. 
+
+step-size strategies:
+\begin{enumerate}
+    \item $h_k=\frac{1}{L}$
+    \item $h_k=\frac{1}{L}$
+    \item $h_k\ge \frac{2}{L}(1-\beta)$
+\end{enumerate}
+步长选取影响 $\omega$
+
+\begin{align*}
+    f(\bx_{k+1})-f(\bx_k)\le -\frac{\omega}{L}\norm{\nabla f(\bx_k)}^2
+\end{align*}
+where $\omega$ is some positive constant. 
+
+\begin{align*}
+    \norm{\nabla f(\bx_k)}\to 0\text{ as }k\to \infty
+\end{align*}
+
+方法的收敛和梯度与步长相关. 每一步下降但最后是不一定收敛的(需要一个下界). 
+
+\begin{align*}
+    g_T^*=\min g_k
+\end{align*}
+
+\begin{align*}
+    g_T^*\le 
+\end{align*}
+速度是 $\frac{1}{\sqrt{T+1}}$
+
+可得到一个复杂度上界 $g_T^*\le \epsilon$
+
+步长收敛相当于主动构造序列, 保证了递减与有下界, 但收敛点的意义不能保证. 
+
+e.g. 
+
+
+\subsubsection{Performance for \texorpdfstring{$\FC_L^{1,1}(\R^n)$}. }
+\begin{theorem}
+    \begin{align*}
+        f(\bx_k)-f^*\le \frac{2(f(\bx_0)-f^*)\norm{\bx_0-\bx^*}^2}{2\norm{\bx_0-\bx^*}^2+kh(2-Lh)(f(\bx_0)-f^*)}
+    \end{align*}
+\end{theorem}
+
+\begin{corollary}
+    If 
+    \begin{align*}
+        f(\bx_k)-f^*\le\frac{2L\norm{\bx_0-\bx^*}^2}{k+4}
+    \end{align*}
+\end{corollary}
+
+
+\subsubsection{Performance for \texorpdfstring{$\SC_{\mu,L}^{1,1}(\R^n)$}. }
+
+\begin{theorem}
+    \begin{align*}
+        \norm{\bx_k-\bx^*}^2\le \left( 1-\frac{2h\mu L}{\mu+L} \right)^k \norm{\bx_0-\bx^*}^2
+    \end{align*}
+\end{theorem}
+
+\subsection{General Descent Directions}
+\subsubsection{Choosing the Direction}
+
+
+\subsection{Newton Method}
+\subsubsection{Basic Scheme}
+\paragraph{Historical Origins} 寻找单变量函数的根. 
+
+可扩展到解非线性系统. non degenerate
+
+\paragraph{Basic Scheme}由非约束最小化问题到寻找非线性系统的根.
+
+Remark: 
+\begin{itemize}
+    \item ss
+    \item 是可能 diverge(发散) 的
+\end{itemize}
+
+Example:
+
+\paragraph{Damped Newton Method}加阻尼防止发散
+
+\subsubsection{Local Convergence of The Newton Method}
+\begin{enumerate}
+    \item 
+\end{enumerate}
+
+考虑: 
+
+\begin{align}
+    111
+\end{align}
+第一步 $\nabla f(\bx_k)$ 进行 Taylor 零阶展开. 
+
+contracting mapping(收缩映射)
+
+\paragraph{Bound for }$[\nabla^2 f(\bx_k)]^{-1}$
+
+
+The rate of convergence of this type is called quadratic
+\begin{align*}
+    \lim_{k\to\infty}\frac{a_{k+1}}{a_k^2}=r
+\end{align*}
+
+\begin{theorem}
+    f(x)
+\end{theorem}
+
+\subsubsection{Convergence Analysis}
+\begin{itemize}
+    \item GD
+    \item Lightweight Newton $G_k$
+    \item Variable Metric(可变度量方法) or Quasi-Newton (拟牛顿)
+    \item New Inner Product (W.R.t)
+\end{itemize}
+
+Example: ($\alpha$ 应该是 $\bm a$)
+
+Variable metric method
+\begin{enumerate}
+    \item Choose
+    \item iter
+    \begin{enumerate}
+        \item 
+    \end{enumerate}
+\end{enumerate}
+
+Quasi-Newton rule: 符合公式,能迭代, 能收敛
+
+Example:
+\begin{itemize}
+    \item Rank-one correction
+    \item (DFP)
+    \item (BFGS)
+\end{itemize}
+
+Remark:
+\begin{enumerate}
+    \item $n$ iter
+    \item superlinear 
+    \begin{align*}
+        \lim_{k\to\infty}\frac{a_{k+1}}{a_k}=0
+    \end{align*}
+    \item 对全局最优并不必 GD 好. 
+    \item 拟牛顿最大的问题是有过多附加运算, 用以存储与计算 $n\times n$ 矩阵. 以此提出新的方法. 
+\end{enumerate}
+
+\subsection{Conjugate Gradient}
+\subsubsection{Historical Origins}
+迭代就是一个线性组合, 直接在子空间中寻找解. 
+\paragraph{Krylov Subspace} To solve (这是一类方法, 例如)
+
+Remark: 这些方法可以被看做为投影. 
+
+\paragraph{CG}CG 
+
+\begin{align*}
+    \bm x_k=\argmin\{ f(\bm x)|\bm x\in \bm x_0+\mathcal{L}_k \},\ k\ge 1
+\end{align*}
+
+\subsubsection{Fundamental Theory}
+
+\begin{lemma}
+    $\forall k\ge 1$
+\end{lemma}
+
+\begin{lemma}
+    $\forall k,i\ge 0$
+\end{lemma}
+
+\begin{corollary}
+    finite
+\end{corollary}
+
+\begin{corollary}
+    $\forall p$
+\end{corollary}
+
+\begin{lemma}
+    Let $\delta_i$,  $\forall k\ne i$
+\end{lemma}
+
+\subsubsection{CG Algorithm}
+
+
+
+
+Conjugate Gradient Method
+\begin{enumerate}
+    \item 00
+    \item 11
+    \begin{enumerate}
+        \item 
+    \end{enumerate}
+\end{enumerate}
+
+The specification of the coefficient $\beta_k$:
+\begin{itemize}
+    \item 
+\end{itemize}
+
+Recall: 
+\begin{itemize}
+    \item 11
+    \item 做很多次 $n$ 次最后可以收敛于 global
+\end{itemize}
+local 达到了 quadratic convergence
+
+但全局并没有理论支持其更好. 
+% 符合动力学 + 取值在空间之内
