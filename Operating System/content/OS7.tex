@@ -1,0 +1,149 @@
+\newpage
+\section{Deadlocks}
+\subsection{The Deadlock Problem}
+A set of blocked processes each holding a resource and waiting to acquire a resource held by another process in the set.
+
+e.g. semaphores A and B, initialized to 1 
+\begin{table}[!htb]
+    \centering
+    % \caption{}
+    \begin{tabular}[c]{cc}\toprule
+         $P_0$ & $P_1$\\ \midrule
+         wait(A) & wait(B) \\
+         wait(B) & wait(A) \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+死锁由资源的共享造成. 
+
+\subsection{System Model}
+Resource types $R_1,\dots,R_m$. Each resource type $R_i$ has $W_i$ instances. Each process utilizes a resource as follows:
+\begin{itemize}
+    \item request
+    \item use
+    \item release
+\end{itemize}
+
+\subsection{Deadlock Characterization}
+Deadlock can arise if four conditions hold simultaneously
+\begin{enumerate}
+    \item Mutual exclusion(互斥性): 一个 resource 只能同时被一个 process 使用. 
+    \item Hold and wait: 进程手里至少有一个 resource, 且等待其他进程的 resource. 
+    \item No preemption: 不能抢占
+    \item Circular wait: 循环等待. 
+\end{enumerate}
+
+\subsubsection{Resource-Allocation Graph}
+%TODO P11
+\begin{itemize}
+    \item Process
+    \item Resource Type with 4 instances
+    \item $P_i$ requests instance of $R_j$
+    \item $P_i$ is holding an instance of $R_j$
+\end{itemize}
+
+%TODO P12-14
+
+\subsubsection{Basic Facts}
+If graph contains no cycles $\to$ no deadlock.
+
+If graph contains a cycle $\to$
+\begin{itemize}
+    \item if only one instance per resource type, then deadlock.
+    \item if several instances per resource type, possibility of deadlock.    
+\end{itemize}
+
+\subsection{Methods for Handling Deadlocks}
+\begin{itemize}
+    \item Ensure that the system will never enter a deadlock state(死锁避免).
+    \item Allow the system to enter a deadlock state and then recover.
+    \item Ignore the problem and pretend that deadlocks never occur in the system; used by most operating systems, including UNIX. (KISS)
+\end{itemize}
+
+\subsection{Deadlock Prevention (预防)}
+Restrain the ways request can be made
+\begin{enumerate}
+    \item Mutual Exclusion: 难以打破. 
+    \item Hold and Wait: must guarantee that whenever a process requests a resource, it does not hold any other resources.
+    \item No Preemption: 也不太行
+    \item Circular Wait: impose a \textbf{total ordering} of all resource types, and require that each process requests resources in an increasing order of enumeration. (但难以做到)
+\end{enumerate}
+
+\subsection{Deadlock Avoidance (避免)}
+Requires that the system has some additional a priori information available.
+\begin{enumerate}\small
+    \item Simplest and most useful model requires that each process declares the maximum number of resources of each type that it may need
+    \item The deadlock-avoidance algorithm dynamically examines the resource-allocation state to ensure that there can never be a circular-wait condition.
+    \item Resource-allocation state is defined by the number of available and allocated resources, and the maximum demands of the processes
+\end{enumerate}
+
+\subsubsection{Safe State}
+%TODO P20-22
+
+\subsubsection{Avoidance algorithms}
+
+For single instance of a resource type, use a resource-allocation graph.
+
+For multiple instances of a resource type, use the banker's algorithm
+
+\paragraph{Resource-Allocation Graph}
+%TODO P24-27
+%TODO 证明, 为什么 rag 不能用在多实例的情况
+
+\paragraph{Banker's Algorithm}%TODO P28-31
+Assumptions:
+\begin{itemize}\small
+    \item Multiple instances
+    \item Each process must a priori claim maximum use
+    \item When a process requests a resource it may have to wait
+    \item When a process gets all its resources it must return them in a finite amount of time
+\end{itemize}
+
+Data Structures: Let $n =$ number of processes, and $m =$ number of resources types
+\begin{itemize}
+    \item Available
+    \item Max
+    \item Allocation
+    \item Need
+\end{itemize}
+
+First part: Safety Algorithm
+\begin{enumerate}
+    \item 
+\end{enumerate}
+
+Second part: Resource-Request Algorithm for Process $P_i$:
+\begin{enumerate}
+    \item 违反约定
+    \item 等待资源
+    \item 假装修改后, 调用 part 1
+    \begin{itemize}
+        \item safe, 修!
+        \item unsafe, 拒!
+    \end{itemize}
+\end{enumerate}
+
+e.g. %TODO P32-34
+
+\subsection{Deadlock Detection}
+Allow system to enter deadlock state. 
+\subsubsection{Single Instance of Each Resource Type}
+Maintain wait-for graph
+\begin{itemize}
+    \item 
+\end{itemize}
+
+rag -> wait-for
+
+\subsubsection{Several Instances of a Resource Type}
+
+
+\paragraph{Detection Algorithm}
+\begin{enumerate}
+    \item 
+\end{enumerate}
+
+e.g. 
+
+% \subsection{Recovery from Deadlock}
