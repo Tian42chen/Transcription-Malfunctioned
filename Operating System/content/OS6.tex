@@ -67,7 +67,7 @@ To design a protocol that the processes can use to cooperate
 \end{enumerate}
 
 
-\subsection{Peterson’s Solution}
+\subsection{Peterson's Solution}
 \begin{itemize}
     \item Two process solution
     \item Assume that the LOAD and STORE instructions are atomic
@@ -92,6 +92,8 @@ To design a protocol that the processes can use to cooperate
     \end{minted}
     \caption{The Algorithm for Process $P_i$}
 \end{code}
+
+但遇到指令重排会失效, 可在 flag[i]=ture  后增加个内存屏障, 保证flag 都处理完才能进行下面的指令. 
 
 \subsection{Synchronization Hardware}
 Many systems provide hardware support for critical section code.
@@ -143,7 +145,7 @@ Shared boolean variable lock., initialized to false.
     \begin{minted}{c++}
         while (true) {
             key = TRUE;
-            while ( key == TRUE)
+            while (key == TRUE)
                 Swap (&lock, &key );
             critical section;
             lock = FALSE;
@@ -177,6 +179,41 @@ Shared boolean variable lock., initialized to false.
     \end{minted}
     \caption{Solution with CAS}
 \end{code}
+
+不满足 Bounded Waiting. 可以解决但需要更改逻辑, 加个检查
+
+\subsection{Solution with Mutex Locks}
+Has atomic operations acquire and release. 
+
+\begin{code}
+    \begin{minted}{c++}
+        void acquire(){
+            while(!available)
+                ; /* busy wait */
+            available=false;
+        }
+
+        void release(){
+            available=true;
+        }
+    \end{minted}
+    \caption{acquire and release}
+\end{code}
+
+
+\begin{code}
+    \begin{minted}{c++}
+        while(true){
+            acquire();
+            critical section;
+            release();
+            remainder section;
+        }
+    \end{minted}
+    \caption{Solution with mutex lock}
+\end{code}
+
+自旋锁 (spin lock), 忙等待 (busy waiting).  
 
 
 \subsection{Semaphores(信号量)}
@@ -225,8 +262,61 @@ Provides mutual exclusion
 
 
 \subsubsection{Semaphore Implementation}
+\paragraph{with Busy waiting}
+wait 与 signal 也成为了 critical section. 需要保护. 这属于 busy Waiting
+
+\paragraph{with no Busy waiting} With each semaphore there is an associated waiting queue. Each semaphore has two data items:
+\begin{itemize}
+    \item value 
+    \item pointer to a linked-list of PCBs.
+\end{itemize}
+
+Two operations (provided as basic system calls):
+\begin{enumerate}
+    \item block - place the process invoking the operation on the appropriate waiting queue. 
+    \item wakeup – remove one of processes in the waiting queue
+    and place it in the ready queue.
+\end{enumerate}
+%TODO P26
+
+可能导致 lost wake-up problems
+
+\subsubsection{Deadlock and Starvation}%TODO 27
+\begin{itemize}
+    \item Deadlock 
+    \item Starvation 
+\end{itemize}
 
 
+\subsection{Classic Problems of Synchronization}
+%TODO P29
 
-% \subsection{Classic Problems of Synchronization}
-% \subsection{Monitors}
+\subsubsection{Bounded-Buffer Problem}
+
+\subsubsection{Readers-Writers Problem}
+
+\subsubsection{Dining-Philosophers Problem}
+
+\subsection{Monitors(管程)}
+A high-level abstraction that provides a convenient and effective mechanism for process synchronization. 
+
+Only one process may be active within the monitor at a time. 
+
+%TODO P39
+
+\subsubsection{Condition Variables}
+
+Two operations on a condition variable:
+\begin{itemize}
+    \item x.wait(): a process that invokes the operation is suspended.
+    \item x.signal(): resumes one of processes (if any) that invoked x.wait ()
+\end{itemize}
+
+%TODO P41
+
+\subsubsection{Solution to Dining Philosophers}
+
+%TODO P42 
+
+\subsection{Pthreads Synchronization}
+%TODO P53-56
