@@ -24,6 +24,7 @@
 \RequirePackage{amsthm}
 \RequirePackage{mathtools}
 % \RequirePackage{unicode-math}
+\RequirePackage{bm}
 \RequirePackage{extarrows}
 \RequirePackage{caption}
 \RequirePackage{subcaption}
@@ -67,11 +68,16 @@
 %
 
 \newtheorem{theorem}{Theorem}[section]
-\newtheorem{definition}[theorem]{Definition}
 \newtheorem{claim}{Claim}[theorem]
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{assumption}[theorem]{Assumption}
 % \newtheorem{claimproof}{Proof of claim}[theorem]
 % \newtheorem{proof}{Proof}[section]
 \numberwithin{equation}{section}
+\counterwithin{algorithm}{section}
+
 
 \hypersetup{
 	colorlinks=true,%打开颜色显示
@@ -83,6 +89,29 @@
 }
 
 %自定义命令
+	% 数学符号
+		% 偏导
+		\newcommand{\pard}[2]{\frac{\partial #1}{\partial #2}}
+		% 向量
+		\newcommand{\bx}{\bm{x}}
+		\newcommand{\by}{\bm{y}}
+		\newcommand{\bg}{\bm{g}}
+		% 域
+		\newcommand{\R}{\mathbb{R}}
+		\newcommand{\FC}{\mathcal{F}}
+		\newcommand{\SC}{\mathcal{S}}
+		\newcommand{\LC}{\mathcal{L}}
+		% 范数
+		\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+		% encode
+		\newcommand{\encode}[1]{{``#1"}}
+		%subject to
+		\DeclareMathOperator{\st}{s.t.\ }
+		%argmin, argmax
+		\DeclareMathOperator*{\argmin}{argmin}
+		\DeclareMathOperator*{\argmax}{argmax}
+		% domain
+		\DeclareMathOperator*{\dom}{dom}
 	% 复制代码不带行号
 	\newcommand{\emptyaccsupp}[1]{\BeginAccSupp{ActualText={}}#1\EndAccSupp{}}
 	%脚注
