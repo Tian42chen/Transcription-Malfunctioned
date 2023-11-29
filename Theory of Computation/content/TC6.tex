@@ -1,0 +1,632 @@
+\newpage
+\section{Undecidability}
+\subsection{Church-Turing Thesis}
+\begin{table}[!htb]
+    \centering
+    \caption*{Church-Turing Thesis}
+    \begin{tabular}{ccc}
+        Intuition of algorithm & equals & \begin{tabular}[c]{@{}c@{}}Turing machines that\\ halt on every input\end{tabular} \\
+        solve                  &        & decide                                                                             \\
+        decision porblem       & equals & language                                                                          
+    \end{tabular}
+\end{table}
+
+Intuition of algorithm $\iff$ TM that halt of every input
+
+
+Description of TM
+\begin{enumerate}
+    \item formal definition: $M=(K,\Sigma, \delta, s, H)$
+    \item Implement-level desc: diagram
+    \item high-level: ``pseudo code"
+\end{enumerate}
+
+Fact:
+\begin{enumerate}
+    \item Any finite set can encoded. 
+    \item Any finite collection of finite sets can be encoded
+\end{enumerate}
+Object $O$ $\to$ $``O"$ (用双引号表示 encode)% 数学模式中 的 ``"
+
+\subsection{Decidable Problem}
+\begin{enumerate}
+    \item [$R_1$] $A_{DFA}=\{ ``D"\ ``w": D \text{ is a DFA that accepts }w \}$. 
+    \subitem $M_{R_1}=$ on input $``D"\ ``w"$.
+
+    \begin{algorithm}[!htb]
+        \caption{$M_{R_1}$}
+        \begin{algorithmic}
+            \State run $D$ on $w$.
+            \If{$D$ accepts $w$}
+                \State accepts $``D"\ ``w"$
+            \Else
+                \State rejects $``D"\ ``w"$
+            \EndIf
+        \end{algorithmic}
+    \end{algorithm}
+    \item [$R_2$] $A_{NFA}=\{ ``N"\ ``w": N \text{ is a NFA that accepts }w \}$
+    \subitem $M_{R_2}=$ on input $``N"\ ``w"$.
+    \begin{algorithm}[H]
+        \caption{$M_{R_2}$}
+        \begin{algorithmic}
+            \State N $\to$ equivalent DFA $D$
+            \State run $M_{R_1}$ on $``D"\ ``w"$
+            \State output the result of $M_{R_1}$
+        \end{algorithmic}
+    \end{algorithm}
+    a reduction(归约) from $A_{NFA}$ to $A_{DFA}$. 将左输入映射为右输入, 保证映射前后答案一致. 
+    \item [$R_3$] $A_{REX}=\{ ``R"\ ``w": R $ is a regular expression with $w\in L(R)  \}$
+    \subitem $M_{R_3}=$ on input $``R"\ ``w"$.
+    \begin{algorithm}[H]
+        \caption{$M_{R_3}$}
+        \begin{algorithmic}
+            \State R $\to$ an equivalent NFA $N$
+            \State run $M_{R_2}$ on $``N"\ ``w"$
+            \State output the result of $M_{R_2}$
+        \end{algorithmic}
+    \end{algorithm}
+    \item [$R_4$] $E_{DFA}=\{ ``D": D \text{ is a DFA and }L(D)=\emptyset \}$
+    \subitem $M_{R_4}=$ on input $``D"$
+    \begin{algorithm}[H]
+        \caption{$M_{R_4}$}
+        \begin{algorithmic}
+            \If{$D$ has no finial state}
+                \State accepts
+            \Else
+                \State run DFS on BFS starting with the initial state on the diagram
+                \If{$\exists$ path from $s$ to finial}
+                    \State reject
+                \Else
+                    \State accept
+                \EndIf
+            \EndIf
+        \end{algorithmic}
+    \end{algorithm}
+    \item [$R_5$] $EQ_{DFA}=\{ ``D_1"\ ``D_2": D_1$ and $D_2$ are DFAs with $L(D_1)=L(D_2) \}$
+    \begin{definition}[symmetric difference]
+        \begin{align*}
+            A \oplus B = \{ x\in A\cup B \cap x \notin A\cap B \}
+        \end{align*}
+        \begin{align*}
+            A=B &\iff A\oplus B=\emptyset\\
+            A\oplus B&=A\cup B-A\cap B\\
+            &= (A\cup B)\cap (\overline{A\cap B})\\
+            &=(A\cup B)\cap (\overline{A}\cup \overline{B})
+        \end{align*}
+    \end{definition}
+    \subitem $M_{R_5}=$ on input $``D_1"\ ``D_2"$
+
+    \begin{algorithm}[H]
+        \caption{$M_{R_5}$}
+        \begin{algorithmic}
+            \State construct $D_3$ with $L(D_3)=L(D_1)\oplus L(D_2)$
+            \State run $M_{R_4}$ on $``D_3"$
+            \State output the result of $M_{R_4}$
+        \end{algorithmic}
+    \end{algorithm}
+\end{enumerate}
+
+\begin{enumerate}
+    \item [$C_1$] $A_{CFG}=\{ ``G"\ ``w": G\text{ is a CFG that generates }w\}$
+    \subitem $M_{C_1}=$ on input $``G"``w"$
+    \begin{algorithm}[H]
+        \caption{$M_{C_1}$}
+        \begin{algorithmic}
+            \State $G\to$ an equivalent CFG $G'$ in CNF. 
+            \State enumerate all the derivations of length $2|w|-1$( the number of derivations $\le |R|^{2|w|-1}$). 
+            \If{any of them generates $w$}
+                \State accepts $``G"``w"$
+            \Else
+                \State rejects $``G"``w"$
+            \EndIf
+        \end{algorithmic}
+    \end{algorithm}
+    \item [$C_2$] $A_{PDA}=\{ ``P"``w": P\text{ isa PDA that accepts }w \}$
+    \subitem $M_{C_2}=$ on input $``P"``w"$
+    \begin{algorithm}[H]
+        \caption{$M_{C_2}$}
+        \begin{algorithmic}
+            \State $P\to $ an equivalent CFG $G$
+            \State run $M_{C_1}$ on $``G"``w"$
+            \State return the result of $M_{C_1}$
+        \end{algorithmic}
+    \end{algorithm}
+    \item [$C_3$] $E_{CFG}=\{ ``G": G\text{ is a CFG with }L(G)=\emptyset \}$
+    \subitem $M_{C_3}=$ on input $``G"$
+    \begin{algorithm}[H]
+        \caption{$M_{C_3}$}
+        \begin{algorithmic}
+            \State mark terminals and $e$
+            \State If right is marked, mark left, until it can't be marked. 
+            \If{$S$ is marked}
+                \State rejects $``G"$
+            \Else
+                \State accepts $``G"$
+            \EndIf
+        \end{algorithmic}
+    \end{algorithm}
+    \item [$C_4$] $E_{PDA}=\{ ``P": P\text{ is a PDA with } L(P)=\emptyset \}$
+    \subitem $M_{C_4}=$ on input $``P"$
+    \begin{algorithm}[H]
+        \caption{$M_{C_4}$}
+        \begin{algorithmic}
+            \State $P\to $ an equivalent CFG $G$
+            \State run $M_{C_3}$ on $``G"``w"$
+            \State return the result of $M_{C_3}$
+        \end{algorithmic}
+    \end{algorithm}
+\end{enumerate}
+
+\begin{definition}
+    Let $A$ and $B$ be two languages over $\Sigma_A$ and $\Sigma_B$ respectively. A reduction from $A$ to $B$ is a recursive(computable) function $f:\Sigma_A^*\to\Sigma_B^*$, such that $\forall x\in\Sigma_A^*$,
+    \begin{align*}
+        x\in A \iff f(x) \in B
+    \end{align*}
+    called $A\le B$
+\end{definition}
+
+\begin{theorem}
+    Suppose that $\exists$ a reduction from $A$ to $B$. If $B$ is recursive, $A$ is recursive. (If $A$ is not recursive, then $B$ is not recursive.)
+\end{theorem}
+\begin{proof}
+    $B$ is recursive $\to\exists M_B$ decides $B$. 
+
+    Let $M_A=$ on input $``x"$,
+    \begin{algorithm}[H]
+        \caption{$M_A$}
+        \begin{algorithmic}
+            \State compute $f(x)$
+            \State run $M_B$ on $f(x)$
+            \State return the result of $M_B$
+        \end{algorithmic}
+    \end{algorithm}
+\end{proof}
+
+\subsection{Countable}
+
+\begin{definition}
+    Two sets $A$ and $B$ are equinumerous(等势), if $\exists$ bijection $f:A\to B$. 
+
+    A set is countable if it's finite or it's equinumerous with $\mathcal{N}$, uncountable otherwise. 
+\end{definition}
+
+\begin{lemma}
+    $A$ is countable if and only if $\exists$ injection $f:A\to \mathcal{N}$
+\end{lemma}
+\begin{proof}\quad
+
+    \begin{enumerate}
+        \item [$\to$] is simple. 
+        \item [$\leftarrow$] if $A$ is finite, trivially
+        \subitem else sort $A$ in increasing order of $f(a)$. Let $g(a)=$ rank of $a$. $g(a)$ is bijection. 
+    \end{enumerate}
+\end{proof}
+
+\begin{corollary}
+    Any subset of a countable set is countable. 
+\end{corollary}
+\begin{proof}
+    $A$ is a countable set. \\
+    $\Rightarrow \exists$ injection $f:A\to \mathcal{N}$\\
+    $\Rightarrow \exists$ injection $f':A' \to \mathcal{N}$, $A'\subseteq A$\\
+    $\Rightarrow A'$ is countable. 
+\end{proof}
+
+\begin{lemma}
+    Let $\Sigma$ be an alphabet. $\Sigma^*$ is countable. 
+\end{lemma}
+Proof idea: 从短到长排列所有字符串, 并编号, 这是个 bijection. 
+
+\begin{corollary}\label{cor:tmc}
+    $\{ M: M \text{ is a Turing Machine} \}$ is countable
+\end{corollary}
+
+\begin{lemma}\label{lem:lunc}
+    Let $\Sigma$ be some non-empty alphabet. Let $\mathcal{L}$ be the set of all languages over $\Sigma$. $\mathcal{L}$ is uncountable. 
+\end{lemma}
+\begin{proof}
+    Suppose that $\mathcal{L}$ is countable. The languages in $\mathcal{L}$ can be labelled as $L_1,L_2,\dots$ 
+    
+    Since $\Sigma^*$ is countable, the strings in $\Sigma^*$ can be labelled as $s_1,s_2,\dots$
+
+    Let $D=\{ s_i:s_i\notin L_i \}$, $\forall i$, $s_i\in D \iff s_i\notin L_i$. \\
+    $\Rightarrow D\ne L_i$\\
+    $\Rightarrow D\notin \mathcal{L}$, contradiction. 
+\end{proof}
+It's same as Diagonalization.(用来证实数不可数的)
+
+From \textbf{Corollary} \ref{cor:tmc} and \textbf{Lemma} \ref{lem:lunc}, $\exists$ language is not recursively enumerable. 
+
+\subsection{Halting Problem}
+$H=\{ ``M"``w": M \text{ is a TM that halts on }w \}$
+
+\begin{theorem}
+    $H$ is recursively enumerable. 
+\end{theorem}
+\begin{proof}
+    Let $U=$ on input $``M"``w"$
+    \begin{algorithm}[H]
+        \caption{$U$}
+        \begin{algorithmic}
+            \State run $M$ on $w$
+        \end{algorithmic}
+    \end{algorithm}
+    $U$ halts on $``M"``w"\iff M$ halts on $w \iff$ $``M"``w"\in H$. $U$ is called universal Turing Machine
+\end{proof}
+
+\begin{theorem}
+    $H$ is not recursive. 
+\end{theorem}
+\begin{proof}
+    $H_d=\{ ``M": M \text{ is a TM that doesn't halt on }``M" \}$
+
+    \begin{enumerate}
+        \item If $H$ is  recursive, then $H_d$ is recursive. 
+        \subitem $H$ is recursive $\Rightarrow$ $\exists M_H$ decides $H$. 
+        \subitem $M_d=$ on input $``M"$.
+        \begin{algorithm}[H]
+            \caption{$M_d$}
+            \begin{algorithmic}
+                \State run $M_H$ on $``M"``M"$%TODO 为啥要重复
+                \If{$M_H$ accepts $``M"``M"$}
+                    \State rejects $``M"$
+                \Else
+                    \State accepts $``M"$
+                \EndIf
+            \end{algorithmic}
+        \end{algorithm}
+        $\Rightarrow M_d$ decides $H_d$\\
+        $\Rightarrow H_d$ is recursive. 
+        \item $H_d$ is not recursively enumerable. 
+        \subitem Assume $H_d$ is recursively enumerable. \\
+        $\Rightarrow \exists D$ semidecides $H_d$
+        {\small
+        \begin{align*}
+            D\text{ on input }``M"\left\{ \begin{array}[c]{ll}
+                \text{halt} & \begin{array}{c}
+                    \text{if $M$ doesn't halt on }``M"\\
+                    (``M"\in H_d)
+                \end{array}\\
+                \text{looping} & \begin{array}{c}
+                    \text{if $M$ halts on }``M"\\
+                    (``M"\notin H_d)
+                \end{array}\\
+            \end{array} \right.
+        \end{align*}
+        \begin{align*}
+            D\text{ on input }``D"\left\{ \begin{array}[c]{ll}
+                \text{halt} & \begin{array}{c}
+                    \text{if $D$ doesn't halt on }``D"\\
+                    (``D"\in H_d)
+                \end{array}\\
+                \text{looping} & \begin{array}{c}
+                    \text{if $D$ halts on }``D"\\
+                    (``D"\notin H_d)
+                \end{array}\\
+            \end{array} \right.
+        \end{align*}
+        }$\Rightarrow$ contradiction
+    \end{enumerate}
+    So $H$ is not recursive. 
+\end{proof}
+
+%TODO 补充作业7 Q5-6 描述与证明。 
+
+e.g. 
+\begin{enumerate}
+    \item $L_1=\{ ``M": M \text{ is a TM that halts on }e \}$ is not recursive. 
+    \subitem $``M"``w"\in H \iff ``{M^*} "\in L_1$. 
+    \subitem $M$ halts on $w$ $\iff$ $M^*$ halts on $e$. 
+    \subitem $M^*=$ on input $``u"$
+    \begin{algorithm}[H]
+        \caption{$M^*$}
+        \begin{algorithmic}
+            \State run $M$ on $w$
+        \end{algorithmic}
+    \end{algorithm}
+    $M^*$ halts on $e$\\
+    $\iff$ $M^*$ halts on some input\\
+    $\iff M^*$ halts on every input\\
+    $\iff M$ halts on $w$. 
+    \subitem $H\le L_1$
+    \item $L_2=\{ ``M": M \text{ is a TM that halts on some input} \}$ is not recursive. 
+    \subitem $H\le L_2$, same as $L_1$
+    \item $L_3=\{ ``M": M\text{ is a TM that halts on every input} \}$ is not recursive. 
+    \subitem $H\le L_3$, same as $L_1$
+    \item $L_4=\{ ``M_1"``M_2": M_1 \text{ and } M_2$ \text{ are two TMS with } $L(M_1)=L(M_2) \}$ is not recursive. 
+    \subitem $L_3\le L_4$
+    \subitem $``M"\iff ``M_1"``M_2"$
+    \subitem $M$ halts on every input $\iff$ $L(M_1)=L(M_2)$\\
+    $\iff L(M)=\Sigma^*$. 
+    \subitem Let $M_1=M$
+    \subitem $M_2=$ on input $``x"$
+    \begin{algorithm}[H]
+        \caption{$M_2$}
+        \begin{algorithmic}
+            \State halt
+        \end{algorithmic}
+    \end{algorithm}
+    $\Rightarrow L(M_2)=\Sigma^*$
+    \subitem $M_{L_3}=$ on input $``M"$
+    \begin{algorithm}[H]
+        \caption{$M_{L_3}$}
+        \begin{algorithmic}
+            \State construct a TM $M^*$ that halt on every input
+            \State run $M_{L_4}$ on $``M"``M^*"$
+            \State return the result of $M_{L_4}$
+        \end{algorithmic}
+    \end{algorithm}
+    reduction $f(``M")= ``M"``M^*"$ from $L_3$ to $L_4$. 
+    \item $R_{TM}=\{ ``M": M$  is a Turing Machine with $L(M)$ being regular $\}$
+    \subitem target: $H\le \overline{R_{TM}}$. Assume $M_{R_{TM}}$ decides $R_{TM}$, we will ues it to construct $M_{H}$ decides $H$. 
+    \subitem $M_H=$ on input $``M"``w"$
+    \begin{algorithm}[H]
+        \caption{$M_H$}
+        \begin{algorithmic}
+            \State construct a TM $M'=$ on input $x$
+            \State run $M_{R_{TM}}$ on $``M'"$
+            \State return the result of $M_{R_{TM}}$
+        \end{algorithmic}
+    \end{algorithm}
+    
+    \begin{algorithm}[H]
+        \caption{$M'$}
+        \begin{algorithmic}
+            \State run $M$ on $w$
+            \State run $U$ on $x$
+        \end{algorithmic}
+    \end{algorithm}
+    \begin{align*}
+        L(M')=\left\{ \begin{array}{ll}
+            \emptyset & \text{If $M$ doesn't halt on } w\\
+            L(U)=H & \text{If $M$ halt on } w
+        \end{array} \right.
+    \end{align*}
+    \item $CF_{TM}=\{ ``M": M$ is a TM with $L(M)$ being context-free $ \}$
+    \subitem $H\le \overline{CF_{TM}}$
+    \item $REC_{TM}=\{``M": M$ is a TM with $L(M)$ being recursive $\}$
+    \subitem $H\le \overline{REC_{TM}}$
+\end{enumerate}
+
+\begin{theorem}[Rice's Theorem]
+    Let $\mathcal{L}(P)$ be the set with property $P$. If $\mathcal{L}(P)$ is a non-empty proper subset of all recursive enumerable language, 
+    \begin{align*}
+        \{ ``M": M\text{ is a TM with }L(M)\in \mathcal{L}(P) \}
+    \end{align*}
+    is not recursive. 
+\end{theorem}
+\begin{proof}\quad
+
+    \begin{enumerate}
+        \item [case 1] $\emptyset \notin \mathcal{L}(P)$, called $R(P)$
+        \subitem $H\le R(P)$
+        \subitem $\exists L\in \mathcal{L}(P)$ $\Rightarrow$ $\exists M_A$ semidecides $A$. 
+        \subitem $M_H=$ on input $``M"``w"$
+        \begin{algorithm}[H]
+            \caption{$M_H$}
+            \begin{algorithmic}
+                \State construct a TM $M^*=$ on input $x$
+                \State run $M_R$ on $``M^*"$
+                \State return the result of $M_R$
+            \end{algorithmic}
+        \end{algorithm}
+
+        \begin{algorithm}[H]
+            \caption{$M^*$}
+            \begin{algorithmic}
+                \State run $M$ on $w$
+                \State run $M_L$ on $x$
+            \end{algorithmic}
+        \end{algorithm}
+        
+        \begin{align*}
+            L(M^*)=\left\{ \begin{array}{ll}
+                L(M_A)=A & \text{if $M$ halts on }w\\
+                \emptyset & \text{if $M$ doesn't halt on }w\
+            \end{array} \right.
+        \end{align*}
+        \item [case 2] $\emptyset \in \LC(P)$
+        \subitem $H\le \overline{\LC(P)}$
+    \end{enumerate}
+\end{proof}
+
+\subsection{recursively enumerable}
+prove recursively enumerable
+\begin{itemize}
+    \item by def
+    \item $A\le$ known recursively enumerable language
+\end{itemize}
+
+e.g. $\{ A: \encode{M}: M \text{ is a TM that halts on some input} \}$ is respectively enumerable
+\begin{proof}
+    $M_A=$ on input $\encode{M}$
+    \begin{algorithm}[H]
+        \caption{$M_A$}
+        \begin{algorithmic}
+            \Require $\encode{M}$
+            \For{$i=1,2,\dots$}
+                \For{$s=s_1,\dots,s_i$}
+                    \State run $M$ on $s$ for $i$ steps
+                    \If{$M$ halts on $s$ within $i$ steps}
+                        \State halt
+                    \EndIf
+                \EndFor
+            \EndFor
+        \end{algorithmic}
+    \end{algorithm}
+    
+\end{proof}
+
+prove not recursively enumerable
+\begin{itemize}
+    \item known non-recursively enumerable $\le A$
+    \item theorem
+\end{itemize}
+
+\begin{theorem}
+    If $A$ and $\overline{A}$ are recursively enumerable, $A$ is recursive. 
+\end{theorem}
+\begin{proof}
+    $\exists M_1, M_2$ semidecides $A, \overline{A}$ respectively.
+
+    Target: construct $M_3$ to decide $A$
+
+    $M_3=$ on input $x$
+    \begin{algorithm}[H]
+        \caption{$M_3$}
+        \begin{algorithmic}
+            \State run $M_1$ and $M_2$ on $x$ in parallel
+            \If{$M_1$ halts on $x$}
+                \State accept $x$
+            \ElsIf{$M_2$ halts on $x$}
+                \State reject $x$
+            \EndIf
+        \end{algorithmic}
+    \end{algorithm}
+\end{proof}
+
+$H$ is recursively enumerable, is not recursive $\Rightarrow $ $\overline{H}$ is not recursively enumerable. 
+
+\subsection{Closure property}
+\begin{table}[!htb]
+    \centering
+    \caption{Closure property}
+    \begin{tabular}[c]{ccc}\toprule
+         &recursive & recursively enumerable \\ \midrule
+        $\cup$ &  $\surd$ & $\surd$  \\
+        $\cap$ &  $\surd$ & $\surd$ \\
+        $\bar{}$ &$\surd$ & $\times$ \\
+        $\circ$ & $\surd$ & $\surd$ \\
+        ${}^*$ &  $\surd$ & $\surd$ \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\begin{proof}\quad
+
+    \begin{itemize}
+        \item $M_{A\cup B}=$ on input $x$
+        \begin{algorithm}[H]
+            \caption{$M_{A\cup B}$}
+            \begin{algorithmic}
+                \State run $M_A$ on $x$
+                \State run $M_B$ on $x$
+                \If{at least one of them accepts $x$}
+                    accept
+                \Else
+                    \quad reject
+                \EndIf
+            \end{algorithmic}
+        \end{algorithm}
+        \item $M_{A\circ B}=$ on input $x$
+        \begin{algorithm}[H]
+            \caption{$M_{A\circ B}$}
+            \begin{algorithmic}
+                \State enumerate all possible $u$ and $v$ with $x=uv$
+                \State run $M_A$ on $u$ and run $M_B$ on $v$
+                \If{both accept}
+                    accepts
+                \Else
+                    \quad reject
+                \EndIf
+            \end{algorithmic}
+        \end{algorithm}
+        
+        \item $\overline{H}$ is not recursively enumerable. 
+    \end{itemize}
+\end{proof}
+
+\subsection{Enumerator}
+
+\begin{definition}
+    We say a TM $M$ enumerate a language $L$. If for some state $q$, 
+    \begin{align*}
+        L=\{ w: (s,\triangleright \underline{\sqcup})\vdash_M^*(q,\triangleright \underline{\sqcup} w) \}
+    \end{align*}
+    called Turing enumerable. 
+\end{definition}
+
+\begin{theorem}
+    A language $L$ is Turing enumerable iff it's recursively enumerable. 
+\end{theorem}
+\begin{proof}
+    If $L$ is finite, trivially. Assume $L$ is infinite.
+    \begin{itemize}
+        \item [$\Rightarrow$] $\exists M$ enumerate $L$, 
+        \subitem goal: $M'$ semidecides $L$ 
+        \subitem $M'=$ on input $x$
+        \begin{algorithm}[H]
+            \caption{$M'$}
+            \begin{algorithmic}
+                \State run $M$ to enumerate $L$
+                \State every tiem $M$ accepts a string $w$
+                \If{$w==x$}
+                    \State halt
+                \EndIf
+            \end{algorithmic}
+        \end{algorithm}
+        \item [$\Leftarrow$] $\exists M$ semidecides $L$
+        \subitem goal: $M'$ enumerate $L$
+        \subitem $M'=$ on input $x$
+        \begin{algorithm}[H]
+            \caption{$M'$}
+            \begin{algorithmic}
+                \For{$i=1,\dots,2$}
+                    \For{$s=s_1,\dots,s_i$}
+                        \State run $M$ on $s$ for $i$ steps
+                        \If{ $M$ halts on $s$ within $i$ steps}
+                            \State accept $s$
+                        \EndIf
+                    \EndFor
+                \EndFor
+            \end{algorithmic}
+        \end{algorithm}
+    \end{itemize}
+\end{proof}
+
+\begin{definition}
+    Let $M$ be a TM that enumerates $L$. We say $M$ lexicographically enumerates $L$ if whenever
+    \begin{align*}
+        (q, \triangleright \underline{\sqcup} w)\vdash_M^+ (q,\triangleright \underline{\sqcup}w')
+    \end{align*}
+    we have $w'$ is after $w$ in lexicographical order. 
+\end{definition}
+
+\begin{theorem}
+    $L$ is lexicographically enumerable iff it's recursive. 
+\end{theorem}
+\begin{proof}\quad
+
+    \begin{itemize}
+        \item [$\Leftarrow$] $\exists M$ decide $L$
+        \subitem $M'=$ on input
+        \begin{algorithm}[H]
+            \caption{$M'$}
+            \begin{algorithmic}
+                \State enumerate all string in lexicographical order
+                \For{each string $s$}
+                    \State run $M$ on $s$
+                    \If{$M$ accepts $s$}
+                        \State accepts 
+                    \EndIf
+                \EndFor
+            \end{algorithmic}
+        \end{algorithm}
+        \item [$\Rightarrow$] $\exists M$ lexicographically enumerate $L$
+        \subitem goal: $M'$ decides $L$
+        \subitem $M'=$ on input $x$
+        \begin{algorithm}[H]
+            \caption{$M'$}
+            \begin{algorithmic}
+                \State run $M$ to enumerate all strings in $L$ with lexicographical order $\le x$
+                \State every time $M$ accepts a string $w$
+                \If{$w==x$}
+                    \State accept
+                \Else
+                    \State reject 
+                \EndIf
+            \end{algorithmic}
+        \end{algorithm}
+        
+    \end{itemize}
+\end{proof}
