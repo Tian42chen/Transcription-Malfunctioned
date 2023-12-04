@@ -39,8 +39,11 @@ The nubmer of transistors per chip would double every year (every two years late
 Multiple efficient processors. From instruction-level parallelism to data-level and thread-level parallelism. 
 
 \subsubsection{Amdahl's Law}
+Make common case fast
 \begin{align*}
-    111
+    1&=\text{Fraction}_{\text{enhanced}}+\text{Fraction}_{\text{last}}\\
+    \text{Speedup}_{\text{overall}}&=\frac{\text{Execution tmie}_{\text{old}}}{\text{Execution time}_{\text{new}}}\\
+    &=\frac{1}{\text{Fraction}_{\text{last}}+\frac{\text{Fraction}_{\text{enhanced}}}{\text{Speedup}_{\text{enhanced}}}}
 \end{align*}
 
 \subsection{5 Classes of Computer}
@@ -52,13 +55,123 @@ Multiple efficient processors. From instruction-level parallelism to data-level 
     \item Embedded Computers
 \end{enumerate}
 
-
-
-\subsection{What makes computers fast}
-\subsubsection{Parallelism}
+\subsection{Parallelism}
 application parallelism and hardware parallelism
 
-\paragraph{Application Parallelism}
+\subsubsection{Application Parallelism}
+\begin{itemize}
+    \item DLP: Data-Level Parallelism
+    \item TLP: Task-Level Parallelism
+\end{itemize}
+
+\subsubsection{Hardware Parallelism}
+four ways:
+\begin{itemize}\small
+    \item ILP: Instruction-Level Parallelism
+    \subitem exploit data-level parallelism
+    \begin{itemize}
+        \item pipelining
+        \subitem divide a task to steps;
+        \subitem simultaneously run different steps of different tasks
+        \item speculative execution
+        \subitem do some work in advance;
+        \subitem prevent delay when the work is needed
+    \end{itemize}
+    \item Vector Architectures, GPUs, and Multimedia Instruction Sets(MM)%TODO P61 图
+    \subitem exploit data-level parallelism;
+    \subitem apply a single instruction to a collection of data in parallel;
+    \item TLP: Thread-Level Parallelism % P63
+    \subitem exploits either DLP or TLP,
+    \subitem in a tightly coupled hardware model that allows for interaction among parallel threads;
+    \item RLP: Request-Level Parallelism P65
+    \subitem exploits parallelism among largely decoupled tasks specified by the programmer or the OS
+\end{itemize}
+
+\subsubsection{Classes of Parallel Architectures}
+\textbf{S}ingle/\textbf{M}ultiple \textbf{I}nstruction/\textbf{D}ata stream
+\begin{itemize}
+    \item SISD: Exploit instruction-level parallelism
+    \item SIMD: The same instruction is executed by multiple processors using different data streams. Exploits data-level parallelism.
+    \item MISD: hard to exploit data-level parallelism
+    \item MIMD: Each processor fetches its own instructions and operates on its own data. Exploits task-level parallelism
+\end{itemize}
+
+\subsection{Instruction Set Architecture (ISA)}
+7 Dimensions of ISA:
+\begin{itemize}
+    \item Class of ISA
+    \item Memory addressing
+    \item Addressing modes: %TODO P103
+    \item Types and sizes of operands
+    \item Operations
+    \begin{itemize}
+        \item Data Transfer
+        \item Arithmetic/Logical
+        \item Control
+        \item Floating point
+    \end{itemize}
+    \item Control flow instructions
+    \item Encoding an ISA
+\end{itemize}
+remember RISC-V Register Naming %TODO P90
+
+\section{Fundamentals-Performance}
+\subsection{Trend}
+energy workload %TODO P27
+
+daynamic Energy %TODO P31
+
+daynamic Power %TODO P32
+
+static Power %TODO P45
+
+Dies per Wafer %TODO 52
+
+Cost of Die %TODO 53
+
+Die Yield %TODO 54
+
+Cost of Integrated Circuit %TODO 57
+
+Price %TODO 60
+
+Transient/permanent faults become more commonplace
+\subsection{Dependability}
+SLA: service level agreements
+
+SLO: service level objectives
+
+System states: up or down
+
+Service states %TODO P68
+
+\begin{itemize}%TODO 72-73
+    \item Failure: 仅当 actual behavior 偏离 actual behavior 时发生. 
+    \item Error
+    \item Fault
+\end{itemize}
+
+\subsubsection{Measures of Dependability}
+Module reliability: A measure of continuous service accomplishment (or of the time to failure) from a reference initial instant. 
+
+\begin{itemize}%TODO P82
+    \item MTTF: mean time to failure
+    \item MTTR: mean time to repair
+    \item MTBF: mean time between failures
+    \item FIT: failures per billion hours
+\end{itemize}
+MTBF = MTTF + MTTR
 
 
-\paragraph{Hardware Parallelism}
+Module availability=%TODO P87
+
+\subsubsection{Dependability via Redundancy}
+
+
+\subsection{Disk Arrays - RAID}
+
+\subsection{Measure Performance}
+
+
+
+
