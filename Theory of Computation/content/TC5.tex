@@ -356,7 +356,7 @@ Also can define configuration and $\vdash_M, \vdash_M^*, \vdash_M^N$ (走 $N$ �
 \end{definition}
 
 \begin{definition}
-    Let $M=(K, \Sigma, \Delta, s, \{ y,n \})$ be a NTM with input alphabet $\sigma_0$. $M$ decides a language $L\in \Sigma_0^*$ if 
+    Let $M=(K, \Sigma, \Delta, s, \{ y,n \})$ be a NTM with input alphabet $\Sigma_0$. $M$ decides a language $L\in \Sigma_0^*$ if 
     \begin{enumerate}
         \item there is a constant $N$ (independent of the $M$), $\forall w\in \Sigma_0^*$, there is no configuration $C$, satifiy $(s,\triangleright \underline{\sqcup} w)\vdash_M^N C$. (要求每条分支在 $N$ 步内停止)
         \item $w\in L$ iff $(s,\triangleright \underline{\sqcup} w)\vdash_M^*(y,\dots)$
