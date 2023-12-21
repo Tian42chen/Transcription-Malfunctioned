@@ -182,6 +182,51 @@ Object $O$ $\to$ $``O"$ (用双引号表示 encode)% 数学模式中 的 ``"
     \end{algorithm}
 \end{proof}
 
+\begin{theorem}
+    Suppose that we have a reduction f from A to B. If $B$ is recursively enumerable, $A$ is recursively enumerable. 
+\end{theorem}
+
+\begin{proof}
+    Since $B$ is recursive enumerable, there is a Turing machine $M_B$ that semidecides $B$. We can construct $M_A=$ on input $\encode{x}$
+    \begin{algorithm}[H]
+        \caption{$M_A$}
+        \begin{algorithmic}
+            \State compute $f(x)$
+            \State run $M_B$ on $f(x)$
+        \end{algorithmic}
+    \end{algorithm}
+    $M_A$ halts on $x$ $\iff$ $M_B$ halts on $f(x)$ $\iff$ $f(x)\in B$ $\iff$ $x\in A$. So $M_A$ semidecides $A$. 
+\end{proof}
+
+\begin{theorem}
+    If $A\le B$, then $\overline{A}\le \overline{B}$
+\end{theorem}
+\begin{proof}
+    Let $f$ be a reduction from $A$ to $B$. By definition, for any $x \in \Sigma^*$,$x\in A$ iff $f(x)\in B$. In other words, $x\in \overline{A}$ iff $f(x)\in \overline{B}$. So f is also a reduction to $\overline{A}$ to $\overline{B}$.
+\end{proof}
+
+\begin{theorem}\label{the:aaa}
+    If $A$ and $\overline{A}$ are recursively enumerable, $A$ is recursive. 
+\end{theorem}
+\begin{proof}
+    $\exists M_1, M_2$ semidecides $A, \overline{A}$ respectively.
+
+    Target: construct $M_3$ to decide $A$
+
+    $M_3=$ on input $x$
+    \begin{algorithm}[H]
+        \caption{$M_3$}
+        \begin{algorithmic}
+            \State run $M_1$ and $M_2$ on $x$ in parallel
+            \If{$M_1$ halts on $x$}
+                \State accept $x$
+            \ElsIf{$M_2$ halts on $x$}
+                \State reject $x$
+            \EndIf
+        \end{algorithmic}
+    \end{algorithm}
+\end{proof}
+
 \subsection{Countable}
 
 \begin{definition}
@@ -267,7 +312,7 @@ $H=\{ ``M"``w": M \text{ is a TM that halts on }w \}$
         \begin{algorithm}[H]
             \caption{$M_d$}
             \begin{algorithmic}
-                \State run $M_H$ on $``M"``M"$%TODO 为啥要重复
+                \State run $M_H$ on $``M"``M"$
                 \If{$M_H$ accepts $``M"``M"$}
                     \State rejects $``M"$
                 \Else
@@ -309,8 +354,6 @@ $H=\{ ``M"``w": M \text{ is a TM that halts on }w \}$
     \end{enumerate}
     So $H$ is not recursive. 
 \end{proof}
-
-%TODO 补充作业7 Q5-6 描述与证明。 
 
 e.g. 
 \begin{enumerate}
@@ -460,30 +503,8 @@ e.g. $\{ A: \encode{M}: M \text{ is a TM that halts on some input} \}$ is respec
 prove not recursively enumerable
 \begin{itemize}
     \item known non-recursively enumerable $\le A$
-    \item theorem
+    \item \textbf{Theorem} \ref{the:aaa}
 \end{itemize}
-
-\begin{theorem}
-    If $A$ and $\overline{A}$ are recursively enumerable, $A$ is recursive. 
-\end{theorem}
-\begin{proof}
-    $\exists M_1, M_2$ semidecides $A, \overline{A}$ respectively.
-
-    Target: construct $M_3$ to decide $A$
-
-    $M_3=$ on input $x$
-    \begin{algorithm}[H]
-        \caption{$M_3$}
-        \begin{algorithmic}
-            \State run $M_1$ and $M_2$ on $x$ in parallel
-            \If{$M_1$ halts on $x$}
-                \State accept $x$
-            \ElsIf{$M_2$ halts on $x$}
-                \State reject $x$
-            \EndIf
-        \end{algorithmic}
-    \end{algorithm}
-\end{proof}
 
 $H$ is recursively enumerable, is not recursive $\Rightarrow $ $\overline{H}$ is not recursively enumerable. 
 

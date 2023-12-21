@@ -68,6 +68,7 @@
 %
 
 \newtheorem{theorem}{Theorem}[section]
+\newtheorem{thesis}{Thesis}[theorem]
 \newtheorem{claim}{Claim}[theorem]
 \newtheorem{definition}[theorem]{Definition}
 \newtheorem{lemma}[theorem]{Lemma}
@@ -135,7 +136,7 @@
 	%proof 标题
 	\renewcommand{\proofname}{Proof}
 	%proof QED symbol
-	\renewcommand\qedsymbol{QED}
+	\renewcommand\qedsymbol{Q.E.D.}
 %
 
 %页面参数

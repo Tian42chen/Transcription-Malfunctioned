@@ -1,0 +1,181 @@
+\newpage
+\section{Computational Complexity}
+
+decidable:
+\begin{itemize}
+    \item efficiently solvable (tractable)
+    \item inefficiently solvable (intractable)
+\end{itemize}
+
+resource: time and space
+
+e.g. :$A=\{ 0^k1^k:k\ge 0 \}$
+
+\begin{definition}
+    Let $M$ be a deterministic TM that halts on every input. 
+    
+    The running time f $M$ is a function $f:N\to N$, where on any input of length $n$, $M$ halts within $f(n)$ steps. 
+\end{definition}
+
+\begin{definition}
+    We say a language $L$ is in DTIME(t(n)) if $L$ is decided by some standard DTM with running time $O(t(n))$
+\end{definition}
+
+If Multiple tapes TM is $t(n)$, single tape TM is at most $O(t^2(n))$. 因为多带每走一步, 单带需要以一次扫描确定多带的每一个位置并修改, 扫一遍的时间是 $t(n)$. 
+
+\begin{thesis}[The Cobham-Edmond Thesis]
+    Any ``reasonable'' and ``general'' deterministic model of computational is polynomially related. 
+\end{thesis}
+
+
+\begin{definition}
+    Let $P$(polynomially decidable) be the set of language that are decided by some DTM with $poly(n)$ time. (robust)
+\end{definition}
+
+\begin{theorem}
+    Every context-free language is in $P$
+\end{theorem}
+
+\begin{proof}
+    If $A$ is context-free, $\exists$ CFG $G=(V,\Sigma, S, R)$ in CNF generates $A$, given a string of length $n$, enumerate all derivations of length $\ge n-1$ (total $|R|^{n-1}$)
+
+    Dynamic Programing, 
+    \begin{itemize}
+        \item $w=a_1 \dots a_n$, $S\Rightarrow^* w$?
+        \item subproblem: for $1\le i\le j\le n$, define
+        \begin{align*}
+            T[i,j]=\{ A\in V-\Sigma : A\Rightarrow^* a_i\dots a_j \}
+        \end{align*}
+        \item Goal: $T[1,n]$, $S\in T[1,n]$
+        \item Base case: for $1\le i\le n$,
+        \begin{align*}
+            T[i,i]=\{ A\in V-\Sigma: A\to a_i \}
+        \end{align*}
+        \item Recurrence: for $1\le i\le j\le n$
+        \begin{align*}
+            T[i,j]=\bigcup_{k=i}^{j-1} \{ A\to BC : B\in T[i,k] \land C\in T[k+1, j] \}
+        \end{align*}
+        \item $n^2$ subproblems, each subproblem costs: $n\cdot|R|^3$.
+    \end{itemize}
+    total: $\left( n^3 |R|^3 \right)$, and $R$ is constant
+\end{proof}
+
+\subsection{SAT(satisfiability) Problem}
+
+Let $X=\{ x_1,\dots,x_n \}$ be a set of boolean variable. 
+\begin{itemize}
+    \item $x_1,\dots,x_n,\bar{x}_1,\dots,\bar{x}_n$: literals
+    \item a clause is like $x_1\lor x_2 \lor \bar{x}_3$
+    \item a boolean formular is like 
+    \begin{align*}
+        (x_1\lor x_2 \lor \bar{x}_3)\land (x_2\lor x_3 \lor \bar{x}_4)\land (x_1\lor x_3 \lor x_5)
+    \end{align*}
+    \item A truth assignment of $X$ is $T:X\to \{ 0,1 \}$
+\end{itemize}
+
+SAT: given a formular $F$, is there any assignment $T$ that makes $F$ true/ satisfies $F$.
+
+We don't know whether $SAT\in P$ or not.
+
+\subsection{NP}
+
+\begin{definition}
+    Let $M$ be a non-deterministic TM such that for any input every branch of $M$ halts within $k$ steps, where $k$ depends only on the input.
+    
+    The running time of $M$ is a function $f:N\to N$,  for any input of length $n$, every branch of $M$ halts within $f(n)$ steps. 
+\end{definition}
+
+SAT can be decided by NTM poly time. 
+
+$M=$ on input $F$
+\begin{algorithm}[H]
+    \caption{$M$}
+    \begin{algorithmic}
+        \Require $F$
+        \State non-deterministically generate an assignment $T$
+        \If{$T$ satisfies $F$}
+            \State accept
+        \Else
+            \State reject
+        \EndIf
+    \end{algorithmic}
+\end{algorithm}
+
+\begin{definition}
+    NP is the set of all languages that can be decided by some NTM in poly time. 
+\end{definition}
+
+\begin{definition}
+    We say that a language A is polynomially verifiable, if there is a polynomially DTM $V$ such that for $x\in\Sigma^*$,
+    \begin{enumerate}
+        \item if $x\in A$, $\exists\ y$ with $|y|\le poly(|x|)$ s.t. $V$ accepts $\encode{x}\encode{y}$ (completeness)
+        \item if $x\notin A$, $\forall\ y$ with $|y|\le poly(|x|)$, $V$ rejects $\encode{x}\encode{y}$ (soundness)
+    \end{enumerate}
+    called $y$ certificate
+\end{definition}
+
+e.g. 
+\begin{itemize}
+    \item $A=$ SAT
+    \item $x=$ boolean formular
+    \item $y=$ an truth assignment that satisfies $x$
+    \item $V=$ on input $x$ and $y$
+    \begin{algorithm}[H]
+        \caption{$V$}
+        \begin{algorithmic}
+            \State evaluate $x$ using $y$
+            \If{$x$ is satisfied by $y$}
+                \State accept
+            \Else
+                \State reject
+            \EndIf
+        \end{algorithmic}
+    \end{algorithm}
+\end{itemize}
+
+\begin{theorem}
+    A language is polynomially verifiable iff it's NP
+\end{theorem}
+\begin{proof}
+    $\Rightarrow$ $\exists$ polynomial-time verifier $V$
+    \begin{algorithm}[H]
+        \caption{$M$ (If $x\in A$ ?)}
+        \begin{algorithmic}
+            \Require $x$
+            \State non-deterministically generate a certificate $y$ with $|y|\le poly(|x|)$
+            \State run $V$ on $\encode{x}\encode{y}$
+            \If{$V$ accepts}
+                \State accept
+            \Else
+                \State reject
+            \EndIf
+        \end{algorithmic}
+    \end{algorithm}
+    
+    $\Leftarrow$ $\exists$ NTM $M$ decides $A$ in $poly(|x|)$ time. 
+    
+    construct $V$, for $x\in A$, certificate $y=$ branch that accepts $x$, $|y|\le poly(|x|)$ 
+    \begin{algorithm}[H]
+        \caption{$V$}
+        \begin{algorithmic}
+            \Require x and y
+            \State run $M$ on $x$ under the guidance of $y$
+            \If{$M$ accepts}
+                \State accept
+            \Else
+                \State reject
+            \EndIf
+        \end{algorithmic}
+    \end{algorithm}
+\end{proof}
+
+$P\subseteq NP$
+
+$P= NP$? i.e. 解决问题的难度与验证问题的难度是否相等. 
+
+widely believe $P\ne NP$
+
+\subsection{NP-complete Problem}
+\begin{definition}
+    A NP-complete problem is in $p$ iff $P=NP$. 
+\end{definition}

@@ -1,0 +1,399 @@
+\newpage
+
+\section{Numerical Functions}
+\begin{align*}
+    f:N^k\to N\ k\ge 0
+\end{align*}
+
+\begin{definition}[Numerical Functions]
+    A TM $M$ computes $f:N^k\to N$ if any $n_1,\dots,n_k\in N$
+    \begin{align*}
+        M(bin(n_1),\dots,bin(n_k))=bin(f(n_1,\dots,n_k))
+    \end{align*}
+\end{definition}
+
+\subsection{Basic Functions}
+\begin{enumerate}
+    \item zero function
+    \begin{align*}
+        zero(n_1,\dots,n_k)=0
+    \end{align*}
+    for any $n_1,\dots,n_k\in N$
+    \item identity function
+    \begin{align*}
+        id_{k,j}(n_1,\dots,n_k)=n_j
+    \end{align*}
+    \item successor function
+    \begin{align*}
+        succ(n)=n+1
+    \end{align*}
+\end{enumerate}
+
+\subsection{Operation}
+\begin{definition}[composition]
+    Let 
+    \begin{align*}
+        g&:N^k\to N\\
+        h_1,\dots,h_k&:N^l\to N
+    \end{align*}
+    we have $f:N^l\to N$
+    \begin{align*}
+        f(n_1,\dots,n_l)=g(h_1(n_1,\dots,n_l),\dots,h_k(n_1,\dots,n_l))
+    \end{align*}
+    call $f$ as the composition of $g$ with $h_1,\dots,h_k$.
+\end{definition}
+
+\begin{definition}[Recursive definition]
+    Let 
+    \begin{align*}
+        g&:N^k\to N\\
+        h&:K^{k+2}\to N
+    \end{align*}
+    we have $f:N^{k+1}\to N$
+    \begin{align*}
+        \left\{ \begin{array}{l}
+            f(n_1,\dots,n_k,0)=g(n_1,\dots,n_k)\\
+            \dots\\
+            f(n_1,\dots,n_k,t+1)=h(n_1,\dots,n_k,t,f(n_1,\dots,n_k,t))
+        \end{array} \right.
+    \end{align*}
+\end{definition}
+
+e.g. $n!$
+\begin{align*}
+    \left\{ \begin{array}{l}
+        k=0\\
+        g=1\\
+        h(n, f(n))=(n+1)f(n)
+    \end{array} \right.
+\end{align*}
+
+\subsection{primitive recursive function}
+\begin{definition}[primitive recursive function]\scriptsize
+    \begin{align*}
+        \text{basic functions} + \left\{ \begin{array}{l}
+            \text{composition}\\
+            \text{recursive definition}
+        \end{array} \right.=\text{primitive recursive function}
+    \end{align*}
+\end{definition}
+All primitive recursive functions is computable. 
+
+e.g. 
+\begin{enumerate}
+    \item $puls2(n)=n+2$
+    \begin{align*}
+        succ(succ(n))
+    \end{align*}
+    \item $puls(m,n)=m+n$
+    \begin{align*}
+        \left\{ \begin{array}{rl}
+            plus(m,0)&=id_{1,1}(m)\\
+            plus(m,n+1)&=plus(m,n)+1\\
+            &=succ(id_{3,3}(m,n,plus(m,n)))
+        \end{array} \right.
+    \end{align*}
+    平时写到就行 $succ(plus(m,n))$.
+    \item $mult(m,n)=m\cdot n$
+    \begin{align*}
+        \left\{ \begin{array}{rl}
+            mult(m,0)&=zero(m)\\
+            mult(m,n+1)&=mult(m,n)+m\\
+            &=plus(m,mult(m,n))
+        \end{array} \right.
+    \end{align*}
+    \item $exp(m,n)=m^n$
+    \begin{align*}
+        \left\{ \begin{array}{rl}
+            exp(m,0)&=m\\
+            exp(m,n+1)&=exp(m,n)\cdot m\\
+            &=mult(m,exp(m,n))
+        \end{array} \right.
+    \end{align*}
+    \item constant function: $f(n_1,\dots,n_k)=c$
+    \begin{align*}
+        (succ\dots(succ(zero(n_1,\dots,n_k))))
+    \end{align*}
+    $c$ successor functions
+    \item sign function
+    \begin{align*}
+        sgn(n)=\left\{ \begin{array}{ll}
+            1 & \text{if }n>0\\
+            0 & \text{if }n=0\\
+        \end{array} \right.
+    \end{align*}
+    \begin{align*}
+        \left\{ \begin{array}{rl}
+            sgn(0)&=0\\
+            sgn(n+1)&=1
+        \end{array} \right.
+    \end{align*}
+    \item predecessor function
+    \begin{align*}
+        pred(n)=\left\{ \begin{array}{ll}
+            n-1 & \text{if }n>0\\
+            0 & \text{if }n=0\\
+        \end{array} \right.
+    \end{align*}
+    \begin{align*}
+        \left\{ \begin{array}{rl}
+            pred(0)&=0\\
+            pred(n+1)&=id_{2,1}(n,pred(n))\\
+            &=n
+        \end{array} \right.
+    \end{align*}
+    \item $m\sim n=\max(m-n,0)$ non-negative substraction
+    \begin{align*}
+        \left\{ \begin{array}{rl}
+            m\sim 0&=0\\
+            m\sim (n+1)&=(m\sim n) -1\\
+            &=pred(m\sim n)
+        \end{array} \right.
+    \end{align*}
+\end{enumerate}
+
+\begin{lemma}\scriptsize
+    \begin{align*}
+        \text{primitive recursive func} + \left\{ \begin{array}{l}
+            \text{composition}\\
+            \text{recursive def}
+        \end{array} \right.=\text{primitive recursive func}
+    \end{align*}
+\end{lemma}
+
+\begin{corollary}
+    if $f,g$ is primitive recursive function, then $f+g, f\cdot g, f\sim g$ are all primitive recursive functions. 
+\end{corollary}
+
+\begin{definition}[predicate function]
+    the function's output is 1 or 0. the function is called predicate function. 
+\end{definition}
+
+\begin{corollary}
+    If predicate $p, q$ is primitive recursive, so is $\neg p, p\land  q, p\lor q$
+\end{corollary}
+
+\begin{enumerate}
+    \item $positive(n)=sgn(n)$
+    \item $iszero(n)$
+    \begin{align*}
+        iszero(n)&=\left\{ \begin{array}{ll}
+            1 & \text{if }n=0\\
+            0 & \text{if }n>0\\
+        \end{array} \right.\\
+        &=1-positive(n)
+    \end{align*}
+    \item $geq(m,n)$
+    \begin{align*}
+        geq(m,n)&=\left\{ \begin{array}{ll}
+            1 & \text{if }m\ge n\\
+            0 & \text{if }m<n\\
+        \end{array} \right.\\
+        &=iszero(m\sim n)
+    \end{align*}
+    \item $eq(m,n)$
+    \begin{align*}
+        eq(m,n)&=\left\{ \begin{array}{ll}
+            1 & \text{if }m= n\\
+            0 & \text{if }m\ne n\\
+        \end{array} \right.\\
+        &=gep(m, n)\cdot gep(n,m)
+    \end{align*}
+\end{enumerate}
+
+\begin{corollary}
+    Let 
+    \begin{align*}
+        f(n_1,\dots,n_k)=\left\{ \begin{array}{ll}
+            g(n_1,\dots,n_k)& \text{if }p(n_1,\dots,n_k)\\
+            h(n_1,\dots,n_k)&\text{otherwise}
+        \end{array} \right.
+    \end{align*}
+    If $g,h,p$ are primitive recursive, so is $f$. 
+\end{corollary}
+\begin{proof}
+    $f=p\cdot g+(1\sim p)\cdot h$
+\end{proof}
+
+\begin{enumerate}
+    \item $rem(m,n)=m\%n$
+    {\scriptsize
+    \begin{align*}
+        rem(m,n)&=\left\{ \begin{array}{rl}
+            rem(0,n)&=0\\
+            rem(m+1,n)&= d(m+1,n)
+        \end{array} \right.\\
+        d(m+1,n)&=\left\{ \begin{array}{ll}
+            0 & \text{if $m+1$ is divisible by $n$}\\
+            rem(m,n)+1 & \text{otherwise}
+        \end{array} \right.
+    \end{align*}
+    }
+    $m+1$ is divisible ny $n$ $\iff$ $eq(rem(m,n), pred(n))$
+    \item $div(m,n)=\lfloor m/n \rfloor$, $n\ne 0$
+    {\scriptsize
+    \begin{align*}
+        div(m,n)&=\left\{ \begin{array}{rl}
+            div(0,n)&=0\\
+            div(m+1,n)&= d(m+1,n)
+        \end{array} \right.\\
+        d(m+1,n)&=\left\{ \begin{array}{ll}
+            div(m,n)+1 & \text{if $m+1$ is divisible by $n$}\\
+            div(m,n) & \text{otherwise}
+        \end{array} \right.
+    \end{align*}
+    }
+    \item $digit(m,n,p)=a_{m-1}$ with least digit
+    \begin{align*}
+        &n=a_k p^k+\dots+a_{m-1}p^{m-1}+\dots+a_1p_1+a_0\\
+        &digit(m,n,p)=div(rem(n,p^m),p^{m-1})
+    \end{align*}
+    \item $\displaystyle sum_f(m,n)=\sum_{k=0}^n f(m,k)$, $f$ is primitive recursive. 
+    \begin{align*}
+        \left\{ \begin{array}{rl}
+            sum_f(m,0)&=f(m,0)\\
+            sum_f(m,n+1)&=sum_f(m,n)+f(m,succ(n))
+        \end{array} \right.
+    \end{align*}
+    \item $\displaystyle mult_f(m,n)=\prod_{k=0}^n f(m,k)$, $f$ is primitive recursive. 
+    \item Let $p$ be a primitive recursive predicate from $N\to\{ 0,1\}$
+    \begin{align*}
+        g_p(n)&=\left\{ \begin{array}{ll}
+            1 & \text{if }\exists\ n' \le n, p(n')=1\\
+            0 & \text{otherwise}
+        \end{array} \right.\\
+        &=p(0)\lor \dots \lor p(n)\\
+        &=positive(\sum_{n'=0}^n p(n'))\\
+        &=positive(sum_p(n))
+    \end{align*}
+    \begin{align*}
+        h_p(n)&=\left\{ \begin{array}{ll}
+            1 & \text{if }\forall\ n' \le n, p(n')=1\\
+            0 & \text{otherwise}
+        \end{array} \right.\\
+        &=positive(\prod_{n'=0}^np(n'))\\
+        &=positive(mult_p(n))
+    \end{align*}
+\end{enumerate}
+
+\begin{definition}\quad 
+    \begin{align*}
+        PR&=\{ \encode{f}:f\text{ is a primitive recursive function} \}\\
+        C&=\{  \encode{f}: f\text{ is computable function} \}
+    \end{align*}
+\end{definition}
+$PR \subseteq C$, but $PR \ne C$
+
+\begin{lemma}
+    $PR$ is decidable. 
+\end{lemma}
+
+\begin{lemma}
+    $C$ is undecidable. 
+\end{lemma}
+\begin{proof}
+    Assume that $C$ is decidable. So $C'=\{$ unary computable numerical function $\}$ is decidable. So $C'$ is lexicographically Turing enumerable by $g_1,g_2\dots$
+
+    Let $M=$ on input $n$
+    \begin{algorithm}[H]
+        \caption{$M$}
+        \begin{algorithmic}
+            \State enumerable $C'$ to get $g_n$
+            \State compute $g_n(n)$
+            \State return $g_n(n)+1$
+        \end{algorithmic}
+    \end{algorithm}
+    
+    $g^*(n)=g_n(n)+1$ is unary computable function, so $g^*\in C'$. 
+    
+    But $\because g^*(n)=g_n(n)+1$, $\therefore \forall n, g^* \ne g_n$. 
+    
+    contradiction. 
+\end{proof}
+
+\subsection{Extend Basic Functions}
+\begin{definition}[minimalization]
+    Let $g:N^k\to N$, we have
+    {
+    \begin{align*}
+        f(n_1,\dots,n_k)=\left\{ \begin{array}{ll}
+            n_{n+1} & \begin{array}{l}
+                \text{if exists minimum } n_{n+1}\\
+                \text{such that }g(n_1,\dots,n_{k+1})=1
+            \end{array}\\
+            0 & \text{otherwise}
+        \end{array} \right.
+    \end{align*}
+    }
+    called a minimalization of $g$, $\mu m[g(n_1,\dots,n_k,m)=1]$
+\end{definition}
+
+\begin{theorem}
+    A function $g$ is minimalizable if $g$ is computable and $\forall n_1,\dots,n_k, \exists m\ge 0, g(n_1,..   ,n_k,m)\ge 1$
+\end{theorem}
+
+e.g. $\log(m,n)=\lceil \log_{m+2}(n+1)\rceil$ i.e. minimum $p\in N$, s.t. $(m+2)^p\ge n+1$
+\begin{align*}
+    \log(m,n)=\mu p \left[gep((m+2)^p, n+1)=1\right]
+\end{align*}
+
+\begin{theorem}
+    If $g(n_1,\dots,n_{k+1})$ is minimalizable, the $\mu m[g(n_1,\dots,n_k,m)=1]$ is computable. 
+\end{theorem}
+
+\begin{theorem}
+    $L=\{\encode{g}: g\text{ is minimalizable }\}$ is undecidable
+\end{theorem}
+
+\begin{definition}[$\mu$-recursive]
+    \begin{align*}
+        \mu\text{-recursive}=\text{basic functions} + \left\{ \begin{array}{l}
+            \text{composition}\\
+            \text{recursive def}\\
+            \text{minimalization of}\\
+            \text{\quad minimalizable  func}
+        \end{array} \right.
+    \end{align*}
+\end{definition}
+
+\begin{theorem}
+    A numerical function is $\mu$-recursive iff it's computable.
+\end{theorem}
+\begin{proof}
+    $\Rightarrow$ trivial
+
+    $\Leftarrow$, $f$, $\exists M$ accepts $f$. $n\to f(n)$ is
+    \begin{align*}
+        (s, \triangleright \underline{\sqcup}n)\vdash_M (q_1, \triangleright u_1 \underline{a_1} v_1) \vdash_M \cdots \vdash_M (h, \triangleright \underline{\sqcup}f(n))
+    \end{align*}
+    用 state 标记读写头位置, i.e.
+    \begin{align*}
+        \triangleright \sqcup s n\ \triangleright u_1 a_1 q_1 v_1\ \cdots\ \triangleright h\sqcup h f(n)
+    \end{align*}
+    Let $\Sigma \cup K\to\{ 0, 1,2, \dots,b-1 \}$, the computation can be a base-b integer. 
+
+    Therefore, we can
+    \begin{align*}
+        \begin{array}{cl}
+            n\\
+            \downarrow & 1)\\
+            \triangleright \sqcup s n\\
+            \downarrow & 2)\\
+            \triangleright \sqcup s n\ \triangleright u_1 a_1 q_1 v_1\ \cdots\ \triangleright h\sqcup h f(n)\\
+            \downarrow & 3)\\
+            \triangleright h\sqcup h f(n)\\
+            \downarrow & 4)\\
+            f(n)
+        \end{array}
+    \end{align*}
+
+    把计算过程分解为四个函数的叠加, 每个函数是 $\mu$-recursive 的, 总体就是 $\mu$-recursive. 
+
+    \begin{enumerate}
+        \item $\displaystyle h_1(n)=\triangleright \sqcup s b^{\lceil \log_b n+1 \rceil} + n$ 
+        \subitem 这里是为了留够 $n$ 的空间. 
+        \item $\mu m[iscomp(\triangleright \sqcup sn, m)\land halted(m)]$. $iscomp$ and $halted$ are both primitive recursive
+        \item $\mu m[digit(m,n,b)==\triangleright]=k$, and $rem(n, b^k)$
+        \item $\mu m[digit(m,n,b)==h]=k$, and $rem(n, b^k)$
+    \end{enumerate}
+\end{proof}

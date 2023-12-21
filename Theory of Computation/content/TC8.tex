@@ -1,0 +1,84 @@
+\newpage
+\section{Grammar(unrestricted grammar)}
+grammar: $uAv\to w$
+
+\begin{definition}
+    A grammar is a 4-tuple $G=(V,\Sigma, S, R)$
+    \begin{itemize}
+        \item $V$ is a alphebte
+        \item $\Sigma$ is the set of terminals
+        \item $S\in V-\Sigma$: start symbol
+        \item $R$: a finite set of $(V^*(V_\Sigma)V^*)\times V^*$
+    \end{itemize}
+\end{definition}
+
+\begin{definition}[derive in one step and derive]
+    类似之前的.
+
+    $G$ generates a string $w\in \Sigma^*$ if $S\vdash_G^*w$
+\end{definition}
+
+e.g. $\{ a^nb^nc^n:n\ge 0 \}$
+\begin{itemize}
+    \item $S\to ABCS$
+    \item $BA\to AB$
+    \item $CA\to AC$
+    \item $CB\to BC$
+    \item $S\to T_c, CT_c\to T_c c, BT_c\to BT_b$
+    \item $BT_b\to T_bb, AT_b\to A T_a$
+    \item $AT_a\to T_a a, T_a \to e$
+\end{itemize}
+
+\begin{theorem}
+    A language is generateed by some grammar iff it's semidecided by some TM
+\end{theorem}
+\begin{proof}\quad
+    \begin{itemize}
+        \item [$\Rightarrow$] Given $G$, construct $M$ to semidecide $L(G)$, i.e. given $w$, is $S\Rightarrow_G^* w$?
+        \subitem 进行枚举, 因为每一步最多只有 $|R|$ 种选择, 若有 $w$ halt. 
+        \item [$\Leftarrow$] Given $M$, construct $G$ to generate $L(M)$, i.e. $S\Rightarrow_G^* w$ iff $w\in L(M)$. 
+        \subitem 假设图灵机 halting state 唯一, 并且停机时纸带为空. 
+        \begin{align*}
+            (S,\triangleright \underline{\sqcup}w)\vdash_M (q_1, \triangleright u_1 \underline{a_1} v_1)\vdash_M \cdots \vdash_M (h, \triangleright \underline{\sqcup})
+        \end{align*}
+        于是改造图灵机, 让其用 state 标记读写头, 并且停机时输出为空. 
+        \begin{align*}
+            \triangleright \sqcup sw\triangleleft \vdash_M \triangleright u_1 a_1 q_1 v_1\triangleleft \vdash_M \cdots \vdash_M \triangleright\sqcup h\triangleleft
+        \end{align*}
+        \subitem $S$ 就进行 $M$ 的回溯, 从 最后的 configuration 推到 最初的 configuration. 
+        \begin{align*}
+            S\Rightarrow^* \triangleright \sqcup h \triangleleft 
+            \Rightarrow^* \cdots 
+            &\Rightarrow^* \triangleright u_1 a_1q_1 v_1\triangleleft \\
+            &\Rightarrow^* \triangleright \sqcup sw\triangleleft\\
+            &\Rightarrow^* w\\
+        \end{align*}
+        \subitem 于是增加如下规则: 
+        \begin{itemize}
+            \item $S\to  \triangleright \sqcup h \triangleleft $
+            \item $\triangleright \sqcup s\to e$
+            \item $\triangleleft \to e$
+            \item 剩下的情况只有三种可能: 写或左右移
+            \begin{enumerate}
+                \item If $M$ has $\delta(q, a)=(p,b)$ for some $a, b\in \Sigma$. 
+                \begin{align*}
+                    \because\ & uaqv\vdash_M ubpv\\
+                    \therefore\ & bp\to aq
+                \end{align*}
+                \item If $M$ has $\delta(q, a)=(p, \rightarrow)$
+                \begin{align*}
+                    \because\ & uaqbv\vdash_M uabpv\\
+                    \therefore\ & abp\to aqb
+                \end{align*}
+                for each $b\in \Sigma$.
+                \subitem 但有特殊情况, 若 $a$ 之后都是空格, i.e.
+                \begin{align*}
+                    \because\ & uaq\triangleleft\vdash_M ua\sqcup p\triangleleft\\
+                    \therefore\ & a\sqcup p\triangleleft\to aq\triangleleft
+                \end{align*}
+                \item $M$ has $\delta(q, a)=(p, \leftarrow)$ 类似
+            \end{enumerate}
+        \end{itemize}
+    \end{itemize}
+\end{proof}
+
