@@ -20,7 +20,9 @@
 \RequirePackage{accsupp}
 \RequirePackage{diagbox}
 \RequirePackage{amsmath}
+\RequirePackage{amsthm}
 \RequirePackage{mathtools}
+\RequirePackage{bm}
 % \RequirePackage{unicode-math}
 \RequirePackage{extarrows}
 \RequirePackage{caption}
@@ -76,6 +78,31 @@
 }
 
 %自定义命令
+	% 数学符号
+		% 偏导
+		\newcommand{\pard}[2]{\frac{\partial #1}{\partial #2}}
+		% 向量
+		\newcommand{\bx}{\bm{x}}
+		\newcommand{\by}{\bm{y}}
+		\newcommand{\bg}{\bm{g}}
+		\newcommand{\bw}{\bm{w}}
+		% 域
+		\newcommand{\R}{\mathbb{R}}
+		\newcommand{\FC}{\mathcal{F}}
+		\newcommand{\SC}{\mathcal{S}}
+		\newcommand{\LC}{\mathcal{L}}
+		% 范数
+		\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+		% encode
+		\newcommand{\encode}[1]{{``#1"}}
+		%subject to
+		\DeclareMathOperator{\st}{s.t.\ }
+		%argmin, argmax
+		\DeclareMathOperator*{\argmin}{argmin}
+		\DeclareMathOperator*{\argmax}{argmax}
+		% domain
+		\DeclareMathOperator*{\dom}{dom}
+	
 	% 复制代码不带行号
 	\newcommand{\emptyaccsupp}[1]{\BeginAccSupp{ActualText={}}#1\EndAccSupp{}}
 	%脚注
@@ -96,6 +123,8 @@
 	% 图片按章节编号
 	\numberwithin{figure}{section}
 	\numberwithin{table}{section}
+	%proof QED symbol
+	\renewcommand\qedsymbol{QED}
 %
 
 %页面参数
