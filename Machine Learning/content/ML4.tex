@@ -1,0 +1,54 @@
+\newpage
+\section{决策树}
+\subsection{决策树简介(基本流程)}
+处理未见的能力
+
+递归构建决策树, 三个条件停止递归:
+\begin{enumerate}
+    \item 
+\end{enumerate}
+
+
+
+
+\subsection{决策树算法的关键：划分选择}
+最优划分属性
+
+希望 purity 愈来愈高. 
+
+\subsubsection{信息增益}%TODO 练习计算
+
+偏向于类目多的属性
+
+\subsubsection{增益率}
+
+偏向于类目少的属性, 相当于给增益做了规范化
+
+\subsubsection{基尼系数}
+反映了从数据集中随机抽取两个样本, 其类别标记不一致的概率; 基尼指数越小, 说明越纯
+
+\subsection{克服过拟合的问题：剪枝处理}
+没有先验, 非常易过拟合. 
+
+\subsubsection{预剪枝}
+边建树，边剪枝
+
+\subsubsection{后剪枝}
+先建树，后剪枝
+
+\subsection{处理多种类型数据：连续与缺失值}
+离散化
+
+\subsubsection{二分化}
+
+\subsubsection{缺失值}
+两个问题:
+\begin{enumerate}\small
+    \item 如何在属性值缺失的情况下进行划分属性选择? 跟传统决策树一致，只不过仅在有属性值的子集上计算信息增益，不考虑无属性值的样本
+    \item 给定划分属性，若样本在该属性上的值缺失,如何对样本进行划分？就是让同一个样本以不同的概率划入到不同的子节点中去
+\end{enumerate}
+
+\subsection{决策树的变体：多变量决策树}
+非叶节点不再是仅对某个属性,而是对属性的线性组合. 
+
+多变量本质就是模型, 相当于叶节点是小模型. 
