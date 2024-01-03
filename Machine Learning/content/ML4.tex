@@ -3,50 +3,126 @@
 \subsection{决策树简介(基本流程)}
 处理未见的能力
 
+输入: 训练集 $D$, 属性集 $A$ 
+
 递归构建决策树, 三个条件停止递归:
 \begin{enumerate}
-    \item 
+    \item 当前结点包含的
+    样本全部属于同一类
+    别, 无需划分
+    \item 当前属性集为空, 
+    或所有样本在所有属
+    性上取值相同, 无法划分
+    \item 当前结点包含的
+    样本集合为空, 不能划分
 \end{enumerate}
 
-
-
-
 \subsection{决策树算法的关键：划分选择}
-最优划分属性
+最优划分属性, 希望 纯度(purity) 愈来愈高. 
 
-希望 purity 愈来愈高. 
+\subsubsection{信息增益}
+``信息熵'' (information entropy)是度量样本集合纯度最常用的一种指标.
+假定当前样本集合。 中 第 $k$ 类 样 本 所 占 的 比 例 为 $p_k(k=1,2,\dots,|\mathcal{Y}|)$, 则 $D$ 的信息熵定义为
+\begin{align*}
+    Ent(D)=\sum_{k=1}^{|\mathcal{Y}|}p_k\log_2 p_k
+\end{align*}
+$Ent(D)$ 越小, $D$ 纯度越高. $0\le Ent(D)\le \log_2|\mathcal{Y}|$. 计算时约定: $p=0$ 时, $p\log_2 p=0$. 
 
-\subsubsection{信息增益}%TODO 练习计算
+假定离散属性$a$ 有 $V$ 个 可 能 的 取 值 $\{ a^1, a^2,\dots,a^V \}$, 若 使 用 $a$ 来对样本集 $D$ 进行划分, 则会产生 $V$ 个分支结点, 其 中 第 $v$ 个分支结点包含了 $D$ 中所有在 属 性 $a$ 上 取 值 为 $a^v$ 的 样 本 , 记 为 $D^v$. 再考虑到不同的分支结点所包含的样本数不同, 给分支结点赋予权重 $\frac{|D^v|}{|D|}$, 即样本数越多的分支结点的影响越大, 于是可计算出用属性 $a$ 对样本 集 $D$ 进行 划 分 所 获 得 的 ``信息增益''(information gain)
+\begin{align*}
+    Gain(D, a)=Ent(D)-\sum_{i=1}^V \frac{|D^v|}{|D|}Ent(D^v)
+\end{align*}
+一般而言, 信息增益越大, 则意味着使用属性 $a$ 来 进 行 划 分 所 获 得 的 ``纯度提升''越大. 因此, 我们可用信息增益来进行决策树的划分属性选择, 即选 择 属 性 $\displaystyle a_*=\argmin_{a\in A}Gain(D,a)$. 著 名 的 ID3 决策树学习算就是以信息增益为准则来选择划分属性.
 
-偏向于类目多的属性
+偏向于类目多的属性. 
 
 \subsubsection{增益率}
+为减少这种偏好可能带来的不利影响，著名的 C4.5 决策树算法 使 用 ``增益率''(gain ratio)来选择最优划分属性, 增益率定义为
+\begin{align*}
+    Gain\_ratio(D,a)&=\frac{Gain(D,a)}{IV(a)}\\
+    IV(a)&=-\sum_{v=1}^V\frac{|D^v|}{|D|}\log_2 \frac{|D^v|}{|D|}
+\end{align*}
+其中 $IV(a)$ 称为属 性 $a$ 的 ``固有值'' (intrinsic value). 属 性 a 的可能
+取值数目越多(即 $V$ 越大)，则 $IV(a)$ 的值通常会越大. 
 
-偏向于类目少的属性, 相当于给增益做了规范化
+偏向于类目少的属性, 相当于给增益做了规范化. 
 
 \subsubsection{基尼系数}
-反映了从数据集中随机抽取两个样本, 其类别标记不一致的概率; 基尼指数越小, 说明越纯
+CART 决 策 树 使 用 ``基 尼 指 数''(Gini index)来选择划分属性. 
+\begin{align*}
+    Gini(D)=\sum_{k=1}^{|\mathcal{Y}|}\sum_{k'\ne k}p_kp_{k'}=1-\sum_{k=1}^{\mathcal{Y}}p_k^2
+\end{align*}
+反映了从数据集 $D$ 中随机抽取两个样本，其类别标记不一致的概率.因此, $Gini(D)$ 越小，则数据集 $D$ 的纯度越高. 
+
+属性 $a$ 的基尼指数定义为
+\begin{align*}
+    Gini\_index(D,a)=\sum_{v=1}^V\frac{|D^v|}{|D|}Gini(D^v)
+\end{align*}
+在候选属性集合$A$ 中，选择那个使得划分后基尼指数最小的属性作为最优划分属性，即 $\displaystyle a_*=\argmin_{a\in A}Gini\_index(D,a)$
+
 
 \subsection{克服过拟合的问题：剪枝处理}
 没有先验, 非常易过拟合. 
 
 \subsubsection{预剪枝}
-边建树，边剪枝
+边建树, 边剪枝
+
+划分验证集, 若划分后验证集精度下降则不进行划分. 
+
+优点:
+\begin{itemize}
+    \item 降低过拟合
+    \item 减少训练与测试时间
+\end{itemize}
+
+缺点: 基于贪心, 可能欠拟合
 
 \subsubsection{后剪枝}
-先建树，后剪枝
+先建树, 后剪枝
 
-\subsection{处理多种类型数据：连续与缺失值}
-离散化
+优点: 后剪枝比预剪枝保留了更多的分支，欠拟合风险小，泛化性能往往优于预剪枝决策树
 
-\subsubsection{二分化}
+缺点: 训练时间开销大：后剪枝过程是在生成完全决策树之后进行的，需要自底向上对所有非叶结点逐一考察；其训练时间要远大于预剪枝决策树
+
+\subsection{处理多种类型数据: 连续与缺失值}
+\subsubsection{连续值离散化(二分法)}
+\begin{enumerate}
+    \item 假 定 $a$ 在 $D$ 上出现了 $n$ 个不同的取值, 从小到大进行排序，记 为$\{ a^1,a^2,\dots,a^n \}$, 基于划分点 $t$ 可 将 $D$ 分为子集 $D^-_t$ 和 $D^+_t$. 其 中 $D^-_t$ 包含那些在属性 $a$ 上取值不大于 $t$ 的样本，而 $D^+_t$ 则包含 那些在属性 $a$ 上取值大于 $t$ 的样本. 考察包含 $n - 1$ 个元素的候选划分点集合
+    \begin{align*}
+        T_a=\left\{ \left.\frac{a^i+a^{i+1}}{2}\right|1\le i\le n-1 \right\}
+    \end{align*}
+    即把区间 $[a^i, a^{i-1})$ 的中位点作为候选划分点. 
+    \item 考察这些划分点, 选取最优划分点进行样本集合的划分. 
+\end{enumerate}
+
+与离散属性不同，若当前结点划分属性为连续属性，该属性还可作为其后代结点的划分属性.
 
 \subsubsection{缺失值}
 两个问题:
-\begin{enumerate}\small
-    \item 如何在属性值缺失的情况下进行划分属性选择? 跟传统决策树一致，只不过仅在有属性值的子集上计算信息增益，不考虑无属性值的样本
-    \item 给定划分属性，若样本在该属性上的值缺失,如何对样本进行划分？就是让同一个样本以不同的概率划入到不同的子节点中去
+\begin{enumerate}
+    \item 如何在属性值缺失的情况下进行划分属性选择? 
+    \subitem 跟传统决策树一致, 只不过仅在有属性值的子集上计算信息增益, 不考虑无属性值的样本
+    \item 给定划分属性, 若样本在该属性上的值缺失,如何对样本进行划分？
+    \subitem 就是让同一个样本以不同的概率划入到不同的子节点中去
 \end{enumerate}
+
+给定训练集 $D$ 和属性 $a$,令 $\tilde{D}$ 表示 $D$中在属性 $a$ 上没有缺失值的样本子集. 显然我们仅可根据 $\tilde{D}$ 来判断属性 $a$ 的优劣. 假定属性 $a$ 有 $V$ 个 可 取 值 $\{ a^1,a^2,\dots,a^V \}$, 令 $\tilde{D}^v$ 表 示 $\tilde{D}$中 在 属 性 $a$ 上取值为 $a^v$ 的样本子集, $\tilde{D}_k$ 表 示 $\tilde{D}$ 中属于第$k$ 类 $(k = 1 , 2 ,\dots ,|\mathcal{Y}| )$ 的样本子集，则显然有 $\tilde{D}=\bigcup_{k=1}^{|\mathcal{Y}|}\tilde{D}_k$, $\tilde{D}=\bigcup_{v=1}^{V}\tilde{D}_k$. 定 我 们 为 每 个 样 本 $\bx$ 赋 予 一 个 权 重 $w_{\bx}$ 并定义
+\begin{align*}
+    \rho&=\frac{\sum_{x\in \tilde{D}}w_{\bx}}{\sum_{x\in {D}}w_{\bx}}\\
+    \tilde{p}_k&=\frac{\sum_{x\in \tilde{D}_k}w_{\bx}}{\sum_{x\in {D}}w_{\bx}}\ (1\le k\le |\mathcal{Y}|)\\
+    \tilde{r}_v&=\frac{\sum_{x\in \tilde{D}^v}w_{\bx}}{\sum_{x\in {D}}w_{\bx}}\ (1\le v\le V)
+\end{align*}
+对属性 $a$, $\rho$ 表示无缺失值样本所占的比例, $\tilde{p}_k$ 表示无缺失值样本中 第 $k$ 类所占的比例，$\tilde{r}_v$ 则表示无缺失值样本中在属性 $a$ 上取值$a^v$的样本所占的比例. 
+
+基于上述定义，我们可将信息增益的计算式推广为
+\begin{align*}
+    Gain(D,a)&=\rho \times Gain(\tilde{D}, a)\\
+    &=\rho\times \left( Ent(\tilde{D})-\sum_{v=1}^V\tilde{r}_v Ent(\tilde{D}^v) \right)\\
+    Ent(\tilde{D})&=-\sum_{k=1}^{|\mathcal{Y}|}\tilde{p}_k\log_2 \tilde{p}_k
+\end{align*}
+跟传统决策树一致，只不过仅在有属性值的子集上计算信息增益，不考虑无属性值的样本. 
+
+若样本$\bx$在划分属性 $a$ 上的取 值未知，则 将 $\bx$ 同时划入所有子结点，且样本权值在与属性值 $a^v$ 对应的子结点 中调整为$\tilde{r}_v\cdot w_{\bx}$
 
 \subsection{决策树的变体：多变量决策树}
 非叶节点不再是仅对某个属性,而是对属性的线性组合. 

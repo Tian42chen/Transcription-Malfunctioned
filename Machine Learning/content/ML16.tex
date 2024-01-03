@@ -1,8 +1,173 @@
 \newpage
 \section{强化学习}
 \subsection{任务与奖赏}
+强化学习常用马尔可夫决策过程 (Markov Decision Process, MDP) 描述. 
+
+强化学习对应了四元组
+\begin{align*}
+    E=\braket{X, A, P, R}
+\end{align*}
+其中 $P$ 指定了状态转移概率, $R$ 指定了奖赏, $X$ 为状态空间, $A$ 为动作空间. $E$ 为机器所处环境. 
+
+强化学习的目标: 机器通过在环境中不断尝试从而学到一个策略$\pi$，使得长期执行该策略后得到的累积奖赏最大
+
+
+强化学习在某种意义上可以认为是具有“延迟标记信息”的监督学习. 
+
 \subsection{K-摇臂赌博机}
+\begin{itemize}
+    \item 只有一个状态，K个动作
+    \item 每个摇臂的奖赏服从某个期望未知的分布
+    \item 执行有限次动作
+    \item 最大化累积奖赏
+\end{itemize}
+
+强化学习面临的主要困难：探索-利用窘境 (Exploration-Exploitation dilemma)
+\begin{itemize}
+    \item 探索：估计不同摇臂的优劣 (奖赏期望的大小)
+    \item 利用：选择当前最优的摇臂
+\end{itemize}
+
+在探索与利用之间进行折中:
+\begin{itemize}
+    \item $\epsilon$-贪心
+    \item Softmax
+\end{itemize}
+
+\subsubsection{\texorpdfstring{$\epsilon$}. 贪心}
+\begin{itemize}
+    \item 以$\epsilon$的概率探索：均匀随机选择一个摇臂
+    \item 以$1-\epsilon$的概率利用：选择当前平均奖赏最高的摇臂
+\end{itemize}
+
+\subsubsection{Softmax}
+基于当前已知的摇臂平均奖赏来对探索与利用折中, 若某个摇臂当前的平均奖赏越大，则它被选择的概率越高. 
+
+\subsubsection{离散空间强化学习}
+离散空间状态空间、离散动作空间上的多步强化学习任务
+
+方法：
+\begin{itemize}
+    \item 每个状态上动作的选择看作一个 K-摇臂赌博机问题
+    \item K-摇臂赌博机算法奖赏函数：强化学习任务的累积奖赏
+\end{itemize}
+局限：未考虑马尔科夫决策过程
+
 \subsection{有模型学习}
+有模型学习 (model-based learning)
+\begin{align*}
+    E=\braket{X, A, P, R}
+\end{align*}
+$X, A, P, R$ 均已知. 
+
+强化学习的目标：找到使累积奖赏最大的策略$\pi$
+
+策略评估：使用某策略所带来的累积奖赏
+\begin{itemize}
+    \item 状态值函数：从状态$x$出发，使用策略$\pi$所带来的累积奖赏
+    \item 状态-动作值函数：从状态$x$出发，执行动作$a$后再使用策略
+    $\pi$所带来的累积奖赏
+\end{itemize}
+
+策略改进：将非最优策略改进为最优策略
+
+策略迭代 (policy iteration): 求解最优策略的方法
+\begin{enumerate}
+    \item 随机策略作为初始策略
+    \item 策略评估+策略改进+策略评估+策略改进+...
+    \item 直到策略收敛
+\end{enumerate}
+
 \subsection{免模型学习}
+免模型学习 (model-free learning)：
+\begin{itemize}
+    \item 转移概率，奖赏函数未知
+    \item 甚至环境中的状态数目也未知
+    \item 假定状态空间有限
+\end{itemize}
+
+免模型学习所面临的困难: 策略无法评估, 无法通过值函数计算状态-动作值函数, 机器只能从一个起始状态开始探索环境. 
+
+解决困难的办法: 多次采样, 直接估计每一对状态-动作的值函数, 在探索过程中逐渐发现各个状态
+
+
+两种著名的免模型学习方法:
+\begin{itemize}
+    \item 蒙特卡罗强化学习
+    \item 时序差分学习
+\end{itemize}
+
+\subsubsection{蒙特卡罗强化学习}
+采样轨迹，用样本均值近似期望
+
+策略评估：蒙特卡罗法
+\begin{enumerate}
+    \item 从某状态出发，执行某策略
+    \item 对轨迹中出现的每对状态-动作，记录其后的奖赏之和
+    \item 采样多条轨迹，每个状态-动作对的累积奖赏取平均
+\end{enumerate}
+
+策略改进：换入当前最优动作
+
+蒙特卡罗强化学习可能遇到的问题：轨迹的单一性. 解决问题的办法: $\epsilon$-贪心
+\begin{itemize}
+    \item 同策略(on-policy)：被评估与被改进的是同一个策略
+    \item 异策略(off-policy)：学习过程是基于行为策略产生的数据，但是学习的目标是优化目标策略 (用重要性采样技术)
+\end{itemize}
+\subsubsection{时序差分学习}
+增量式地进行状态-动作值函数更新, 也是$\epsilon$-贪心
+\begin{itemize}
+    \item 同策略：Sarsa算法
+    \item 异策略：Q-学习 (Q-learning)
+\end{itemize}
+
+\paragraph{Sarsa算法}需要前一步的状态(state) 、前一步的动 (action)、奖赏值(reward) 、当前状态 (state) 、将要执行的动作(action)
+
+\paragraph{Q-学习算法}该算法评估的是$\epsilon$-贪心策略,而执行的是原始策略
+
 \subsection{值函数近似}
+若状态空间是连续(无限)的, 需要使用值函数近似. 但为简便假定:
+\begin{itemize}
+    \item 状态空间 $X=\R^n$
+    \item 考虑线性近似
+    \item 行为空间有限
+\end{itemize}
+
+值函数近似: 将值函数表达为状态的线性函数
+\begin{align*}
+    V_{\bm \theta}(\bx)=\bm{\theta}^\top \bx
+\end{align*}
+$\bm{\theta}$ 为参数向量, $\bx$ 为状态向量. 
+
+用最小二乘误差来度量学到的值函数与真实的值函数$V^\pi$之间的近似程度
+\begin{align*}
+    E_{\bm\theta}=\mathbb{E}_{\bx\sim\pi}\left[ \left( V^\pi(\bx)-V_{\bm\theta}(\bx) \right)^2 \right]
+\end{align*}
+
+用梯度下降法更新参数向量，求解优化问题.
+
+单个样本更新策略
+\begin{align*}
+    \bm\theta=\bm\theta+\alpha(V^\pi(\bx)-V_{\bm\theta}(\bx) )\bx
+\end{align*}
+
+借助时序差分学习，使用估计的值函数 $V^\pi(\bx)=r+\gamma V^\pi(\bx')$ 代替真实值函数
+
+\begin{align*}
+    \bm\theta&=\bm\theta+\alpha(r+\gamma V^\pi(\bx)-V_{\bm\theta}(\bx) )\bx\\
+    &=\bm\theta+\alpha(r+\gamma\bm{\theta}^\top\bx'-\bm{\theta}^\top\bx )\bx\\
+\end{align*}
+
+线性值函数近似Sarsa算法. 可以通过引入核方法实现非线性值函数近似。
+
 \subsection{模仿学习}
+强化学习任务中多步决策的搜索空间巨大，基于累积奖赏来学习很多步之前的合适决策非常困难. 直接模仿人类专家的状态-动作对来学习策略. 
+
+\begin{enumerate}
+    \item 利用专家的决策轨迹，构造数据集D：状态作为特征，动作作为标记
+    \item 利用数据集D，使用分类/回归算法即可学得策略
+    \item 将学得的策略作为初始策略
+    \item 策略改进，从而获得更好的策略
+\end{enumerate}
+
+强化学习任务中，设计合理的符合应用场景的奖赏函数往往相当困难. 从人类专家提供的范例数据中反推出奖赏函数. i.e. 逆强化学习 (inverse reinforcement learning)
