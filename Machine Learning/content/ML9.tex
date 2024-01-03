@@ -1,8 +1,88 @@
 \newpage
 \section{聚类}
 \subsection{聚类任务}
+目标：将数据样本划分为若干个通常不相交的“簇”(cluster)
+
 \subsection{性能度量}
+聚类性能度量，亦称聚类“有效性指标”(validity index)
+\begin{itemize}
+    \item 外部指标 (external index)
+    \subitem 将聚类结果与某个“参考模型”(reference model) 进行比较
+    \item 内部指标 (internal index)
+    \subitem 直接考察聚类结果，无参考模型
+\end{itemize}
+
+
+
 \subsection{距离计算}
+聚类来自于分组，分组来自于合理度量，度量来自于距离, 因此距离对聚类很本质. 
+
+距离度量 (distance metric) 需满足的基本性质：
+\begin{itemize}
+    \item 非负性: $dist(\bx_i,\bx_j)\ge0$
+    \item 同一性: $dist(\bx_i,\bx_j)=0 \iff \bx_i=\by_i$
+    \item 对称性: $dist(\bx_i,\bx_j)=dist(\bx_j,\bx_i)$
+    \item 直递性: $dist(\bx_i,\bx_j)\le dist(\bx_i,\bx_k)+dist(\bx_k,\bx_j)$
+\end{itemize}
+
+常用距离形式:
+\begin{itemize}
+    \item 闵可夫斯基距离 (Minkowski distance)
+    \begin{align*}
+        dist_{mk}(\bx_i,\bx_j)=\left( \sum_{u=1}^n|x_{iu}-x_{ju}|^p \right)^{\frac{1}{p}}
+    \end{align*}
+    \subitem $p = 2$: 欧氏距离(Euclidean distance)
+    \subitem $p = 1$: 曼哈顿距离(Manhattan distance)
+    \item 对无序(non-ordinal)属性，可使用 VDM (Value Difference Metric)
+    \subitem 令 $m_{u,a}$ 表示属性 $u$ 上取值为 $a$ 的样本数，$m_{u,a,i}$ 表示在第 $i$ 个样本簇中在属性 $u$ 上取值为 $a$ 的样本数，$k$ 为样本簇数，则属性 $u$ 上两个离散值 $a$ 与 $b$ 之间的 VDM 距离为
+    \begin{align*}
+        VMD_p(a,b)=\sum_{i=1}^k\left| \frac{m_{u,a,i}}{m_{u,a}}-\frac{m_{u,b, i}}{m_{u,b}} \right|^p
+    \end{align*}
+    \item 对混合属性，可使用 MinkovDM
+    \begin{align*}
+        MinkovDM_p(\bx_i,\bx_j)=&\left( \sum_{u=1}^{n_c}|x_{iu}-x_{ju}|^p\right. \\
+        &\left.+ \sum_{u=n_c+1}^n VDM_p(x_{iu}, x_{ju}) \right)^{\frac{1}{p}}
+    \end{align*}
+\end{itemize}
+
+
 \subsection{原型聚类}
+原型=簇中心，有簇中心的聚类方法
+
+\subsubsection{k-均值聚类 (k-means)}
+每个簇中心以该簇中所有样本点的“均值”表示. 
+
+步骤:
+\begin{enumerate}
+    \item 随机选取k个样本点作为簇中心
+    \item 将其他样本点根据其与簇中心的距离，划分给最近的簇
+    \item 更新各簇的均值向量，将其作为新的簇中心
+    \item 若所有簇中心未发生改变，则停止；否则执行 2)
+\end{enumerate}
+
+\subsubsection{学习向量量化 (LVQ)}
+Learning Vector Quantization. 也是试图找到一组原型向量来刻画聚类结构，但数据样本带有类别标记. 通过聚类来形成类别的“子类”结构；每个聚类对应于类别的一个子类. 
+
+\subsubsection{高斯混合聚类 (GMM)}
+Gaussian Mixture Clustering. 采用高斯概率分布来表达聚类原型，簇中心=均值，簇半径=方差. 参数估计可采用极大似然法. 
+
 \subsection{密度聚类}
+划成多个等价类，未必有簇中心
+
+\subsubsection{DBSCAN}
+通过邻域建立样本的可达路径，形成等价类(连通分支). 
+
+DBSCAN将 “簇 ”定义为:由密度可达关系导出的最大的密度相连样本集合
+
 \subsection{层次聚类}
+聚类效果跟抽象的粒度有关，形成多层次聚类
+
+\subsubsection{AGNES (AGglomerative NESting)}
+从最细的粒度开始（一个样本一个簇），逐渐合并相似的簇，直到最粗的粒度（所有样本一个簇）
+
+步骤:
+\begin{enumerate}
+    \item 将每个样本点作为一个簇
+    \item 合并最近的两个簇
+    \item 若所有样本点都存在与一个簇中, 则停止; 否则 2)
+\end{enumerate}

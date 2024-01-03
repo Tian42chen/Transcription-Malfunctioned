@@ -1,5 +1,5 @@
 \newpage
-\section{线性模型}%TODO 
+\section{线性模型}
 
 \subsection{引言}
 \subsubsection{基本形式}
@@ -141,7 +141,7 @@
 \end{align*}
 线性回归模型为
 \begin{align*}
-    f(\hat{\bx}_i)=\hat{\bx}^\top(\bm{X}^\top\bm X)^{-1}\bm{X}^\top \by
+    f(\hat{\bx}_i)=\hat{\bx}_i^\top(\bm{X}^\top\bm X)^{-1}\bm{X}^\top \by
 \end{align*}
 
 若 $\bm{X}^\top\bm X$ 不是满秩, 需要引入正则化. %TODO \ref{sec:6.4}, \ref{sec:11.4}
@@ -167,15 +167,42 @@
 称 $g$ 为 联系函数 (link function)
 
 \subsection{二分类任务}
-%TODO 做到这里了
+预测值与输出标记
+\begin{align*}
+    z&=\bw^\top \bx +b \\
+    y&\in \{ 0,1 \}
+\end{align*}
+寻找函数将分类标记与线性回归模型输出联系起来. 
+
+最理想的函数 --- 单位阶跃函数
+\begin{align*}
+    y=\left\{ \begin{array}{ll}
+        0 & z<0\\
+        0.5 & z=0\\
+        1 & z>0
+    \end{array} \right.
+\end{align*}
+但其不连续
+
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=0.42\textwidth]{pic/ML3/单 位 阶 跃 函 数 与 对 数 几 率 函 数}
+    \caption{单 位 阶 跃 函 数 与 对 数 几 率 函 数}
+\end{figure}
 
 \subsubsection{对数几率回归}
 
-\paragraph{对数几率函数(logistic function)}
+
+\paragraph{对数几率函数(logistic function)} 于是使用对数几率函数替代. 
+\begin{align*}
+    y&=\frac{1}{1+e^{-z}}\\
+    y&=\frac{1}{1+e^{-(\bw^\top\bx+b)}}\\
+    \ln\frac{y}{1-y}&=\bw^\top\bx+b
+\end{align*}
 
 
-\begin{definition}
-    对数几率(log odds): 样本作为正例的相对可能性对数
+\begin{definition}[对数几率(log odds)]
+    若 将 $y$ 视为样 本 $\bx$ 作为正例的可能性, 则 $1 - y$ 是其反例可能性, 两者的比值称 为 ``几 率 ''(odds), 反 映 了 $\bx$作为正例的相对可能性. 对几率取对数则得到 ``对数几率''(log odds,亦 称 logit)
     \begin{align*}
         \ln\frac{y}{1-y}
     \end{align*}
@@ -188,8 +215,37 @@
     \item 可直接应用现有数值优化算法求最优解
 \end{enumerate}
 
-\paragraph{极大似然法}
+\paragraph{极大似然法}来估计 $\bw$ 与 $b$. 
 
+若将 $y$ 视为类后验概率估计 $p(y = 1 | \bx)$, 有 
+\begin{align*}
+    \ln\frac{p(y = 1 | \bx)}{p(y = 0 | \bx)}&=\bw^\top \bx+b\\
+    p(y = 1 | \bx)&=\frac{e^{(\bw^\top\bx+b)}}{1+e^{(\bw^\top\bx+b)}}\\
+    p(y = 0 | \bx)&=\frac{1}{1+e^{(\bw^\top\bx+b)}}\\
+\end{align*}
+
+给定数据集 $\{ (\bx_i, y_i) \}_{i=1}^m$, 最大化对数似然函数
+\begin{align*}
+    \ell(\bw,b)=\sum_{i=1}^m\ln p(y_i|\bx_i;\bw_i,b)
+\end{align*}
+令 $\bm\beta=(\bw;b),\hat{\bx}=(\bx,1)$, $\bw^\top\bx+b=\bm{\beta}^\top\hat{\bx}$
+\begin{align*}
+    p_1(\hat{\bx};\bm \beta)&=p(y=1|\hat{\bx};\bm\beta)\\
+    p_0(\hat{\bx};\bm \beta)&=p(y=0|\hat{\bx};\bm\beta)=1-p_1(\hat{\bx};\bm \beta)\\
+    p(y_i|\bx_i;\bw,b)&=y_ip_1(\hat{\bx};\bm \beta)+(1-y_i)p_0(\hat{\bx};\bm \beta)
+\end{align*}
+因为 $y_i=0,1$, 有
+\begin{align*}
+    \ell(\bm\beta)&=\left\{ \begin{array}{ll}
+        \bm{\beta}^\top \hat{\bx}_i-\ln\left( 1+e^{\bm{\beta}^\top\hat{\bx}_i} \right)& y_i=1\\
+        -\ln\left( 1+e^{\bm{\beta}^\top\hat{\bx}_i} \right) & y_i=0
+    \end{array} \right.\\
+    &=\sum_{i=1}^m\left( y_i\bm{\beta}^\top \hat{\bx}_i-\ln\left( 1+e^{\bm{\beta}^\top\hat{\bx}_i} \right) \right)
+\end{align*}
+关 于 $\bm\beta$ 的 高 阶 可 导 连 续 凸 函 数, 可以使用经 典 的 数 值 优 化 算 法  求解得
+\begin{align*}
+    \bm\beta^*=\argmin_{\bm\beta}-\ell(\bm\beta)
+\end{align*}
 
 \paragraph{对数几率回归总结}
 主要思想:
@@ -202,62 +258,102 @@
 \end{itemize}
 
 
-\subsubsection{线性判别分析}
-(Linear Discriminant AnalysisC, LDA)
-LDA 视为一种监督降维技术. 
+\subsubsection{线性判别分析(LDA)}
+(Linear Discriminant Analysis)LDA 视为一种监督降维技术. 
 
 \begin{figure}[!htb]
     \centering
-    \includegraphics[width=0.309\textwidth]{pic/ML3/LDA.png}
-    \caption{LDA}
+    \includegraphics[width=0.42\textwidth]{pic/ML3/LDA.png}
+    \caption{LDA 的 二 维 示 意 图}
 \end{figure}
-同类投影点尽可能接近, 异类投影点尽可能远. 
+给定训练样例集, 设法将样例投影到一条直线上, 使得同类样例的投影点尽可能接近、异类样例的投影点尽可能远离. 
 
-\begin{definition}\quad
-
-    \begin{itemize}
-        \item $X_i$: 第 $i$ 类示例的集合
-    \end{itemize}
-\end{definition}
-
+相关变量:
+\begin{itemize}
+    \item $\bw$: 目标直线
+    \item $X_i$: 第 $i$ 类示例的集合
+    \item $\bm{\mu}_i$: 第 $i$ 类示例的均值向量
+    \item $\Sigma_i$: 第 $i$ 类示例的协方差矩阵
+    \begin{align*}
+        \Sigma_i=\sum_{\bx\in X_i}(\bx-\bm{\mu}_i)(\bx-\bm{\mu}_i)^\top
+    \end{align*}
+    \item $\bw^\top\bm{\mu}_0$, $\bw^\top\bm{\mu}_1$: 两类样本中心在直线上的投影.
+    \item $\bw^\top\Sigma_0\bw$, $\bw^\top\Sigma_1\bw$: 两类样本的协方差
+\end{itemize}
 
 最大化目标:
 \begin{align*}
-    1
+    J&=\frac{\norm{\bw^\top\bm{\mu}_0-\bw^\top\bm{\mu}_1}_2^2}{\bw^\top\Sigma_0\bw+\bw^\top\Sigma_1\bw}\\
+    &=\frac{\bw^\top(\bm{\mu}_0-\bm{\mu}_1)(\bm{\mu}_0-\bm{\mu}_1)^\top\bw}{\bw^\top(\Sigma_0+\Sigma_1)\bw}
 \end{align*}
 
-类内散度矩阵:
+定义类内散度矩阵 与 类间散度矩阵:
 \begin{align*}
-    11
+    S_w&=\Sigma_0+\Sigma_1\\
+    &=\sum_{\bx\in X_0}(\bx-\bm{\mu}_0)(\bx-\bm{\mu}_0)^\top+\sum_{\bx\in X_1}(\bx-\bm{\mu}_1)(\bx-\bm{\mu}_1)^\top\\
+    S_b&=(\bm{\mu}_0-\bm{\mu}_1)(\bm{\mu}_0-\bm{\mu}_1)^\top
 \end{align*}
 
-类间散度矩阵:
-\begin{align*}
-    222
-\end{align*}
 
-广义瑞利商 (generalized Rayleigh quotient)
+于是最大化目标可重写为 $S_b$ 与 $S_w$ 的广义瑞利商 (generalized Rayleigh quotient)
 \begin{align*}
-    33
+    J=\frac{\bw^\top S_b \bw}{\bw^\top S_w \bw}
 \end{align*}
 
 令 $\bm w ^T \bm S_w \bm w=1$ 最大化上式等价形式为
 \begin{align*}
-    444
+    &\min_{\bw} -\bw^\top S_b \bw\\
+    \st & \bw^\top S_w \bw=1
 \end{align*}
 
 运用拉格朗日乘子法
 \begin{align*}
-    555
+    S_b\bw=\lambda S_w\bw
 \end{align*}
 
-\paragraph{拉格朗日乘子法}%TODO 讲得好快()()
+\paragraph{拉格朗日乘子法}
+用了个对偶问题, 略过过程, 最后有
+\begin{align*}
+    \bw=S_w^{-1}(\bm{\mu}_0-\bm{\mu}_1)
+\end{align*}
+使用奇异值分解求解, i.e. $S_w=U\Sigma V^\top$, 然后得到 $S_w^{-1}=V\Sigma^{-1}U^\top$.
 
-\paragraph{LDA推广---多分类任务}
+LDA 也可以用贝叶斯决策论解释. 
 
-\paragraph{LDA总结}
+\paragraph{LDA推广---多分类任务}假定存在 $N$ 个类, 且第 $i$ 类示例数位 $m_i$.
+
+定义全局散度矩阵
+\begin{align*}
+    S_t&=S_b+S_w\\
+    &=\sum_{i=1}^m (\bx_i-\bm\mu)(\bx_i-\bm\mu)^\top
+\end{align*}
+其中 $\bm\mu$ 是所有示例的均值向量. 
+
+再重定义类内散度矩阵, 类间散度矩阵
+\begin{align*}
+    S_w&=\sum_{i=1}^N S_{w_i}\\
+    &=\sum_{i=1}^N \left( \sum_{\bx\in X_i}(\bx-\bm{\mu}_i)(\bx-\bm{\mu}_i)^\top \right)\\
+    S_b&=S_t-S_w\\
+    &=\sum_{i=1}^N m_i(\bm{\mu}_i-\bm\mu)(\bm{\mu}_i-\bm\mu)^\top
+\end{align*}
+
+使用 $S_b, S_w, S_t$ 三者中的任何两个即可, 常见的是采用优化目标
+\begin{align*}
+    \max_W\frac{tr(W^\top S_b W)}{W^\top S_w W}
+\end{align*}
+其中 $W\in\R^{d\times(N-1)}$, 通过如下广义特征值问题求解
+\begin{align*}
+    S_bW=\lambda S_w W
+\end{align*}
+$W$ 的 闭 式 解 则 是 $S_w^{-1}S_b$ 的 $N - 1$ 个最大广义特征值所对应的特征向量组成的矩阵.
+
+多 分 类 LDA 将 样本投影到 $N - 1$ 维空间, $N - 1$ 通常远小于数据原有的属性数, 因此LDA 也常被视为一种经典的监督降维技术.
+
+% \paragraph{LDA总结}
+
 
 \subsection{多分类任务}
+常用技巧: 利用二分类学习器解决多分类问题. 
 
 \subsubsection{一对一}
 
