@@ -36,7 +36,7 @@ involves:
 \end{figure}
 
 \subsection{Scheduling Criteria}
-\begin{itemize}\small
+\begin{itemize}\scriptsize
     \item CPU utilization (CPU利用率)--- keep the CPU as busy as possible
     \item Throughput (吞吐率)--- \# of processes that complete their execution per time unit
     \item Turnaround time (周转时间)--- amount of time to execute a particular process
@@ -44,6 +44,11 @@ involves:
     \item Response time (响应时间)--- amount of time it takes from when a request was submitted until the first response is produced, not output (for time-sharing environment)
 \end{itemize}
 
+\begin{itemize}
+    \item 响应时间=第一次响应 - 到达时间
+    \item 周转时间=结束时刻 - 到达时间
+    \item 等待时间=周转时间 - 运行时间
+\end{itemize}
 \subsubsection{Optimization Criteria} 
 \begin{itemize}\small
     \item Max CPU utilization
@@ -74,26 +79,40 @@ The Gantt Chart
     \item Suppose that the processes arrive in the order: $P_1, P_2, P_3$
     \begin{figure}[!htb]
         \centering
-        \tikzmath{
-            \s1=0; 
-            \s2=0.8*8; 
-            \s3=\s2+0.8;
-            \s4=\s3+0.8;
-            \h=0.8;
-        } 
         \begin{tikzpicture}
-            \path[draw=black] (\s1,0) rectangle (\s2,\h);
-            \path[draw=black] (\s2,0) rectangle (\s3,\h);
-            \path[draw=black] (\s3,0) rectangle (\s4,\h);
-    
-            \node at (\s1/2 + \s2/2, \h/2) {$P_1$};
-            \node at (\s2/2 + \s3/2, \h/2) {$P_2$};
-            \node at (\s3/2 + \s4/2, \h/2) {$P_3$};
-    
-            \node at (\s1, -\h/2) {0};
-            \node at (\s2, -\h/2) {24};
-            \node at (\s3, -\h/2) {27};
-            \node at (\s4, -\h/2) {30};
+            \tikzmath{
+                int \i, \p, \n, \tmp, \s;
+                real \h, \bt, \step;
+                % 
+                \h=0.8;
+                \step=0.25;
+                \n0=3;
+                \bt{1}=24;
+                \bt{2}=3;
+                \bt{3}=3;
+                \p{1}=1;
+                \p{2}=2;
+                \p{3}=3;
+                % 
+                \n1=\n0+1;
+                \s{1}=0;
+                for \i in {1,...,\n0}{
+                    \tmp=\i+1;
+                    \s{\tmp}=\s{\i}+\bt{\i};
+                };
+                for \i in {1,...,\n0}{
+                    \tmp=\i+1;{
+                        \path[draw=black] (\step*\s{\i},0) rectangle (\step*\s{\tmp}, \h);
+                        \node at (\step*\s{\i}, -\h/2) {\s{\i}};
+                    };
+                    if \p{\i}!=0 then{
+                        {
+                            \node at (\step*\s{\i}/2 + \step*\s{\tmp}/2, \h/2) {$P_\p{\i}$};
+                        };
+                    };
+                };
+                {\node at (\step*\s{\n1}, -\h/2) {\s{\n1}};};
+            } 
         \end{tikzpicture}
         \caption{FCFS Scheduling Example 1}
     \end{figure}
@@ -101,26 +120,40 @@ The Gantt Chart
     \item Suppose that the processes arrive in the order: $P_2, P_3, P_1$
     \begin{figure}[!htb]
         \centering
-        \tikzmath{
-            \s1=0; 
-            \s2=0.8; 
-            \s3=\s2+0.8;
-            \s4=\s3+0.8*8;
-            \h=0.8;
-        } 
         \begin{tikzpicture}
-            \path[draw=black] (\s1,0) rectangle (\s2,\h);
-            \path[draw=black] (\s2,0) rectangle (\s3,\h);
-            \path[draw=black] (\s3,0) rectangle (\s4,\h);
-    
-            \node at (\s1/2 + \s2/2, \h/2) {$P_2$};
-            \node at (\s2/2 + \s3/2, \h/2) {$P_3$};
-            \node at (\s3/2 + \s4/2, \h/2) {$P_1$};
-    
-            \node at (\s1, -\h/2) {0};
-            \node at (\s2, -\h/2) {3};
-            \node at (\s3, -\h/2) {6};
-            \node at (\s4, -\h/2) {30};
+            \tikzmath{
+                int \i, \p, \n, \tmp, \s;
+                real \h, \bt, \step;
+                % 
+                \h=0.8;
+                \step=0.25;
+                \n0=3;
+                \bt{1}=3;
+                \bt{2}=3;
+                \bt{3}=24;
+                \p{1}=2;
+                \p{2}=3;
+                \p{3}=1;
+                % 
+                \n1=\n0+1;
+                \s{1}=0;
+                for \i in {1,...,\n0}{
+                    \tmp=\i+1;
+                    \s{\tmp}=\s{\i}+\bt{\i};
+                };
+                for \i in {1,...,\n0}{
+                    \tmp=\i+1;{
+                        \path[draw=black] (\step*\s{\i},0) rectangle (\step*\s{\tmp}, \h);
+                        \node at (\step*\s{\i}, -\h/2) {\s{\i}};
+                    };
+                    if \p{\i}!=0 then{
+                        {
+                            \node at (\step*\s{\i}/2 + \step*\s{\tmp}/2, \h/2) {$P_\p{\i}$};
+                        };
+                    };
+                };
+                {\node at (\step*\s{\n1}, -\h/2) {\s{\n1}};};
+            } 
         \end{tikzpicture}
         \caption{FCFS Scheduling Example 2}
     \end{figure}
@@ -149,31 +182,42 @@ SJF 是平均等待时间最优的算法, 但缺点是需要知道所有进程�
 \paragraph{Example of Non-Preemptive SJF}进程不能被打断
 \begin{figure}[!htb]
     \centering
-    \tikzmath{
-        \step=0.5;
-        \s1=0; 
-        \s2=\step*7; 
-        \s3=\s2+\step;
-        \s4=\s3+\step*4;
-        \s5=\s4+\step*4;
-        \h=0.8;
-    } 
     \begin{tikzpicture}
-        \path[draw=black] (\s1,0) rectangle (\s2,\h);
-        \path[draw=black] (\s2,0) rectangle (\s3,\h);
-        \path[draw=black] (\s3,0) rectangle (\s4,\h);
-        \path[draw=black] (\s4,0) rectangle (\s5,\h);
-
-        \node at (\s1/2 + \s2/2, \h/2) {$P_1$};
-        \node at (\s2/2 + \s3/2, \h/2) {$P_3$};
-        \node at (\s3/2 + \s4/2, \h/2) {$P_2$};
-        \node at (\s4/2 + \s5/2, \h/2) {$P_4$};
-
-        \node at (\s1, -\h/2) {0};
-        \node at (\s2, -\h/2) {7};
-        \node at (\s3, -\h/2) {8};
-        \node at (\s4, -\h/2) {12};
-        \node at (\s5, -\h/2) {16};
+        \tikzmath{
+            int \i, \p, \n, \tmp, \s;
+            real \h, \bt, \step;
+            % 
+            \h=0.8;
+            \step=0.5;
+            \n0=4;
+            \bt{1}=7;
+            \bt{2}=1;
+            \bt{3}=4;
+            \bt{4}=4;
+            \p{1}=1;
+            \p{2}=3;
+            \p{3}=2;
+            \p{4}=4;
+            % 
+            \n1=\n0+1;
+            \s{1}=0;
+            for \i in {1,...,\n0}{
+                \tmp=\i+1;
+                \s{\tmp}=\s{\i}+\bt{\i};
+            };
+            for \i in {1,...,\n0}{
+                \tmp=\i+1;{
+                    \path[draw=black] (\step*\s{\i},0) rectangle (\step*\s{\tmp}, \h);
+                    \node at (\step*\s{\i}, -\h/2) {\s{\i}};
+                };
+                if \p{\i}!=0 then{
+                    {
+                        \node at (\step*\s{\i}/2 + \step*\s{\tmp}/2, \h/2) {$P_\p{\i}$};
+                    };
+                };
+            };
+            {\node at (\step*\s{\n1}, -\h/2) {\s{\n1}};};
+        } 
     \end{tikzpicture}
     \caption{Non-Preemptive SJF Example}
 \end{figure}
@@ -184,42 +228,50 @@ Average waiting time$= (0 + 6 + 3 + 7)/4 = 4$\\
 \paragraph{Example of Preemptive SJF}进程可以被打断
 \begin{figure}[!htb]
     \centering
-    \tikzmath{
-        \step=0.5;
-        \s1=0; 
-        \s2=\step*2; 
-        \s3=\s2+\step*2;
-        \s4=\s3+\step*1;
-        \s5=\s4+\step*2;
-        \s6=\s5+\step*4;
-        \s7=\s6+\step*5;
-        \h=0.8;
-    } 
     \begin{tikzpicture}
-        \path[draw=black] (\s1,0) rectangle (\s2,\h);
-        \path[draw=black] (\s2,0) rectangle (\s3,\h);
-        \path[draw=black] (\s3,0) rectangle (\s4,\h);
-        \path[draw=black] (\s4,0) rectangle (\s5,\h);
-        \path[draw=black] (\s5,0) rectangle (\s6,\h);
-        \path[draw=black] (\s6,0) rectangle (\s7,\h);
-
-        \node at (\s1/2 + \s2/2, \h/2) {$P_1$};
-        \node at (\s2/2 + \s3/2, \h/2) {$P_2$};
-        \node at (\s3/2 + \s4/2, \h/2) {$P_3$};
-        \node at (\s4/2 + \s5/2, \h/2) {$P_2$};
-        \node at (\s5/2 + \s6/2, \h/2) {$P_4$};
-        \node at (\s6/2 + \s7/2, \h/2) {$P_1$};
-
-        \node at (\s1, -\h/2) {0};
-        \node at (\s2, -\h/2) {2};
-        \node at (\s3, -\h/2) {4};
-        \node at (\s4, -\h/2) {5};
-        \node at (\s5, -\h/2) {7};
-        \node at (\s6, -\h/2) {11};
-        \node at (\s7, -\h/2) {16};
+        \tikzmath{
+            int \i, \p, \n, \tmp, \s;
+            real \h, \bt, \step;
+            % 
+            \h=0.8;
+            \step=0.5;
+            \n0=6;
+            \bt{1}=2;
+            \bt{2}=2;
+            \bt{3}=1;
+            \bt{4}=2;
+            \bt{5}=4;
+            \bt{6}=5;
+            \p{1}=1;
+            \p{2}=2;
+            \p{3}=3;
+            \p{4}=2;
+            \p{5}=4;
+            \p{6}=1;
+            % 
+            \n1=\n0+1;
+            \s{1}=0;
+            for \i in {1,...,\n0}{
+                \tmp=\i+1;
+                \s{\tmp}=\s{\i}+\bt{\i};
+            };
+            for \i in {1,...,\n0}{
+                \tmp=\i+1;{
+                    \path[draw=black] (\step*\s{\i},0) rectangle (\step*\s{\tmp}, \h);
+                    \node at (\step*\s{\i}, -\h/2) {\s{\i}};
+                };
+                if \p{\i}!=0 then{
+                    {
+                        \node at (\step*\s{\i}/2 + \step*\s{\tmp}/2, \h/2) {$P_\p{\i}$};
+                    };
+                };
+            };
+            {\node at (\step*\s{\n1}, -\h/2) {\s{\n1}};};
+        } 
     \end{tikzpicture}
-    \caption{Non-Preemptive SJF Example}
+    \caption{Preemptive SJF Example}
 \end{figure}
+
 
 Average waiting time $= (9 + 1 + 0 +2)/4 = 3$
 
@@ -279,55 +331,68 @@ Performance:
 
 \begin{figure}[!htb]
     \centering
-    \tikzmath{
-        \step=0.8;
-        \s1=0; 
-        \s2=\step;
-        \s3=\s2+\step;
-        \s4=\s3+\step;
-        \s5=\s4+\step;
-        \s6=\s5+\step;
-        \s7=\s6+\step;
-        \s8=\s7+\step;
-        \s9=\s8+\step;
-        \ss1=\s9+\step;
-        \ss2=\ss1+\step;
-        \h=0.8;
-    } 
     \begin{tikzpicture}
-        \path[draw=black] (\s1,0) rectangle (\s2,\h);
-        \path[draw=black] (\s2,0) rectangle (\s3,\h);
-        \path[draw=black] (\s3,0) rectangle (\s4,\h);
-        \path[draw=black] (\s4,0) rectangle (\s5,\h);
-        \path[draw=black] (\s5,0) rectangle (\s6,\h);
-        \path[draw=black] (\s6,0) rectangle (\s7,\h);
-        \path[draw=black] (\s7,0) rectangle (\s8,\h);
-        \path[draw=black] (\s8,0) rectangle (\s9,\h);
-        \path[draw=black] (\s9,0) rectangle (\ss1,\h);
-        \path[draw=black] (\ss1,0) rectangle (\ss2,\h);
-
-        \node at (\s1/2 + \s2/2, \h/2) {$P_1$};
-        \node at (\s2/2 + \s3/2, \h/2) {$P_2$};
-        \node at (\s3/2 + \s4/2, \h/2) {$P_3$};
-        \node at (\s4/2 + \s5/2, \h/2) {$P_4$};
-        \node at (\s5/2 + \s6/2, \h/2) {$P_1$};
-        \node at (\s6/2 + \s7/2, \h/2) {$P_3$};
-        \node at (\s7/2 + \s8/2, \h/2) {$P_4$};
-        \node at (\s8/2 + \s9/2, \h/2) {$P_1$};
-        \node at (\s9/2 + \ss1/2, \h/2) {$P_3$};
-        \node at (\ss1/2 + \ss2/2, \h/2) {$P_3$};
-
-        \node at (\s1, -\h/2) {0};
-        \node at (\s2, -\h/2) {20};
-        \node at (\s3, -\h/2) {37};
-        \node at (\s4, -\h/2) {57};
-        \node at (\s5, -\h/2) {77};
-        \node at (\s6, -\h/2) {97};
-        \node at (\s7, -\h/2) {117};
-        \node at (\s8, -\h/2) {121};
-        \node at (\s9, -\h/2) {134};
-        \node at (\ss1, -\h/2) {154};
-        \node at (\ss2, -\h/2) {162};
+        \tikzmath{
+            int \i, \p, \n, \tmp, \s;
+            real \h, \bt, \step;
+            % 
+            \h=0.8;
+            \step=0.05;
+            \n0=10;
+            \bt{1}=20;
+            \bt{2}=17;
+            \bt{3}=20;
+            \bt{4}=20;
+            \bt{5}=20;
+            \bt{6}=20;
+            \bt{7}=4;
+            \bt{8}=13;
+            \bt{9}=20;
+            \bt{10}=8;
+            \p{1}=1;
+            \p{2}=2;
+            \p{3}=3;
+            \p{4}=4;
+            \p{5}=1;
+            \p{6}=3;
+            \p{7}=4;
+            \p{8}=1;
+            \p{9}=3;
+            \p{10}=3;
+            % 
+            \n1=\n0+1;
+            \s{1}=0;
+            for \i in {1,...,\n0}{
+                \tmp=\i+1;
+                \s{\tmp}=\s{\i}+\bt{\i};
+            };
+            for \i in {1,...,\n0}{
+                \tmp=\i+1;
+                {
+                    \path[draw=black] (\step*\s{\i},0) rectangle (\step*\s{\tmp}, \h);
+                };
+                if \step*(\s{\tmp}-\s{\i})>0.3 then{
+                    {
+                        \node at (\step*\s{\i}, -\h/2) {\s{\i}};
+                    };
+                    if \p{\i}!=0 then{
+                        {
+                            \node at (\step*\s{\i}/2 + \step*\s{\tmp}/2, \h/2) {$P_\p{\i}$};
+                        };
+                    };
+                }else{
+                    {
+                        \node at (\step*\s{\i}, -\h/4) {\s{\i}};
+                    };
+                    if \p{\i}!=0 then{
+                        {
+                            \node at (\step*\s{\i}/2 + \step*\s{\tmp}/2, 3*\h/2) {$P_\p{\i}$};
+                        };
+                    };
+                };
+            };
+            {\node at (\step*\s{\n1}, -\h/2) {\s{\n1}};};
+        } 
     \end{tikzpicture}
     \caption{RR Example}
 \end{figure}

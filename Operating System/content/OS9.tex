@@ -242,10 +242,82 @@ Two major allocation schemes:
 \subsection{Thrashing(颠簸)}
 Thrashing: a process is busy swapping pages in and out. 
 
+Total size of locality > total memory size
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=0.309\textwidth]{pic/OS9/Thrashing}
+    \caption{Thrashing}
+\end{figure}
+
+To limit the effect of thrashing: local replacement algo cannot
+steal frames from other processes. But queue in page device
+increases effective access time.
+
+To prevent thrashing: allocate memory to accommodate its
+locality
+
+\subsubsection{Working-Set Model}
+Let $\Delta$ be working-set window, which is a fixed number of page references. 
+
+$WSS_i(\text{working-set size of Process }P_i)=$ total number of pages referenced in the most recent $\Delta$ (varies in time). 
+
+Let $D=\sum WSS_i$ be total demand frames for all processes in the system. If $D>m$, thrashing, then suspend one of the processes. 
+
+\subsubsection{Keeping Track of the Working Set}
+Approximate with interval timer + a reference bit. 
+
+e.g. %TODO 53
+
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=0.309\textwidth]{pic/OS9/Page-fault frequency}
+    \caption{Page-fault frequency}
+\end{figure}
 
 
 
-% \subsection{Memory-Mapped Files}
-% \subsection{Allocating Kernel Memory}
-% \subsection{Other Considerations}
+\subsection{Memory-Mapped Files}
+%TODO 55-57
+
+\subsection{Allocating Kernel Memory}
+Often allocated from a free-memory pool
+
+\subsubsection{Buddy System}
+Allocates memory from fixed-size segment consisting of physically- contiguous pages
+
+Memory allocated using power-of-2 allocator. 
+
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=0.309\textwidth]{pic/OS9/Buddy system allocation}
+    \caption{Buddy system allocation}
+\end{figure}
+
+\subsubsection{Slab Allocator}
+Slab is one or more physically contiguous pages. Cache consists of one or more slabs.  Each cache filled with objects -- instantiations of the data
+structure
+
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=0.42\textwidth]{pic/OS9/Slab allocation}
+    \caption{Slab allocation}
+\end{figure}
+
+
+\subsection{Other Issues}
+\subsubsection{Prepaging/Prefetching}
+To reduce the large number of page faults that occurs at process startup
+%TODO P63
+
+\subsubsection{Page Size}
+Page size selection must take into consideration
+
+%TODO P64
+
+\subsubsection{TLB Reach}
+%TODO 65
+
+\subsubsection{Program Structure}
+%TODO P66
+
 % \subsection{Operating-System Examples}
