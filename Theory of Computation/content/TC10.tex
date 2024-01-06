@@ -1,0 +1,109 @@
+\newpage
+
+\section{NP-complete Problem}
+\begin{definition}
+    A NP-complete problem is in $p$ iff $P=NP$. 
+\end{definition}
+
+\subsection{polynomial-time reductions}
+
+\begin{definition}
+    A reduction $f$ from $A$ to $B$ ($A\le B$). And $f$ can be computed by some DTM within poly(n) time. Called,
+    \begin{align*}
+        A\le_p B
+    \end{align*}
+\end{definition}
+
+\begin{theorem}
+    If $A\le_p B$, and $B\in P$, then $A\in P$
+\end{theorem}
+\begin{proof}
+    \begin{align*}
+        x\to f(x)\to \text{ decide }f(x)\in B\to
+    \end{align*}
+    Totsl time:
+    \begin{align*}
+        poly(|x|)+poly(|f(x)|)= poly(|x|)
+    \end{align*}
+    where $|f(x)|\le poly(|x|)$
+\end{proof}
+
+
+e.g. Obviously, $3SAT\le_p SAT$, $\because\ f(x)=x$
+
+But we also have $SAT\le_p 3SAT$
+\begin{proof}
+    对每一个 set, 多拆少补. 
+
+    \begin{enumerate}
+        \item $(x_1\lor x_2)\Rightarrow (x_1\lor x_2 \lor y)\land (x_1\lor x_2 \lor \bar{y})$
+        \item \quad
+        \begin{align*}
+            &(x_1\lor x_2\lor x_3\lor x_4\lor x_5)\\
+            \Rightarrow & (x_1\lor x_2\lor y)\land (\bar{y}\lor x_3\lor x_4\lor x_5)\\
+            \Rightarrow & (x_1\lor x_2\lor y)\land (\bar{y}\lor x_3\lor y_2)\land(\bar{y}_2\lor x_4 \lor x_5)
+        \end{align*}
+    \end{enumerate}
+\end{proof}
+
+\begin{definition}[Clique]
+    For $G=(V,E)$, a clique of $G$ is a subgraph $G'=(V', E')$ with $V'\subseteq V$, $E'\subseteq E$ such that $G'$ is a complete graph. 
+    \begin{align*}
+        Clique=\{ \encode{G}\encode{k}: G \text{ has a clique with at least $k$ nodes}\}
+    \end{align*}
+\end{definition}
+
+$3SAT\le_p Clique$
+\begin{proof}
+    $m$ clause $F$ and $3m$ nodes $G$. %TODO 构图略过了
+    $F$ is satisfiable $\iff$ $G$ has a clique with at least $m$ nodes. 
+\end{proof}
+
+\begin{definition}[vertex cover]
+    A vertex cover of $G$ is a subset $V'\subseteq V$ s.t. for each $e\in E$, $e$ has at least one endpoint in $V'$.
+    \begin{align*}
+        VC=\{ \encode{G}\encode{k}: G\text{ has a vertex cover with at most $k$ nodes} \}
+    \end{align*}
+\end{definition}
+
+$3SAT\le_p VC$
+\begin{proof}
+    %TODO 构图略过了
+    $F$ is satisfiable $\iff$ $G$ has a VC with at most $n+2m$ nodes. 
+\end{proof}
+
+
+\begin{definition}
+    A language $L$ is NP-complete if
+    \begin{enumerate}
+        \item $L\in NP$
+        \item $\forall L'\in NP, L'\le_p L$
+    \end{enumerate}
+\end{definition}
+
+\begin{theorem}
+    If a NP-complete language $L\in P$, $NP=P$. 
+
+    If a NP-complete language $L\notin P$, $NP\ne P$
+\end{theorem}
+
+\subsection{Cook's Theorem}
+\begin{theorem}[Cook's Theorem]
+    SAT is NP-complete
+\end{theorem}
+\begin{proof}
+    Let $A$ be an arbitrary language in $NP$, 
+    \begin{align*}
+        A\le_p SAT
+    \end{align*}
+    i.e. $x\in A\iff F$ is satisfiable
+
+    $\exists NTM N$ decides $A$ in $n^k$ times.%TODO 没弄明白前面的SAT, 后面这里就不想听了
+    \begin{align*}
+        &a_1,\dots,a_n\in A\\
+        \iff & 
+    \end{align*}
+\end{proof}
+
+\subsection{space}
+% 摸了
