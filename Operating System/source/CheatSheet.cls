@@ -109,7 +109,7 @@
 	%页边距
 	\geometry{top=0.1in,bottom=0.1in,left=0.1in,right=0.1in}
 	%行距
-	\linespread{1}
+	\linespread{0.8}
 	%目录深度
 	\setcounter{secnumdepth}{3}
 	\setcounter{tocdepth}{4}
