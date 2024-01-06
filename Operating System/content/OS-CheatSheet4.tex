@@ -1,1 +1,177 @@
 \section{文件系统}
+\subsection{File-System 基础}
+
+\subsubsection{File Concept}
+一个文件是存储在二级介质上的，具名的一系列相关信息集合，无论是用户还是程序，都需要通过文件来与二级介质进行信息交换。
+
+\paragraph{File Attributes}
+不同的文件系统下，文件可能有不同的属性，但通常有以下几个:
+\begin{itemize}\small
+    \item name：文件名；
+    \item identifier：用于唯一标识一个文件；
+    \item type：用于标识类型；
+    \item location
+    \item size：文件大小，也可能包含文件被允许的最大大小；
+    \item protection：访问控制信息，决定哪些用户具有对应的读/写/执行权限等；
+    \item timestamp：保存创建时间/上次修改时间/上次使用时间等，这些信息可用来做一些安全保护和使用监控；
+    \item user indentification：创建者/上次修改者/上次访问者等，这些信息可用来做一些安全保护和使用监控；
+\end{itemize}
+这些信息也被称为文件的元数据(meta data)。
+
+\paragraph{File Operations}
+一些基本的文件操作:
+\begin{itemize}\small
+    \item create：分为两步，一是 在文件系统中为文件分配一块空间，二是 在目录中创建对应的条目；
+    \item open / close：打开文件后会得到文件的句柄(handle)，其它对特定文件的操作一般都需要通过这个句柄来完成
+    \subitem 通常来说，文件被打开后需要由用户来负责关闭；
+    \subitem 打开后的文件会被加入到一个打开文件表(open-file table)中，这个表中保存了所有打开的文件的信息，包括文件的句柄、文件的位置、文件的访问权限等；
+    \subitem 文件可能被多方用户(进/线程)打开，而只有所有用户都关闭文件后才应当释放文件在打开文件表中的条目，所以维护一个 open-file count 用于记录当前文件被打开的次数；
+    \item read / write：维护一个 current-file-position pointer 表示当前操作的位置，在对应位置上做读写操作；
+    \item repositioning within a file：将 current-file-position pointer 的位置重新定位到给定值，也被叫做 seek；
+    \item delete：在 directory 中找到对应条目并删除该条目，如果此时对应的文件没有其它硬链接，则需要释放其空间；
+    \item truncate：清空文件内容，但保留文件属性；
+    \item locking；
+\end{itemize}
+
+\paragraph{Open File Locking}不同的文件操作对应着不同的权限, 通过访问控制列表(access control list, ACL)来维护用户们对文件所具有的权限. 精简化后为访问权限位(access permission bits)的方式来实现权限控制. 
+
+比如在 linux 中有10个字符控制权限. 第1 个字符表示一些类型, 比如 ``-'' 表示原始文件, ``d''表示一个目录. 后 9 个字符将权限被分为三组，分别代表文件所有者(owner)、文件所属组(group)、其他人(other)的读(r)、写(w)、执行(x)权限。
+
+\paragraph{File Types}主要分为数据(data)和程序(program)两大类. UNIX 系统会在文件开头，使用一串 magic number 来标识文件的类型. 
+
+\paragraph{File Struction}文件结构指的是文件数据存储的形式, 常见的有:
+\begin{itemize}\small
+    \item 无结构：流式的存储所有的 words/bytes
+    \item 简单记录结构(simple record structure)：将文件以 record 为单位存储. 
+    \item 复杂结构(complex structures)；
+\end{itemize}
+
+\subsubsection{Access Methods}
+\begin{itemize}
+    \item 顺序访问(sequential access)
+    \item 直接访问(direct access)/相对访问(relative access)/随机访问(random access)
+    \item 索引顺序访问(indexed sequential-access): 先通过索引表查询位置，然后去访问
+\end{itemize}
+\subsection{Directory}
+目录本质上是一个特殊的文件(Linux 中). 目录的结构表示的是目录下文件的组织方式. 
+
+\begin{itemize}\small
+    \item Single-Level Directory: 所有的文件都被铺在根目录下
+    \item Two-Level Directory: 主文件目录(master file directory, MFD)下为每个用户分配一个用户文件目录(user file directory, UFD)，每个用户的目录下再存放该用户的文件
+    \item 树形目录(tree-structured directories): 将目录视为一种特殊文件, 允许用户在目录下自由地创建目录进行分组, 总体文件结构成为一种树形结构
+    \subitem 文件的路径(path)，分为绝对路径(absolute path)和相对路径(relative path)两种
+    \item 无环图目录(acyclic-graph directories): 在树形目录的基础上，允许目录之间存在链接关系，链接分为软链接(soft link)和硬链接(hard link)两种
+    \subitem 软链接又称符号链接(symbolic link)，是一个指向文件的指针
+    \subitem 硬链接是复制链接文件目录项的所有元信息，存到目标目录中，此时文件平等地属于两个目录
+    \item 通用图目录(general-graph directories): 允许目录之间存在环，在各种操作时，通过算法来避免出现问题. 
+\end{itemize}
+
+\subsection{File System}
+文件系统(file system, FS)是操作系统中，以文件的方式管理计算机软件资源的软件，以及被管理的文件和数据结构的集合. 
+
+\subsubsection{挂载(mount)}
+是指将一个文件系统的根目录挂载到另一个文件系统的某个目录(被称为 mount point). 只有被挂载了，一个文件系统才能被访问. 
+
+\subsubsection{文件系统分层设计}
+文件系统被分为若干层，向下与 device 交互，向上接受 application programs 的请求. 
+\begin{enumerate}\small
+    \item I/O control
+    \subitem 向下控制 I/O devices，向上提供 I/O 功能；
+    \item Basic file system
+    \subitem 向下一层发射``抽象''的, 由下一层转化为设备直接支持的指令的, 操作指令；
+    \subitem 与 I/O 调度有关；
+    \subitem 管理内存缓冲区(memory buffer)和缓存(caches)；
+    \item File-organization module
+    \subitem 以 basic file system 提供的功能为基础；
+    \subitem 能够实现 file 的 logical block 到 physical address 的映射；4
+    \subitem 同时，file-organization module 也囊括了 free-space manager；
+    % Free-space manager 维护那些没有被分配的 blocks，并在 file-organization module 请求的时候提供这些 blocks；
+    \item Logical file system
+    \subitem 存储一些文件系统的结构信息，不包括实际的文件内容信息；
+    \subitem 具体来说，logical file system 会维护 directory 的信息，为之后的 file-organization module 提供一些信息，例如符号文件名；
+    \subitem FCB 会维护被打开的文件的一些具体信息；
+\end{enumerate}
+
+\subsection{File System Implementation}
+
+
+\subsubsection{硬盘数据结构}
+On-Disk 的数据结构维护 1. 如何启动硬盘中的 OS，2. 硬盘中包括的 block 总数，3. 空闲 block 的数量和位置，4. 目录结构以及文件个体等，下面介绍几个主要的数据结构:
+\begin{itemize}
+    \item 操作系统被保存在引导控制块(boot control block)中，一般 boot control block 是操作系统所在的 volume 的第一个 block。
+    \item 卷控制块(volume control block)维护了 volume 的具体信息，例如 volume 的 blocks 数量、空闲 block 的数量与指针、空闲 PCB 的数量与指针等
+    \item 目录结构(directory structure)用来组织 files，同时也维护了 files 的元信息
+    \item 文件控制块(file control block, FCB)维护了被打开的文件的具体信息。
+\end{itemize}
+
+\subsubsection{内存数据结构}
+在 main memory 中维护，用于帮助文件系统管理和一些缓存操作
+\begin{itemize}
+    \item 已被挂载的 volume 会被记录在 mount table 中
+    \item Directory cache: 为了提高文件系统的性能
+    \item System-wide open-file table: 记录这个系统中所有进程打开的文件
+    \item Per-process open-file table: 记录每个进程打开的文件
+    \item Buffers: 在内存中，用于缓冲 disk block 的内容
+\end{itemize}
+
+\subsubsection{目录的实现}
+\paragraph{linear list based}线性检索法通过线性表来存储目录信息，每个目录项包含 file name 和指向 FCB/Inode 的指针，查找时需要遍历查找。
+
+\paragraph{hash table based}哈希表法通过哈希表来存储目录信息，每个目录项包含 file name 和指向 FCB/Inode 的指针，可以直接通过 hash function 进行 random access。
+\subsubsection{块分配与块组织}
+
+\paragraph{连续分配(contiguous)}指的是每个文件占用一段连续的 block
+\begin{align*}
+    \text{Logic Address}=\text{block size}*Q+R
+\end{align*}
+\begin{itemize}
+    \item Block to be accessed $=Q+$ start address
+    \item Displacement into block $=R$
+\end{itemize}
+
+\paragraph{链接分配(linked)}每个 block 作为一个链节，维护存储信息以外还需要维护指向下一个 block 的指针。此时，FCB 中只需要记录起始地址即可。
+\begin{align*}
+    \text{Logic Address}=(\text{block size}-1)Q+R
+\end{align*}
+$(\text{block size}-1)$ because of pointer
+\begin{itemize}
+    \item Block to be accessed is the $Q$th block in the linked chain of
+    blocks representing the file
+    \item Displacement into block $=R+1$
+\end{itemize}
+
+
+\paragraph{索引分配(indexed)}索引方法将所有指针统一维护到 index block 中。每个文件有自己的 index block，顺序存放着指向文件的所有 block 的指针。
+\begin{align*}
+    \text{Logic Address}=512Q+R
+\end{align*}
+\begin{itemize}
+    \item $Q =$ displacement into index table
+    \item $R =$ displacement into block
+\end{itemize}
+计算时要考虑索引系统所能支持的最大块数量与块地址能支持的最大地址空间大小，取最小的那个作为答案. 
+
+\subsubsection{空闲空间管理}
+\begin{itemize}
+    \item {位图(bitmap)}: 用对应 bit 的 0 或 1 来标记对应的 block 是否空闲
+    \item 链表: 用链表将空闲的 block 连起来。
+    \item 分组: 是基于链表方法的改进, 将 n 个空闲块的地址存放在第 0 个空闲块中, 以此类推. 
+    \item 计数方法: 维护每个连续内存段的起始地址和额外长度。
+\end{itemize}
+
+\subsubsection{典型文件系统}
+ext, FAT, NTFS
+
+\subsubsection{虚拟文件系统}
+虚拟文件系统(virtual FS, VFS)有两个主要功能：
+\begin{enumerate}
+    \item 封装并透明化具体文件操作，同一接口可能有不同的具体实现，通过这种方式来支持不同的文件系统；
+    \item 反过来为文件系统提供一个唯一标识文件的方式，VFS 基于一个名为 vnode 的 file-representation structure 的东西来表示文件，其中包含了在整个文件网络中标识文件的数字指示符；
+\end{enumerate}
+
+\subsection{文件系统的性能与安全}
+\begin{itemize}
+    \item 日志系统: 日志结构的文件系统(log-structured FS)是一种文件系统的实现方式，它将所有的修改操作都作为一个事务(transaction)记录在一个日志中，而不是直接修改文件本身。
+    \item 恢复: 备份数据，并时常检查数据的一致性和完整性，如果发现问题则尝试利用备份数据进行恢复。
+\end{itemize}
+

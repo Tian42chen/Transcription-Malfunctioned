@@ -165,7 +165,7 @@
   framesep=2mm,
   numbersep=4pt,
   baselinestretch=1.2,
-  fontsize=\small,
+  fontsize=\scriptsize,
   linenos,
   breaklines,
   autogobble,
