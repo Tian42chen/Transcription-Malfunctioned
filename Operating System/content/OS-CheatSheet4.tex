@@ -143,7 +143,7 @@ $(\text{block size}-1)$ because of pointer
 
 \paragraph{索引分配(indexed)}索引方法将所有指针统一维护到 index block 中。每个文件有自己的 index block，顺序存放着指向文件的所有 block 的指针。
 \begin{align*}
-    \text{Logic Address}=512Q+R
+    \text{Logic Address}=\text{block size}Q+R
 \end{align*}
 \begin{itemize}
     \item $Q =$ displacement into index table

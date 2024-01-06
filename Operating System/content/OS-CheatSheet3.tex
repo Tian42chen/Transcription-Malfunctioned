@@ -92,7 +92,7 @@ Associative Lookup $=\epsilon$ time unit. Assume memory cycle time is $t$ ms. Hi
 
 \paragraph{哈希页表(hashed page table)}维护了一张哈希表，以页号的哈希为索引，维护了一个链表，每一个链表项包含页号、帧号、和链表 next 指针，以此来实现页号到帧号的映射.
 
-\paragraph{反式页表(inverted page table)}以物理地址为索引维护映射关系. 使用 content-addressible memory (CAM) 特殊硬件加速. 
+\paragraph{反式页表(inverted page table)}以物理地址为索引维护映射关系. 使用 特殊硬件 content-addressible memory (CAM), 通过数据查找相应地址,  加速. 
 
 \subsubsection{Swapping}
 进程可以临时从存储器交换到后备存储器，然后被带回存储器以继续执行。
