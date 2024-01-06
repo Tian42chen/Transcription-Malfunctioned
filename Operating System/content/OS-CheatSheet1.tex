@@ -22,10 +22,10 @@
 \subsection{操作系统运行}
 
 \subsubsection{特权模式(Privileged Mode)}
-将CPU的运行模式划分为用户态(User Mode)和内核态(Kernel Mode). 特权指令(privileged instruction)，是指不允许用户直接使用的指令. 模式的切换是通过 trap 实现的. 
+将CPU的运行模式划分为用户态(User Mode)和内核态(Kernel Mode). 特权指令(privileged instruction), 是指不允许用户直接使用的指令. 模式的切换是通过 trap 实现的. 
 
 \subsubsection{计时器(timer)}
-通过时钟中断的管理，可以实现进程的切换. 
+通过时钟中断的管理, 可以实现进程的切换. 
 
 \subsubsection{中断(Interrupt)}
 \begin{itemize}
@@ -35,13 +35,13 @@
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.618\linewidth]{pic/OS-CheatSheet1/内中断和外中断的联系与区别}
+    \includegraphics[width=0.618\linewidth]{pic/OS-CheatSheet/内中断和外中断的联系与区别}
     \caption{内中断和外中断的联系与区别}
 \end{figure}
 
 
 \subsubsection{系统调用(System Call)}
-用户在程序中调用操作系统所提供的一些子功能，系统调用可视为特殊
+用户在程序中调用操作系统所提供的一些子功能, 系统调用可视为特殊
 的公共子程序. 
 
 \subsection{操作系统结构}
@@ -54,6 +54,6 @@
 \end{enumerate}
 
 \subsection{引导(bootstrap)}
-在计算机刚刚启动，操作系统还未开始运行之前，需要开机后的第一个程序——引导加载器(bootstrap loader)来一步一步地初始化操作系统。对大多数操作系统来说，bootstrap 都会被存储在 ROM 中，并且需要在一个已知的位置. 
+在计算机刚刚启动, 操作系统还未开始运行之前, 需要开机后的第一个程序——引导加载器(bootstrap loader)来一步一步地初始化操作系统。对大多数操作系统来说, bootstrap 都会被存储在 ROM 中, 并且需要在一个已知的位置. 
 
 BIOS :基本I/O系统
