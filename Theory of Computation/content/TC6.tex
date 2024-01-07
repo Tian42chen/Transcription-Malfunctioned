@@ -231,8 +231,6 @@ Object $O$ $\to$ $``O"$ (用双引号表示 encode)% 数学模式中 的 ``"
 
 \begin{definition}
     Two sets $A$ and $B$ are equinumerous(等势), if $\exists$ bijection $f:A\to B$. 
-
-    A set is countable if it's finite or it's equinumerous with $\mathcal{N}$, uncountable otherwise. 
 \end{definition}
 
 \begin{lemma}
@@ -400,8 +398,9 @@ e.g.
         \end{algorithmic}
     \end{algorithm}
     reduction $f(``M")= ``M"``M^*"$ from $L_3$ to $L_4$. 
-    \item $R_{TM}=\{ ``M": M$  is a Turing Machine with $L(M)$ being regular $\}$
-    \subitem target: $H\le \overline{R_{TM}}$. Assume $M_{R_{TM}}$ decides $R_{TM}$, we will ues it to construct $M_{H}$ decides $H$. 
+    \item $R_{TM}=\{ ``M": M$  is a Turing Machine with $L(M)$ being regular $\}$ is not recursively enumerable
+    \subitem target: $H\le \overline{R_{TM}}$. 
+    \subitem Assume $M_{R_{TM}}$ decides $R_{TM}$, we will ues it to construct $M_{H}$ decides $H$. 
     \subitem $M_H=$ on input $``M"``w"$
     \begin{algorithm}[H]
         \caption{$M_H$}
@@ -425,6 +424,9 @@ e.g.
             L(U)=H & \text{If $M$ halt on } w
         \end{array} \right.
     \end{align*}
+
+    \subitem $\therefore\ H\le \overline{R_{TM}},\ \therefore\ \overline{H}\le R_{TM}$
+    \subitem $\therefore\ R_{TM}$ is not respectively enumerable. 
     \item $CF_{TM}=\{ ``M": M$ is a TM with $L(M)$ being context-free $ \}$
     \subitem $H\le \overline{CF_{TM}}$
     \item $REC_{TM}=\{``M": M$ is a TM with $L(M)$ being recursive $\}$
@@ -480,7 +482,7 @@ prove recursively enumerable
     \item $A\le$ known recursively enumerable language
 \end{itemize}
 
-e.g. $\{ A: \encode{M}: M \text{ is a TM that halts on some input} \}$ is respectively enumerable
+e.g. $\{ A: \encode{M}: M \text{ is a TM that halts on some input} \}$ is recursively enumerable
 \begin{proof}
     $M_A=$ on input $\encode{M}$
     \begin{algorithm}[H]
@@ -506,19 +508,19 @@ prove not recursively enumerable
     \item \textbf{Theorem} \ref{the:aaa}
 \end{itemize}
 
-$H$ is recursively enumerable, is not recursive $\Rightarrow $ $\overline{H}$ is not recursively enumerable. 
+$H$ is recursively enumerable and is not recursive $\Rightarrow $ $\overline{H}$ is not recursively enumerable. 
 
 \subsection{Closure property}
 \begin{table}[!htb]
     \centering
     \caption{Closure property}
-    \begin{tabular}[c]{ccc}\toprule
-         &recursive & recursively enumerable \\ \midrule
-        $\cup$ &  $\surd$ & $\surd$  \\
-        $\cap$ &  $\surd$ & $\surd$ \\
-        $\bar{}$ &$\surd$ & $\times$ \\
-        $\circ$ & $\surd$ & $\surd$ \\
-        ${}^*$ &  $\surd$ & $\surd$ \\
+    \begin{tabular}[c]{ccccc}\toprule
+         &recursive & recursively enumerable & CFL & regular \\ \midrule
+        $\cup$ &  $\surd$ & $\surd$ & $\surd$ & $\surd$  \\
+        $\cap$ &  $\surd$ & $\surd$ & $\times$ & $\surd$ \\
+        $\bar{}$ &$\surd$ & $\times$ & $\times$ & $\surd$ \\
+        $\circ$ & $\surd$ & $\surd$ & $\surd$ & $\surd$ \\
+        ${}^*$ &  $\surd$ & $\surd$ & $\surd$ & $\surd$ \\
         \bottomrule
     \end{tabular}
 \end{table}
@@ -553,7 +555,7 @@ $H$ is recursively enumerable, is not recursive $\Rightarrow $ $\overline{H}$ is
             \end{algorithmic}
         \end{algorithm}
         
-        \item $\overline{H}$ is not recursively enumerable. 
+        \item $\bar{H}$ is not recursively enumerable. 
     \end{itemize}
 \end{proof}
 
