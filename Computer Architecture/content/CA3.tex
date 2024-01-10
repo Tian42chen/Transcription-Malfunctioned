@@ -433,7 +433,7 @@ Two major advantages over scoreboard:
 
 
 \subsubsection{Hardware Speculation}
-out-of-order execution \& in-order commit
+out-of-order execution \& in-order commit and issue
 \begin{itemize}
     \item Instruction Commit
     \item Reorder Buffer (ROB)
@@ -446,6 +446,9 @@ out-of-order execution \& in-order commit
 \end{figure}
 
 Reorder buffer 顺序与 instructions 的顺序一致. 若 branch 预测错误, flush Reorder buffer 的相关内容. 
+
+\subsection{Hardware Speculation}
+%TODO
 
 \begin{table}[!htb]
     \centering
@@ -473,4 +476,20 @@ exe 是开始执行, write 是执行完 broadcast 的周期, 执行完是在 wri
 
 
 \newpage
-\section{ILP -- Exploitation}
+\section{ILP -- Exploitation}%TODO 
+Ideal IPC \& more Data path >1
+
+\subsection{Multiple Issue}
+
+\subsection{VLIW}
+
+\subsubsection{VLIW Scheduling}
+
+\subsection{issue speculation}
+Further Example x2
+
+
+\subsection{Branch-Target Buffer}
+
+
+\subsection{Return Address Stack}

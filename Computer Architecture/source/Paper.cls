@@ -98,6 +98,10 @@
 	% 图片按章节编号
 	\numberwithin{figure}{section}
 	\numberwithin{table}{section}
+	% 新增环境
+	\newenvironment{code}{\captionsetup{type=listing}}{}
+	%重定义 listing 名称
+	\renewcommand{\listingscaption}{\textbf{Code}}
 %
 
 %页面参数

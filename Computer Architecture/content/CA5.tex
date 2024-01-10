@@ -1,2 +1,200 @@
 \newpage
-\section{Thread-Level Parallelism}
+\section{TLP Coherence}
+
+\subsection{Thread-Level Parallelism}
+TLP is identified by software or programmer and threads consist of (parallel) instructions
+
+MIMD: multiple instruction streams and multiple data streams. 
+
+
+multiprocessors: computers consisting of tightly coupled processors
+
+Exploiting TLP:
+\begin{itemize}
+    \item Parallel processing
+    \item Request-level parallelism
+\end{itemize}
+
+\subsection{Multiprocessor Architecture}
+According to memory organization and interconnect strategy
+Two classes:
+\begin{itemize}
+    \item symmetric/centralized shared-memory multiprocessors (SMP)
+    \item distributed shared-memory multiprocessors (DMP)
+\end{itemize}
+
+\subsubsection{Centralized Shared Memory}
+Share a single centralized memory; All processors have uniform latency from memory uniform memory access (UMA) multiprocessors
+
+
+\subsubsection{Distributed Shared Memory}
+Distributing memory among the nodes increases bandwidth \& reduces local-memory latency. 
+
+NUMA: nonuniform memory access. access time depends on data word location in memory. 
+
+\subsubsection{Hurdles of Parallel Processing}
+
+\paragraph{Limited parallelism in programs} makes it difficult to achieve good speedups in any parallel processor (Amdahl's law)
+
+
+\paragraph{Relatively high cost of communications} involves the large latency of remote access in a parallel processor
+
+
+Improve Parallel Processing:
+\begin{itemize}
+    \item insufficient parallelism
+    \item long-latency remote communication
+\end{itemize}
+
+\subsection{Centralized Shared Memory}
+
+\subsubsection{Cache Coherence Problem}
+\begin{itemize}
+    \item Global state defined by main memory
+    \item Local state defined by the individual
+    caches, private to each processor core
+\end{itemize}
+
+A memory system is Coherent if any read of a data item returns the most recently written value of that data item. 
+
+Two critical aspects:
+\begin{itemize}
+    \item coherence: defines what values can
+    be returned by a read
+    \item consistency: determines when a
+    written value will be returned by a read
+\end{itemize}
+
+\subsubsection{Coherence Property}
+A memory is coherent if
+\begin{enumerate}
+    \item A read by processor P to location X that
+    follows a write by P to X (RAW), with no writes
+    of X by another processor occurring
+    between the write and the read by P,
+    always returns the value written by P.
+    \item A read by a processor to location X that
+    follows a write by another processor to
+    X (RAW) returns the written value if the read
+    and the write are sufficiently separated
+    in time and no other writes to X occur
+    between the two accesses
+    \item Write serialization:
+    two writes (WAW) to the same location by any
+    two processors are seen in the same
+    order by all processors
+\end{enumerate}
+
+\subsubsection{Consistency} 
+Memory consistency protocol. 
+
+e.g, a write of X on one processor
+precedes a read of X on another
+processor by a very small time, it may
+be impossible to ensure that the read
+returns the value of the data written,
+since the written data may not even
+have left the processor at that point
+
+\subsubsection{Cache Coherence Protocols}
+\begin{itemize}
+    \item Directory based: the sharing status of a particular block
+    of physical memory is kept in one
+    location, called directory
+    \item Snooping: every cache that has a copy of the data
+    from a block of physical memory could
+    track the sharing status of the block
+\end{itemize}
+
+
+\subsubsection{MSI protocol}
+Snooping Coherence Protocols: 
+\begin{itemize}
+    \item Write invalidate protocol: invalidate other copies on a write
+    \item Write update/broadcast protocol
+\end{itemize}
+
+Implement Write Invalidate Protocol: MSI protocol: three block states
+\begin{itemize}
+    \item Invalid
+    \item Shared: 
+    indicates that the block in the private
+    cache is potentially shared
+    \item Modified: 
+    indicates that the block has been
+    updated in the private cache;
+    implies that the block is exclusive
+\end{itemize}
+
+%TODO 图 11.69-11.71 与表格 11.64-67
+
+
+MSI Extensions: 
+
+MESI
+\begin{itemize}
+    \item exclusive: indicates when a cache
+    block is resident only in a single cache
+    but is clean (after initial read)
+\end{itemize}
+
+MOESI
+\begin{itemize}
+    \item owned: indicates that the associated
+    block is owned by that cache and out-of-date in memory
+\end{itemize}
+
+%TODO 图11.81
+
+MESIF
+\begin{itemize}
+    \item forward: designates which sharing
+    processor (among ones with the same
+    shared-state data block) should respond
+    to a request
+\end{itemize}
+
+\subsubsection{Coherence Miss}
+True sharing miss:
+\begin{enumerate}
+    \item first write by a processor to
+    a shared cache block causes an
+    invalidation to establish ownership of
+    that block;
+    \item another processor reads a
+    modified word in that cache block;
+\end{enumerate}
+
+False sharing miss:
+a single valid bit per cache block;
+occurs when a block is invalidated (and
+a subsequent reference causes a miss)
+because some word in the block, other
+than the one being read, is written into
+
+
+\subsection{Distributed Shared Memory}
+A directory is added to each node;
+Each directory tracks the caches that share the
+memory addresses of the portion of memory in
+the node; 
+
+need not broadcast on every cache miss as in
+snooping-based coherence protocol
+
+\subsubsection{Directory-based Cache Coherence Protocol}
+Common cache states
+\begin{itemize}
+    \item Shared: 
+    one or more nodes have the block cached,
+    and the value in memory is up to date (as
+    well as in all the caches)
+    \item Uncached: 
+    no node has a copy of the cache block
+    \item Modified: 
+    exactly one node has a copy of the cache
+    block, and it has written the block, so the
+    memory copy is out of date
+\end{itemize}
+
+%TODO 表格 11.103-117 图 119-120

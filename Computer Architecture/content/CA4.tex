@@ -1,2 +1,169 @@
+% 非考试重点
 \newpage
-\section{Data-Level Parallelism}
+\section{DLP Architecture}%TODO wip
+\subsection{Data-Level Parallelism (DLP)}
+\begin{itemize}
+    \item Vector Architecture
+    \item Multimedia SIMD
+    \item GPU
+\end{itemize}
+
+\subsection{Vector Architecture}
+\begin{enumerate}
+    \item Grab sets of data elements scattered about memory. 
+    \item Place them in large sequential reg files. 
+    \item Place them in large sequential reg files. 
+    \item Disperse the results back into memory
+\end{enumerate}
+
+A single instruction works on vector of data, which results in dozens of register-register operations on independent data elements. 
+
+
+\subsubsection{RV64V}
+
+
+\subsubsection{RV64V Vector Instructions}
+
+\subsubsection{Dynamic Register Typing}
+Omitted in instruction encoding. Associated a data type and data size with each vector register. 
+
+
+Enable programs to disable unused vector registers. 
+
+\subsubsection{DAXPY Example}
+Double precision a $\times$ X $+$ Y
+\begin{itemize}
+    \item X and Y have 32 elements
+    \item x5 and x6 hold the starting addresses
+    of X and Y, respectively
+\end{itemize}
+
+\begin{code}
+    \caption{RV64V code}
+    \begin{minted}{asm}
+        fld f0.a            #
+        addi x28, x5, #256  # Last address to load
+    Loop:                   #
+        fld f1, 0(x5)       # 
+        fmul.d f1, f1, f0   # 
+        fld f2, 0(x6)       # 
+        fadd.d f2, f2, f1   # 
+        fsd f2, 0(x6)       # 
+        addi x5, x5, #8     # 
+        addi x6, x6, #8     # 
+        bne x28, x5 Loop    # 
+    \end{minted}
+\end{code}
+
+\begin{code}
+    \caption{RV64V code: double-precision}
+    \begin{minted}{asm}
+        vsetdcfg 4*FP64     # Enable 4 DP FP vregs
+        fld f0, a           # 
+        vld v0, x5          # 
+        vmul v1, v0, f0     # 
+        vld v2, x6          # 
+        vadd v3, v1, v2     # 
+        vst v3, x6          # 
+        vdisable            # Disable vector regs
+    \end{minted}
+\end{code}
+no loop-carried dependences
+
+Chaining: 
+\begin{itemize}
+    \item forwarding of element-dependent operations, in that dependent operations are chainedtogether
+    \item scalar and vector registers
+    generate interim results which can be
+    used immediately, without additional
+    memory references
+\end{itemize}
+Flexible Chaining: allow a vector
+instruction to chain to essentially any
+other active vector instruction
+
+\subsubsection{Vector Execution Time}
+For a sequence of vector operations
+\begin{itemize}
+    \item Convoy
+    \subitem the set of vector instructions that could
+    potentially execute together
+    \subitem co-convoy instructions must not contain
+    any structural hazards
+    \subitem RAW is allowed in the same convoy
+    \item Chime: 
+    \subitem the unit of time taken to execute the
+    convoy
+\end{itemize}
+Cross-convoy instructions are serialized
+
+e.g. %TODO 39
+
+\subsection{optimize vector architecture}
+\subsubsection{Multiple Lanes}
+use multiple functional units to
+improve vector performance;
+process several elements per
+clock cycle
+
+vector register memory is divided across the lanes
+
+\subsubsection{Vector-Length Registers}
+Vector length is often unknown at
+compile time
+
+Vector-length register (vl) controls the
+length of any vector operation,
+including a vector load or store
+
+The value in vl cannot be greater than
+the maximum vector length (mvl)
+
+e.g. %TODO 52
+
+\subsection{handle IF in loops}
+\subsubsection{Predicate Registers}
+to handle IF in loops
+
+Vector-mask control: 
+use predicate registers to hold the mask
+and essentially provide conditional
+execution of each element operation
+
+\subsubsection{Memory Banks}
+
+
+\subsubsection{Stride}
+
+\subsubsection{Gather-Scatter}
+
+
+\newpage
+\section{DLP Exploitation}
+
+\subsection{Loop-Level Parallelism}
+\begin{itemize}
+    \item in-iteration dependence
+    \item cross-iteration/Loop-carried dependences
+    \item No circular loop-carried dependence:
+    self dependence, mutual dependence;
+\end{itemize}
+
+e.g. 
+
+\subsection{find dependences}
+\subsubsection{Index Affinity}
+
+\subsubsection{Dependence Conditions}
+
+\subsubsection{GCD Test}
+GCD (Greatest Common Divisor) Test:
+$a, b, c$ and $d$ are all constants, i.e. ai+b and ci+d. If a loop-carried dependence exists,
+\begin{align*}
+    (d-b)\% gcd(c,a)=0
+\end{align*}
+
+\subsection{Dependency Types}
+
+
+\subsection{Dependency Elimination}
