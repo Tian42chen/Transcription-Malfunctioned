@@ -1,0 +1,105 @@
+\newpage
+\section{Network Security}
+Basic knowledge
+\subsection{Cryptography}
+\subsubsection{Kerckhoff's principle}
+All algorithms must be public; only the keys are secret.
+
+\subsubsection{Substitution ciphers}
+In a substitution cipher, each letter or group of letters is replaced by another letter or group of letters to disguise it.
+
+The basic attack takes advantage of the statistical properties of natural languages.
+
+\subsubsection{Transposition ciphers}
+Transposition ciphers, in contrast, reorder the letters but do not disguise them. The cipher is keyed by a word or phrase not containing any repeated letters.
+
+To break a transposition cipher, the cryptanalyst must 
+\begin{enumerate}
+    \item first be aware that he is dealing with a transposition cipher.
+    \item The next step is to make the guess at the number of columns (the key length).
+    \item The remaining step is to order the columns.
+\end{enumerate}
+
+
+\subsubsection{One-time pads}
+First choose a random bit string as the key. Then convert the plaintext
+into a bit string, for example, by using its ASCII representation.
+Finally, compute the XOR of these two strings, bit by bit.
+
+The reason derives from information theory: there is simply no
+information in the message because all possible plaintexts of the given
+length are equally likely.
+
+% \subsubsection{Quantum cryptograph}
+\subsubsection{Two fundamental cryptographic principles}
+\begin{enumerate}
+    \item All the encrypted messages must contain some redundancy.
+    \item Measures must be taken to ensure that each message received can be verified as being fresh.
+\end{enumerate}
+
+\subsection{Symmetric-key algorithms}
+In symmetric-key algorithms, they use the same key for encryption and decryption.
+
+
+\subsubsection{DES}
+要经历 19 个阶段. 
+
+\subsubsection{Triple DES}
+whitening, 不确定性达到最大值. 
+
+\subsubsection{Rijndael}
+
+很重要, 但不讲了.jpg
+
+\subsection{Public-key algorithms}
+
+These requirements can be stated simply as follows:
+\begin{enumerate}
+    \item $D(E(P))=P$
+    \item It is exceedingly difficult to deduce $D$ from $E$.
+    \item $E$ cannot be broken by a chosen plaintext attack.
+\end{enumerate}
+
+Public-key cryptography requires each user to have two keys: a public key, used by the entire world for encrypting message to be sent to that user, and a private key, which the user needs for decrypting messages.
+
+\subsubsection{RSA}%TODO 33-42
+
+\subsection{Digital Signatures}
+The authenticity of many legal, financial, and other
+documents is determined by the presence or absence of an
+authorized handwritten signature.
+
+The basic requirements of digital signatures:
+\begin{enumerate}
+    \item The receiver can verify the claimed identity of the sender.
+    \item The sender cannot later repudiate the contents of the message.
+    \item The receiver cannot possibly have concocted the message
+    himself.
+\end{enumerate}
+
+\subsubsection{Symmetric-Key Signatures}
+
+
+Replay Attack
+
+
+\subsubsection{Public-Key Signatures}
+
+
+\subsubsection{Message Digests}
+One criticism of signature methods is that they often couple two
+distinct functions: authentication and secrecy. 
+
+
+SHA-1 and SHA-2
+
+
+\subsubsection{The Birthday Attack}
+The birthday attack is that with two different plaintexts, but
+have the same message digests.
+
+
+\subsection{Management of public keys}
+\subsubsection{Certificates}
+
+\subsubsection{Public Key Infrastructures}

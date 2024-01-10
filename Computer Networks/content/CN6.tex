@@ -287,3 +287,326 @@ Three Way Handshake
         \item If SYN bit = 0 and ACK bit = 0, then this combination is not possible.
     \end{itemize}
 \end{itemize}
+
+\paragraph{\textbf{SYN Flood} Attack} A malicious sender 发送大量 SYN segments, 但不完成链接.
+
+用 SYN cookies 对抗. 即将 sequence number hash, 这样接受时只需要比对 hash 是否一致. 
+
+\subsubsection{TCP Connection Release}
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=0.22\textwidth]{pic/CN6/TCP Connection Release}
+    \caption{TCP Connection Release}
+\end{figure}
+
+Four TCP segments are needed to release a connection: one FIN and one ACK for each direction. 
+
+\textbf{The Two-army Problem}: 需要知道信号是否送达. 
+
+The following steps are followed in terminating the connection:
+\begin{enumerate}\scriptsize %TODO 62-63
+    \item For terminating the connection
+    \item after receiving the FIN segment
+    \item After receiving the acknowledgement, client enters the state called FIN\_WAIT\_2. Now
+    \item Now suppose server wants to close the connection with the client. For terminating the connection
+    \item After receiving the FIN segment
+\end{enumerate}
+
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=0.309\textwidth]{pic/CN6/The states used in the TCP connection management finite state machine}
+    \caption{The states used in the TCP connection management finite state machine}
+\end{figure}
+
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=0.42\textwidth]{pic/CN6/TCP connection management finite state machine}
+    \caption{TCP connection management finite state machine}
+\end{figure}
+
+
+\subsubsection{TCP Sliding Window}
+
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=0.22\textwidth]{pic/CN6/Window management in TCP}
+    \caption{Window management in TCP}
+\end{figure}
+
+Example %TODO 70-72
+syn + ack 需要占用一个 sequence number, 纯 ack 不用占用. 每个 byte 都有一个对应的 sequence number, 这个 sequence number 也可以携带 ack. 
+
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=0.1\textwidth]{pic/CN6/An Ladder Example}
+    \caption{An Ladder Example}
+\end{figure}
+
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=0.309\textwidth]{pic/CN6/An Ladder Example2}
+    \caption{An Ladder Example}
+\end{figure}
+
+%TODO p72
+% 2 ack=20001
+% 3 seq=20001 ack=5001
+% 4 seq=20001 ack=5001
+% 5 seq=5001 ack=21001
+% 6 seq=21001 ack=5001
+% 7 seq=5001 ack=22001
+% 8 seq=22001 ack=5001
+% 9 seq=5001 ack=23001
+% 10 seq=5001 ack=23001
+% 11 seq=23001 ack=6001
+% 12 seq=6001 ack=23001
+
+
+When the window is 0, the sender may not normally send segments, with two exceptions:
+\begin{enumerate}\scriptsize
+    \item Urgent data may be sent, for example, to allow the user to
+    kill the process running on the remote machine
+    \item The sender may send a 1-byte segment to force the receiver
+    to re-announce the next byte expected and the window size.
+    This packet is called a window probe
+\end{enumerate}
+
+\paragraph{Nagle's Algorithm}To reduce the bandwidth used by a sender that sends multiple short packets. 当有数据要发送, 先发送一个分片, 缓存其他分片, 受到ack 后一次性发送缓存的分片. 但因为缓存, 高交互系统可能造成死锁. 
+
+\paragraph{Clark's Solution} the silly window syndrome: an interactive application on the receiving side reads data only 1 byte at a time. 只有 receiver 有一定比例的 window 可用后再通知 sender. 
+
+\paragraph{The Silly Window Syndrome}The goal is for the sender not to send small segments and the receiver not to ask for them. 
+
+
+Another issue that the receiver must handle is that segments may arrive out of order. Solution:
+\begin{itemize}\scriptsize
+    \item The receiver will buffer the data until it can be passed up to the
+    application in order
+    \item Acknowledgements can be sent only when all the data up to byte
+    acknowledged have been received. This is called a cumulative acknowledgement
+\end{itemize}
+
+\subsubsection{TCP timer management}
+TCP uses multiple timers (at least conceptually) to do its
+work.
+\begin{itemize}
+    \item The RTO (Retransmission TimeOut)
+    \subitem How long should the RTO be ? 
+    \item The Persistence timer
+    \item The Keepalive timer
+    \item The one used in TIME WAIT state
+\end{itemize}
+
+\paragraph{The RTO (Retransmission TimeOut)}\quad 
+
+\begin{itemize}
+    \item set too short, unnecessary retransmissions will occur.
+    \item set too long, performance will suffer due to the long retransmission delay whenever a packet is lost
+\end{itemize}
+Furthermore, the ack arrival can change rapidly within a few seconds as
+congestion builds up or is resolved
+
+The solution is to use a dynamic algorithm: 
+\begin{itemize}\scriptsize
+    \item SRTT (Smoothed Round-Trip Time, Jacobson,1988)
+    \subitem Exponentially Weighted Moving Average (EWMA, R is the current
+    estimate of the RTT)
+    \begin{align*}
+        SRTT=\alpha SRTT+(1-\alpha)R 
+    \end{align*}
+    where $\alpha =7/8$. 
+    \item RTTVAR (Round-Trip Time VARiration)
+    \subitem To make the timeout value sensitive to the variance in round-trip times as well as the smoothed round-trip time.
+    \begin{align*}
+        RTTVAR &=\beta RTTVAR +(1-\beta) |SRTT-R|\\
+        RTO&=SRTT +4\times RTTVAR\\
+        RTO&=\min(1 sec , RTO)
+    \end{align*}
+    where $\beta=3/4$
+\end{itemize}
+
+
+One problem that occurs with gathering the samples, R, of the round-trip time is what to do when a segment times out and is sent again. 但当接受 ack 时无法确定是从发的 ack 还是先前的 ack. 
+
+Karn's algorithm: 重传的 rtt 不参与更新 rto. 每次失败的重传 timeout doubled. 
+
+\paragraph{the persistent timer}It is designed to prevent the following deadlock %TODO 85
+
+\paragraph{the keepalive timer}看看对方是否下线. 
+
+\paragraph{the TIME WAIT timer}twice the maximum packet lifetime
+
+\subsubsection{TCP Congestion Control}
+The network layer 满了只能 dropping packets(丢包). 所以靠 transport layer 解决. In the Internet, TCP plays the main role in controlling congestion, as well as the main role in reliable transport. 
+
+TCP congestion control is based on a AIMD (Additive
+Increase Multiplicative Decrease) control law using a
+window and with packet loss(丢包) as the binary signal.
+
+TCP maintains a congestion window(the sending window) and a flow control window(the receiving window):
+\begin{itemize}
+    \item The congestion window size 是指每时 sender 最大发送的字节数. 
+    \subitem The corresponding rate = window size/RTT
+    \subitem TCP 用 AIMD 调整 congestion window size
+    \item The flow control window size 是指每时最大容纳的字节数. Receiver 通过 TCP Header 告知 sender 其 window size. 
+    \subitem 发送字节数应该同时小于 两 window size
+    \subitem 任意 window size full, TCP 停止传输数据. 
+\end{itemize}
+
+All the Internet TCP algorithms assume that lost packets(丢包) are caused by congestion and monitor timeouts. 
+
+During the implementation, we have two important questions:
+\begin{enumerate}\scriptsize
+    \item The transmission rate of packets which the sender will use
+    \subitem ack clock
+    \item The size of the congestion window
+    \subitem slow start
+\end{enumerate}
+
+%TODO 96
+The key observation is that ack 到 sender 的 rate 受 slowest link 制约.
+The acknowledgements reflect the times at which the packets arrived at
+the receiver after crossing the slow link.
+This timing is known as an ack clock. It is an essential part of TCP
+
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=0.42\textwidth]{pic/CN6/A burst of packets from a sender and the returning ack clock}
+    \caption{A burst of packets from a sender and the returning ack clock}
+\end{figure}
+
+\paragraph{TCP Start Problem}We want to quickly near the right rate, $cwnd_{IDEAL}$. 
+
+Slow-Start Solution: Start by doubling cwnd (the congestion window) every RTT. 每收到一个ACK, 就增加一个数据包, 也就是一个变两个. 
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=0.309\textwidth]{pic/CN6/Slow-Start Solution}
+    \caption{Slow-Start Solution}
+\end{figure}
+
+To keep slow start under control, the sender keeps a threshold for the connection called the slow start threshold (sst).
+\begin{itemize}
+    \item 起始设置为 flow control window size. 
+    \item TCP keeps increasing the congestion window in slow start until
+    \begin{enumerate}
+        \item a timeout occurs (packet loss): sst 降到 congestion window 的一半, 且重启 slow start. 
+        \item the congestion window exceeds the slow start threshold: 从 slow start 变为 additive increase (线性)
+    \end{enumerate}
+\end{itemize}
+
+additive increase: 完成一个完整的RTT, 才增加一个数据包. 
+
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=0.309\textwidth]{pic/CN6/A mix of linear and the multiplication increase}
+    \caption{A mix of linear and the multiplication increase}
+\end{figure}
+
+\paragraph{Inferring Loss from ACKs}\quad 
+\begin{itemize}
+    \item TCP uses a cumulative ACK
+    \item Duplicate ACKnowledgements gives us hints about what data hasn't arrived
+    \begin{itemize}
+        \item 告知收到数据包, 但不是期望的
+        \item 将三次相同的 ack 当作 loss
+        \item 即使计时器没有 timeout, 但也做重传 (Fast Retransmission)
+        \item sst 设置为 congestion window/2, slow start 重启
+    \end{itemize}
+\end{itemize}
+
+\paragraph{Fast Retransmission}It can repair single segment loss quickly, typically before a timeout %TODO 104 + 12.5 钉钉
+
+
+\paragraph{Fast Recovery}Fast recovery is the heuristic that implements this behavior
+\begin{itemize}%TODO 109
+    \item pretend further duplicate ACKs are the expected ACKs
+    \item duplicate ACKs are counted (including the three that
+    triggered fast retransmission) until the number of packets in the
+    network has fallen to the new threshold
+    \item Reconcile views when the ACK jumps
+\end{itemize}
+
+
+Two larger changes have also affect TCP implementations
+\begin{enumerate}
+    \item SACK (Selective ACKnowledgements) 
+    \begin{figure}[!htb]
+        \centering
+        \includegraphics[width=0.42\textwidth]{pic/CN6/Selective acknowledgements}
+        \caption{Selective acknowledgements}
+    \end{figure}
+    \item ECN (Explicit Congestion Notification): an IP layer mechanism
+    \begin{itemize}
+        \item ECE (ECN-Echo): tell the TCP sender to slow down
+        \item CWR: The sender tells the receiver that it has heard the signal
+    \end{itemize}
+\end{enumerate}
+
+TCP Reno, NewReno, and SACK. (笔记中没有前两个版本)
+\begin{itemize}\scriptsize
+    \item Reno can repair one loss per RTT
+    \subitem Multiple losses cause a timeout
+    \item NewReno further refines ACK heuristics
+    \subitem Repairs multiple losses without timeout
+    \subitem SACK (Selective Acknowledgement) is a better idea
+\end{itemize}
+
+\subsection{Introduce new transport layer protocols}
+\subsubsection{QUIC} 
+全称 (Quick UDP Internet Connection), 中文翻译成 ``快速 UDP 互联网连接'', 是由 Google 提出的使用 UDP 进行多路并发传输的协议. 
+
+%TODO 自己去看 120- 
+
+\begin{enumerate}
+    \item Low latency to establish connection
+    \item Improved Congestion Control Scheme
+    \item reliable transmission based on monotonically increased packed number. 
+    \subitem Stream offset
+    \item removal of the ``Head-of-Line blocking'' (HOL blocking) problem (队头阻塞问题)
+    \item 连接迁移
+\end{enumerate}
+
+\subsubsection{BBR} 
+(Congestion Control based on Bottleneck Bandwidth)
+
+%TODO 自己去看 130-
+
+现在丢包与拥塞不再等价了. 
+
+A full-duplex TCP connection has exactly one slowest link or bottleneck in each direction. The bottleneck is important because It determines the connection's maximum data-delivery rate. 
+
+Two physical constraints, RTprop (round-trip propagation time) and BtlBw (Bottleneck Bandwidth), bounds transport performance. If the network path were a physical pipe, Rtprop would be its length and BtlBW its minimum diameter. 
+
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=0.309\textwidth]{pic/CN6/bbr.png}
+    \caption{RTT and delivery rate variration with the amount of data inflight}
+\end{figure}
+
+data in flight (data sent but not yet acknowledged) = BtlBw $\times$ Rtprop
+
+Bandwidth-delay product (BDP) is a measurement of how many bits can fill up a network link
+
+Little's Result:
+\begin{align*}
+    \bar{N}=\lambda T
+\end{align*}
+\begin{itemize}
+    \item $\bar{N}$ is the data in flight in the network
+    \item $T$ RTT
+    \item $\lambda$ the delivery rate
+\end{itemize}
+
+\begin{align*}
+    T&=\frac{\bar{N}}{\lambda}=\frac{\bar{N}}{BtlBw}=RTT\\
+    \lambda&=\frac{\bar{N}}{T}=\frac{\bar{N}}{RTprop}
+\end{align*}
+
+Rtprop and BtlBw obey an uncertainty principle: whenever one can measured, the other cannot.
+
+Characterizing the bottleneck:
+\begin{itemize}
+    \item Rate balance
+    \item Full pipe
+    \item BtlBw and RTprop vary over the life of a connection, so they must be continuously estimated
+\end{itemize}
