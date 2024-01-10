@@ -17,7 +17,7 @@
 
 \paragraph{逻辑地址与物理地址}区分物理地址(physical address)和虚拟地址(virtual address)，后者也叫逻辑地址(logical address). 
 
-内存管理单元(memory management unit, MMU)实现从虚拟地址到物理地址的映射的硬件. TBL 也属于 MMU 的一部分. 
+内存管理单元(memory management unit, MMU)实现从虚拟地址到物理地址的映射的硬件. TLB 也属于 MMU 的一部分. 
 
 \paragraph{内存保护}base 和 limit 两个上下限寄存器来实现框定进程的内存空间, 始于 base 寄存器中存储的地址，终于 base + limit 对应的地址. 内存保护也是通过 MMU实现的. 
 
@@ -162,7 +162,7 @@ fork 后, 只有当子进程需要发生内容修改的时候，才真正去复�
 \begin{enumerate}
     \item Reference-Bits: 在初始化时被置 0；被使用时置 1. 替换 0 的 frame. 
     \item Second-Chance Algorithm: 循环地遍历 frames, 检测 reference bit, 若1则置0, 若0替换. 
-    \item Enhanced Second-Chance Algorithm / NRU: 二元组维护 (dirty, reference), 循环地遍历四次 frame, 依次寻找 (0,0), (0,1), (1,0), (1,1)的替换. 
+    \item Enhanced Second-Chance Algorithm / NRU: 二元组维护 (reference, dirty), 循环地遍历四次 frame, 依次寻找 (0,0), (0,1), (1,0), (1,1)的替换. 
 \end{enumerate}
 
 \paragraph{置换范围}replacement 分为 local 和 global
