@@ -409,9 +409,9 @@ We denote by $\FC^k(\mathcal{Q})$ the class we discussed above, and call it \tex
 \end{lemma}
 
 \begin{lemma}[Partial minimization]
-    If $f(\bx,yB)$ is convex in $(\bx,\by)\in\R^n$ and $Y$ is a convex set, then 
+    If $f(\bx,\by)$ is convex in $(\bx,\by)\in\R^n$ and $Y$ is a convex set, then 
     \begin{align*}
-        g(\bm x)\inf_{\by\in Y}f(\bx,\by)
+        g(\bm x)=\inf_{\by\in Y}f(\bx,\by)
     \end{align*}
     is convex. 
 \end{lemma}
@@ -429,7 +429,7 @@ We denote by $\FC^k(\mathcal{Q})$ the class we discussed above, and call it \tex
 (凸组合的函数$\le$ 函数的凸组合)%TODO 方向导数定义补充 16-17
 
 \begin{theorem}
-    A continuously differentiable function $f$ belongs to the class $\FC^1(\R^n)$ if and only if for $\forall \bx,\by\in \R^n$, we have
+    A continuously differentiable function $f$ belongs to the class $\FC^1(\R^n)$ if and only if $\forall \bx,\by\in \R^n$, we have
     \begin{align*}
         \braket{\nabla f(\bx)-\nabla f(\by), \bx-\by}\ge 0
     \end{align*}
@@ -470,7 +470,7 @@ We denote by $\FC^k(\mathcal{Q})$ the class we discussed above, and call it \tex
         f(\bx)+\braket{\nabla f(\bm x),\by-\bx}+\frac{1}{2L}\norm{\nabla f(\bx)-\nabla f(\by)}^2\le f(\by) 
     \end{equation}
     \begin{equation}
-        \frac{1}{L}\norm{\nabla f(\bx)-\nabla f(\by)}\le \braket{\nabla f(\bx)-\nabla f(\by), \bx-\by}
+        \frac{1}{L}\norm{\nabla f(\bx)-\nabla f(\by)}^2\le \braket{\nabla f(\bx)-\nabla f(\by), \bx-\by}
     \end{equation}
     \begin{equation}
         0\le  \braket{\nabla f(\bx)-\nabla f(\by), \bx-\by} \le L\norm{\bx-\by}^2
@@ -493,10 +493,12 @@ We denote by $\FC^k(\mathcal{Q})$ the class we discussed above, and call it \tex
 
 %TODO 差 (20), (19) 证回去
 
+\subsubsection{Necessary and Sufficient Conditions for The Class \texorpdfstring{$\FC_L^{2,1}(\R^n)$}. }
+
 \begin{theorem}
     Twice continuously differentiable function $f\in \FC_L^{2,1}(\R^n)$ if and only if $\forall \bx \in \R^n$, we have
     \begin{align*}
-        0\succeq \nabla^2 f(\bx)\succeq LI_n
+        0\preceq \nabla^2 f(\bx)\preceq LI_n
     \end{align*}
 \end{theorem}
 
@@ -506,7 +508,7 @@ We denote by $\FC^k(\mathcal{Q})$ the class we discussed above, and call it \tex
 \begin{definition}
     A continuously differentiable function $f(\bm x)$ is called \textbf{strongly convex} on $\R^n$ (notation $f\in\SC_\mu^1(\R^n)$) if there exists a constant $\mu>0$ such that $\forall \bx,\by\in\R^n$, we have
     \begin{align*}
-        f(\bm y)\ge f(\bm x) +\braket{f(\bm x), \bm y-\bm x} +\frac{1}{2}\mu \|\bm y-\bm x\|^2
+        f(\bm y)\ge f(\bm x) +\braket{\nabla f(\bm x), \bm y-\bm x} +\frac{1}{2}\mu \|\bm y-\bm x\|^2
     \end{align*}
     $\mu$ is called \textbf{convexity parameter}(凸参数) of $f$. 
 \end{definition}
@@ -540,6 +542,8 @@ We denote by $\FC^k(\mathcal{Q})$ the class we discussed above, and call it \tex
 \end{theorem}
 
 $\phi(\nu)$
+
+\subsubsection{Equivalent Definitions}
 
 \begin{theorem}
     Let $f$ be continuously differentiable. Both cnoditions below, holding $\forall \bm x,\bm y\in\mathbb{R}^n$ and $\alpha \in [0,1]$, are equivalent to inclusion $\mathcal{S}_\mu^1(\mathbb{R}^n)$
@@ -575,6 +579,8 @@ $\braket{I_n \bm s, \bm s}$
 The value $Q_f=\frac{L}{\mu}\ge 1$ is called the \textbf{condition number}(条件数) of function $f$. 
 
 % SVD 相关
+
+\subsubsection{Property of Smooth and Strongly Convex Function}
 
 \begin{theorem}
     If $f\in \mathcal{S}_{\mu,L}^{1,1}(\mathbb{R}^n)$, then $\forall \bm x,\bm y\in \mathbb{R}^n$, we have

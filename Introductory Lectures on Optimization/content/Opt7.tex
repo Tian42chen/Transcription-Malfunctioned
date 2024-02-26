@@ -1,0 +1,138 @@
+\newpage
+\section{Beyond The Black-box Model}
+
+\subsection{Proximal Gradient Method}
+
+\subsubsection{Proximal Operator}
+
+\subsubsection{Properties of Proximal Operator}
+
+\subsubsection{Analysis for Proximal Gradient Method}
+
+\subsubsection{Accelerated Proximal Gradient Method}
+
+\subsubsection{Special case: Proximal Point Method}
+
+\subsection{Douglas-Rachford Splitting}
+
+\subsubsection{Different Setting for Convex Problem}
+
+\subsubsection{Fixed Point for Nonsmooth Composition}
+
+\subsubsection{Splitting Algorithm}
+
+\subsection{Duality Principle}
+
+\subsubsection{Duality Principle}
+
+Example: Duality in Linear Programs
+
+Primal LP:
+\begin{align*}
+    & \min_{\bx} c^\top \bx
+\end{align*}
+
+
+Duality Problem
+
+\begin{align*}
+    \min_{\bx}f(\bx),\ \st g_i(\bx)\le 0,\ i=1,\dots,m
+\end{align*}
+
+\subsection{Lagrangian Duality and Algorithms}
+
+\subsubsection{Lagrangian Duality}
+\begin{align*}
+    &\min_{\bx}f(\bx)\\
+    \st&h(\bx)\le 0\\
+    &l_i(\bx)=0
+\end{align*}
+
+因为 min max 的互换, 所以有个 gap
+
+
+\subsubsection{KKT}
+
+\subsubsection{Algorithm using Lagrangian duality}
+
+\subsection{Fenchel conjugate and algorithm}
+
+\subsubsection{Fenchel conjugate}
+
+\subsubsection{Properties}
+
+\subsubsection{Fenchel duality}
+
+\subsection{Smoothing Techniques}
+\subsubsection{Introduction}
+\begin{align*}
+    \min_{\bx\in\mathcal{X}}f(\bx)
+\end{align*}
+where $f$ is convex and nonsmooth. Approximate $f(\bx)$. by a smooth and convex $f_u(\bx)$. 
+\begin{align*}
+    \min_{\bx\in\mathcal{X}}f_u(\bx)
+\end{align*}
+where $f_u$ is a $L_u$-Lipschitz continuous, smooth and convex. 
+
+e.g. (Motivation) 
+
+Huber function
+\begin{align*}
+    f_u(\bx)=\left( \begin{array}{ll}
+        \frac{x^2}{2u} & |\bx|\le u\\
+        |\bx|-\frac{u}{2} & |\bx|>u
+    \end{array} \right.
+\end{align*}
+%TODO 图
+\begin{enumerate}
+    \item $f_u(\bx)$ is clearly continuous and differentiable everywhere. 
+    \item $f(\bx)-\frac{u}{2}\le f_u(\bx)\le f(\bx)$
+    \item If $u\to 0$, then $f_u(\bx)\to f(\bx)$
+    \item $|f''_u(\bx)|\le\frac{1}{u}$. This implies that $f_u(\bx)$ is $\frac{1}{u}$-Lipschitz continuous. 
+\end{enumerate}
+
+Major Techniques:
+\begin{enumerate}
+    \item Nesterov's smoothing Techniques: proximity function(近邻函数)
+    \item Moreau-Yosida smoothing regularization: envelope(包络)
+    \item Ben-Tal-Teboulle smoothing based on recession function
+    \item Randomized smoothing
+\end{enumerate}
+
+\subsubsection{Nesterov's Smoothing}
+\begin{align*}
+    \min_{\bx\in\mathcal{X}}f(\bx)\iff f_u(\bx)=\max_{\by\in\dom f^*}\left\{ \bx^\top\by-f^*(\by)-ud(\by) \right\}
+\end{align*}
+Assume that function $f$ can be represented by
+\begin{align*}
+    f(\bx)=g(A\bx+b) \triangleq \max_{y\in\mathcal{Y}}\{ \braket{A\bx+b,\by}-\phi(\by) \}
+\end{align*}
+where $\phi(\by)$ is a convex and continuous function and $\mathcal{Y}$ is a convex and compact set. 
+
+\paragraph{Proximity Function}The function $d(\by)$
+
+Proposition
+
+\begin{theorem}
+    For any $u>0$, let $D_{\mathcal{Y}}^2=\max_{\by\in\mathcal{Y}}d(\by)$, we have
+    \begin{align*}
+        f(\bx)-uD_{\mathcal{Y}}^2\le f_u(\bx)\le f(\bx)
+    \end{align*}
+\end{theorem}
+
+Analysis of Nesterov's smoothing
+\begin{enumerate}
+    \item 
+\end{enumerate}
+
+e.g. 
+
+
+\subsubsection{Moreau-Yosida Regularization}
+
+\subsection{Generalized Distance: Mirror Descent}
+两大动机: general, bound 界更好
+
+\subsubsection{Motivation}
+\subsubsection{Bregman Divergence}
+\subsubsection{Mirror Descent}

@@ -1,0 +1,198 @@
+\newpage
+\section{Acceleration Methods}
+\subsection{Lower Complexity Bounds for \texorpdfstring{$\FC_L^{\infty,1}(\R^n)$}. }
+
+\subsubsection{Problem Class}
+Consider an optimization probelm where objectives function comes from $\FC_L^{\infty, 1}(\R^n)$(and $\FC_{L}^{1,1}(\R^n)$). The probelm class is as following.
+\begin{table}[!htb]
+    \centering
+    % \caption{}
+    \begin{tabular}[c]{cc}\toprule
+        %  \\ \midrule
+        Model & $\displaystyle \min_{\bx\in \mathbb{B}^n}f(\bx),\ f\in \FC_{L}^{1,1}(\R^n)$\\  \cmidrule{1-1}
+        Oracle & First-order Black Box \\ \cmidrule{1-1}
+        Approximate solution & $\bar{\bx}\in\R^n: f(\bar{\bx})-f^*\le \epsilon$ \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+
+\begin{assumption}
+    \begin{align*}
+        \bm x_k = \bx_0 + Lin\{ \nabla f(\bx_0), \dots, \nabla f(\bx_{k-1}) \},\ k\ge 1
+    \end{align*}
+    不把 $\bm x_0$ 写进Lin, 表明对起点不关注. 
+\end{assumption}
+
+\subsubsection{Worst Function in \texorpdfstring{$\FC_L^{\infty,1}(\R^n)$}. }
+{ \scriptsize
+\begin{align*}
+    f_k(\bx)=\frac{L}{4}\left\{ \frac{1}{2}\left[ \left( \bx^{(1)} \right)^2 +\sum_{i=1}^{k-1}\left( \bx^{(i)}-\bx^{(i+1)} \right)^2 + \left( \bx^{(k)} \right)^2\right] - \bx^{(1)} \right\}
+\end{align*}
+}
+for $k=1,\dots,n$
+
+Remark: We have $f_k(\bx)=\frac{1}{2}\bx^\top\left( \frac{L}{4}A_k \right)\bx - \frac{L}{4}e_1\bx$. 
+
+%TODO matrix calculate, vector calculate
+$\nabla^2f(\bx)=\frac{L}{4}A_k$
+\begin{align*}
+    A_k=
+\end{align*}
+($A_k \preceq 4I$, for $k\in[1,n]$)
+
+As assumption
+$0\preceq \nabla^2f(\bx) \preceq LI_n$
+
+About the optimal value: 
+\begin{align*}
+    \bar{\bx}^(i)=\left\{ \begin{array}{ll}
+        1-\frac{i}{k+1} & i\in[1,k]\\
+        0 & i\in[k+1,n]
+    \end{array} \right.
+\end{align*}
+
+Therefore, $f_k$
+\begin{align*}
+    f_k=
+\end{align*}
+
+Bounds of $\bar{\bx}$
+
+$\R^{k,n}$ sub-space
+
+\subsubsection{Theoretical Analysis and Main Results}
+\begin{lemma}
+    \begin{align*}
+        \bx_k\in \mathcal{L} = 
+    \end{align*}
+\end{lemma}
+
+\begin{corollary}
+    \begin{align*}
+        f_p(\bx_k)\ge f_k^*
+    \end{align*}
+\end{corollary}
+
+\begin{theorem}
+    $1\le k\le \frac{1}{2}(n-1)$
+    \begin{align*}
+        f(\bx_k)-f^*&\ge \frac{3L\norm{\bx_0-\bx^*}^2}{32(k+1)^2}\\
+        \norm{\bx_k-\bx^*}^2&\ge\frac{1}{8}\norm{\bx_0-\bx^*}^2
+    \end{align*}
+    where $f^*=f(\bx^*)$
+\end{theorem}
+
+\begin{itemize}
+    \item 1
+    \item 有限维可能可以有更好的复杂度. 
+\end{itemize}
+
+
+\subsection{Lower Complexity Bounds for \texorpdfstring{$\SC_L^{\infty, 1}(\R^n)$}. }
+
+\subsubsection{Worst Function in \texorpdfstring{$\SC_L^{\infty, 1}(\R^n)$}. }
+\begin{align*}
+    \norm{\bx}^2=\sum_{i=1}^\infty \left( \bx^{(i)} \right)^2 < \infty
+\end{align*}
+收敛
+
+
+{ \tiny
+\begin{align*}
+    f_{\mu, Q_f}(\bx)=\frac{\mu(Q_f-1)}{8}\left\{\left( \bx^{(1)} \right)^2 +\sum_{i=1}^{\infty}\left( \bx^{(i)}-\bx^{(i+1)} \right)^2 + -2 \bx^{(1)} \right\}+\frac{\mu}{2}\norm{\bx}^2
+\end{align*}
+}
+
+\begin{align*}
+    Q_{f_{\mu, Q_f}}=\frac{\mu Q_{f}}{\mu}=Q_f
+\end{align*}
+
+\begin{theorem}
+    \begin{align*}
+        \norm{\bx_k-\bx^*}^2 &\ge \left(  \right)^{2k}\norm{\bx_0-\bx^*}^2\\
+        f(\bx_k)-f^*&\ge \frac{\mu}{2} \left(  \right)^{2k}\norm{\bx_0-\bx^*}^2
+    \end{align*}
+\end{theorem}
+
+\subsection{Basic Scheme}
+\subsubsection{Difference bewteen Lower Bounds and Real Efficiency}
+\paragraph{Efficiency Estimation}
+upper vs. lower
+
+
+\paragraph{Estimate Sequences}
+\begin{definition}
+    of function of $f(\bx)$
+\end{definition}
+
+\begin{lemma}
+    \begin{align*}
+        f(\bx_k)\le \phi^*_k\equiv \min_{\bx\in\R^n}\phi_k(\bx)
+    \end{align*}
+    Then $f(\bx_k)-f^*\le \lambda_k[\phi^*(\bx^*)-f^*] \to 0$
+\end{lemma}
+
+However, 
+\begin{enumerate}
+    \item 不知道怎么估计
+    \item 不知道如何满足条件
+\end{enumerate}
+
+\begin{lemma}
+    Assume that 
+    \begin{enumerate}
+        \item 
+    \end{enumerate}
+\end{lemma}
+
+
+\begin{lemma}
+    Let 
+\end{lemma}
+
+Constructing $\bx_k$
+
+\subsubsection{Optimal Scheme}
+
+\subsection{Theoretical Analysis and Variants}
+\subsubsection{Analysis of Optimal Scheme}
+
+\begin{lemma}
+    www
+\end{lemma}
+
+\begin{lemma}
+    \begin{align*}
+        \lambda_k\le \min\left\{  \right\}
+    \end{align*}
+\end{lemma}
+
+\begin{lemma}
+    \begin{align*}
+        f(\bx_k)-f^*\le L \min\left\{  \right\}
+    \end{align*}
+\end{lemma}
+
+\subsubsection{Variants of Optimal Scheme}
+
+... 
+
+
+\begin{theorem}
+    
+\end{theorem}
+
+...
+
+
+Other methods
+\begin{enumerate}
+    \item 1
+    \item 2
+    \item 3
+\end{enumerate}
+
+\begin{lemma}
+    
+\end{lemma}
