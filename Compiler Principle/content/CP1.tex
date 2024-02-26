@@ -3,3 +3,86 @@
 
 A compiler is a program to translates one language to another.
 
+A Real program language Tiger: Simple and Nontrivial
+
+Two Important Concepts:
+\begin{itemize}
+    \item Phases(阶段): one or more modules
+    \subitem Operating on the different abstract ``languages'' during compiling process
+    \item Interfaces(接口)
+    \subitem Describe the information exchanged between modules of the compiler
+\end{itemize}
+
+\subsection{Modules and Interfaces}
+
+\subsubsection{Modules}
+Role: implementing each phase
+
+Advantage: allowing for reuse of the components
+
+\subsubsection{Interfaces}
+The data structures: Abstract Syntax, IR Trees and Assem.
+
+A set of functions: The translate interface.
+
+\subsubsection{Phases}
+\begin{enumerate}
+    \item Lex
+    \item Parse
+    \item Parsing Actions
+    \item Semantic Analysis
+    \item Frame Layout
+    \item Translate
+    \item Canonicalize
+    \item Instruction Selection
+    \item Control Flow Analysis
+    \item Dataflow Analysis
+    \item Register Allocation
+    \item Code Emission
+\end{enumerate}
+
+\subsubsection{Modularization(模块化)}
+
+\subsection{Tools and Software}
+Two of the most useful abstractions:
+\begin{enumerate}
+    \item Context-Free Grammars for parsing
+    \item Regular Expressions for lexical analysis
+\end{enumerate}
+
+Two tools for compiling:
+\begin{enumerate}
+    \item Yacc converts a grammar into a parsing program
+    \item Lex converts a declarative specification(声明性规范) into a lexical analysis program
+\end{enumerate}
+
+\subsection{Data structures for tree languages}
+
+\subsubsection{Intermediate Representations (IR)}
+The form of a compiling program: Trees Representation(TR):
+\begin{itemize}
+    \item The main representation forms
+    \item Several node types with different attributes
+\end{itemize}
+
+\subsubsection{An example of a program}
+
+
+\subsubsection{Programming style}
+Several conventions for representing tree data structures in C
+\begin{enumerate}
+    \item Trees are described by a grammar
+    \item A tree is described by one or more typedef, each corresponding to a symbol in the grammar.
+    \item Each typedef defines a pointer to a corresponding struct.
+    \subitem The struct name, which ends in an underscore, is never used anywhere except in the declaration of the typedef and the definition of the struct itself.
+    \item Each struct contains a kind fields
+    \subitem An enum showing different variants, one of each grammar rule; and a u field, which is a union.
+    \item There is more than one nontrivial(value-carraying) symbol in the right-hand side of a rule. The union has a component that is itself a struct comprising these values
+    \item %TODO 
+\end{enumerate}
+
+
+\subsubsection{Modularity principle for C programs}
+\begin{enumerate}
+    \item %TODO 
+\end{enumerate}
