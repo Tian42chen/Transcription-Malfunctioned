@@ -92,10 +92,13 @@
 		\newcommand{\bx}{\bm{x}}
 		\newcommand{\by}{\bm{y}}
 		\newcommand{\bg}{\bm{g}}
+		\newcommand{\bu}{\bm{u}}
+		\newcommand{\bv}{\bm{v}}
 		% 域
 		\newcommand{\R}{\mathbb{R}}
 		\newcommand{\FC}{\mathcal{F}}
 		\newcommand{\SC}{\mathcal{S}}
+		\newcommand{\LC}{\mathcal{L}}
 		% 范数
 		\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
 		%subject to
@@ -103,6 +106,8 @@
 		%argmin, argmax
 		\DeclareMathOperator*{\argmin}{argmin}
 		\DeclareMathOperator*{\argmax}{argmax}
+		% dom
+		\DeclareMathOperator*{\dom}{dom}
 	% 复制代码不带行号
 	\newcommand{\emptyaccsupp}[1]{\BeginAccSupp{ActualText={}}#1\EndAccSupp{}}
 	%脚注
@@ -126,7 +131,7 @@
 	%proof 标题
 	\renewcommand{\proofname}{Proof}
 	%proof QED symbol
-	\renewcommand\qedsymbol{QED}
+	\renewcommand\qedsymbol{Q.E.D.}
 %
 
 %页面参数
