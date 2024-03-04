@@ -65,8 +65,17 @@
 %
 
 \newtheorem{theorem}{Theorem}[section]
-\newtheorem{definition}{Definition}[section]
+\newtheorem{thesis}{Thesis}[theorem]
+\newtheorem{claim}{Claim}[theorem]
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{assumption}[theorem]{Assumption}
+\newtheorem{example}[theorem]{Example}
+% \newtheorem{claimproof}{Proof of claim}[theorem]
+% \newtheorem{proof}{Proof}[section]
 \numberwithin{equation}{section}
+\counterwithin{algorithm}{section}
 
 \hypersetup{
 	colorlinks=true,%打开颜色显示

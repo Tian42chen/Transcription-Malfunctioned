@@ -1,0 +1,32 @@
+\newpage
+\section{Parsing}
+\begin{itemize}
+    \item Lexical Analysis: Create sequence of tokens from characters
+    \item Parsing: Create abstract syntax tree from sequence of tokens
+\end{itemize}
+
+Syntax: the way in which words are put together to form phrases, clauses, or sentences
+
+\subsection{Context-free Grammars}
+\subsubsection{Definition for CFG}
+计算理论 IV.1.
+
+\subsubsection{Derivations}
+计算理论 IV.2-3
+
+用 CFG 生成 string
+
+\subsubsection{Parse Trees}
+计算理论 IV.5
+
+Representing derivations as a tree. Parse trees have meaning. 
+
+\subsubsection{Ambiguous Grammars}
+A grammar is ambiguous if the same sequence of tokens can give rise to two or more parse trees.
+
+Eliminating ambiguity by transforming the grammar.
+
+However, there are some languages (sets of strings) that have ambiguous grammars but no unambiguous grammar.
+
+\subsubsection{End-Of-File Marker}
+Use \$ to represent end of file
