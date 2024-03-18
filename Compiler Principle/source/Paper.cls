@@ -22,6 +22,7 @@
 \RequirePackage{diagbox}
 \RequirePackage{amsmath}
 \RequirePackage{mathtools}
+\RequirePackage{amsthm}
 % \RequirePackage{unicode-math}
 \RequirePackage{extarrows}
 \RequirePackage{caption}
@@ -71,7 +72,8 @@
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{corollary}[theorem]{Corollary}
 \newtheorem{assumption}[theorem]{Assumption}
-\newtheorem{example}[theorem]{Example}
+\theoremstyle{definition}
+\newtheorem{example}{Example}[section]
 % \newtheorem{claimproof}{Proof of claim}[theorem]
 % \newtheorem{proof}{Proof}[section]
 \numberwithin{equation}{section}
