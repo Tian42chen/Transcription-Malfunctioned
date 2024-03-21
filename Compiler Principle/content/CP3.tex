@@ -134,7 +134,7 @@ Build parsing table where row $X$, col $T$ tells parser which clause to execute 
 \end{table}
 
 \subsubsection{Predictive Parsing: LL(1)}
-If a predictive parsing table constructed this way contains no duplicate entries, the grammar is called LL(1).
+依据 grammar 构造的 parsing table 没有冲突, 此 grammar 才能被称为 LL(1) grammar.
 
 LL(1): Left-to-right parse, Left-most derivation, 1 symbol lookahead.
 
@@ -196,6 +196,7 @@ In LL(k) parsing table, columns include every k-length sequence of terminals.
 \end{example}
 
 \subsubsection{Eliminate left-recursion}
+消除左递归
 Rewrite the grammar so it parses the same language but the rules are different.
 
 \begin{itemize}
@@ -236,29 +237,20 @@ LALR variant: The basis for parsers for most modern programming languages, Imple
 \begin{figure}[!htb]
     \centering
     \includegraphics[width=0.309\textwidth]{pic/CP3/lrexp.png}
-    \caption{Example}
+    \caption{Bottom-up Parsing Example}
 \end{figure}
 
 \subsubsection{LR Parsing Engine}
-The LR parser use a DFA to know when to shift and when to reduce.
+LR parser 使用 DFA 来决定何时 shift/reduce. 具体的:
+\begin{enumerate}
+    \item 通过 LR items 构造 NFA
+    \item NFA 转换为 DFA
+    \item DFA 转换为 LR parser table
+    \item 依据 LR parser table 决定何时 shift/reduce
+\end{enumerate}
 
-Shift-reduce algorithm (details):
-\begin{itemize}
-    \item The parser summarizes the current ``parse state'' using an integer
-    \item Algorithm: Based on next input symbol and the parse state (as opposed to the entire stack), parser table indicates
-    \begin{itemize}
-        \item $Shift(n)$: Advance input one token; push $n$ on stack.
-        \item $Reduce(k)$:
-        \subitem Pop stack as many times as the number of symbols on the right-hand side of rule $k$;
-        \subitem Let $X$ be the left-hand-side symbol of rule $k$;
-        \subitem In the state now on top of stack, look up $X$ to get ``goto $n$''; 
-        \subitem Push n on top of stack.
-        \item $Accept$: Stop parsing, report success
-        \item $Error$: Stop parsing, report failure
-    \end{itemize}
-\end{itemize}
 
-The elements in the transition table are labeled with four kinds of actions:
+一般来说, LR parser table 有以下 elements:
 \begin{itemize}
     \item $s_n$: Shift into state $n$
     \item $g_n$: Goto state $n$
@@ -266,6 +258,51 @@ The elements in the transition table are labeled with four kinds of actions:
     \item $a$: Accept
     \item $\ $: Error 
 \end{itemize}
+
+LR parser table 具体的使用方式:
+\begin{itemize}
+    \item $Shift(n)$: Advance input one token; push $n$ on stack.
+    \item $Reduce(k)$:
+    \begin{enumerate}
+        \item Pop stack as many times as the number of symbols on the right-hand side of rule $k$;
+        \item Let $X$ be the left-hand-side symbol of rule $k$;
+        \item Push $X$ into stack, and look up $X$ to get ``goto $n$''; 
+        \item Push $n$ on top of stack.
+    \end{enumerate}
+    \item $Accept$: Stop parsing, report success
+    \item $Error$: Stop parsing, report failure
+\end{itemize}
+
+如 \textbf{Figure} \ref{fig:explruse} 所示, stack 需要维护 token 与 state 两个量, 这里使用 (state, token) 对表示. 
+
+\begin{algorithm}[H]
+    \caption{LR parser table 使用}
+    \begin{algorithmic}
+        \State $a$ 表示当前入读的 token. 
+        \State $a_{top}, s_{top}$ 分别为 栈顶的 token 与 state.
+        \State $T_{(i,a)}$ 表示 parser table 中, state $i$ 行, token $a$ 列 所对应的 element. 
+        \Repeat
+            \If{$T_{(s_{top}, a)}$ is $s_n$}
+                \State PUSH($n, a$)
+                \State $a$=GETCHAR()
+            \ElsIf{$T_{(s_{top}, a)}$ is $r_k$}
+                \State Assume  rule $k$ is $A\to \beta$
+                \State POP() $|\beta|$ times
+                \State $T_{(s_{top}, A)}$ is $g_n$
+                \State PUSH($n, A$)
+            \Else
+                \State Error
+            \EndIf
+        \Until{$T_{(s_{top}, a)}$ is accept}
+        \State Accept
+    \end{algorithmic}
+\end{algorithm}
+
+\quad
+
+\quad
+
+\quad
 
 \begin{example}\quad
     
@@ -281,33 +318,281 @@ The elements in the transition table are labeled with four kinds of actions:
         \item $L\to L, E$
     \end{enumerate}
 
-    \begin{figure}[!htb]
+    \begin{figure}[H]
         \centering
         \includegraphics[width=0.42\textwidth]{pic/CP3/lrtable.png}
         \caption{LR parsing table}
     \end{figure}
     
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.42\textwidth]{pic/CP3/Shift-reduce parse of a sentence}
+    \caption{Shift-reduce parse of a sentence}
+    \label{fig:explruse}
+\end{figure}
+
+
 \end{example}
 
 \subsubsection{LR(0) Parsing}
 Making shift/reduce decisions without any lookahead.
 
-\begin{figure}[!htb]
-    \centering
-    \includegraphics[width=0.42\textwidth]{pic/CP3/LR(0).png}
-    \caption{Items and States}
-\end{figure}
+% \begin{figure}[!htb]
+%     \centering
+%     \includegraphics[width=0.42\textwidth]{pic/CP3/LR(0).png}
+%     \caption{Items and States}
+% \end{figure}
 
 %TODO 完全听不懂, 回去看辅学()
 
+\begin{definition}[LR(0) item]
+    A grammar rule, combined with the dot that indicates a position in its right-hand side, is called an item (specifically, an LR(0) item).
+\end{definition}
+
+A state is just a set of items.
+
+\begin{example}\label{exp:lr0}
+    For grammar
+    \begin{enumerate}
+        \item $S'\to S$
+        \item $S\to (S)S$
+        \item $S\to \epsilon$
+    \end{enumerate}
+    The LR(0) items include:
+    \begin{itemize}
+        \item $S'\to .S$, $S'\to S.$
+        \item $S\to .(S)S$, $S\to (.S)S$, $S\to (S.)S$, $S\to (S).S$, $S\to (S)S.$
+        \item $S\to .\epsilon$, $S\to \epsilon.$
+    \end{itemize}
+\end{example}
+
+LR(0) Item  之间存在一些转换关系:
+\begin{itemize}
+    \item $X\to .\alpha\beta$, 接受 $\alpha$ 变为 $X\to \alpha . \beta$
+    \item 若有 $X\to \gamma T\omega, Y\to \alpha\beta$, 则 $X\to \gamma . Y \omega$ 可以转换为 $Y\to .\alpha \beta$ (因为凑 $X$ 必须先凑 $Y$)
+\end{itemize}
+通过这些转换关系将 LR(0) items 写为一个 NFA, 然后将 NFA 转换为 DFA. 
+
+% \begin{figure}[!htb]
+%     \centering
+%     \includegraphics[width=0.22\textwidth]{pic/CP3/expnfa.png}
+%     \caption{NFA for \textbf{Example} \ref{exp:lr0}}
+% \end{figure}
+
+\begin{figure}[!htb]
+    \centering
+    \begin{subfigure}{0.22\textwidth}
+        \centering
+        \includegraphics[height=2\textwidth]{pic/CP3/expnfa.png}
+        \caption{NFA}
+    \end{subfigure}
+    \begin{subfigure}{0.22\textwidth}
+        \centering
+        \includegraphics[height=2\textwidth]{pic/CP3/expdfa.png}
+        \caption{DFA}
+    \end{subfigure}
+    \caption{LR(0) NFA and DFA for \textbf{Example} \ref{exp:lr0}}
+\end{figure}
+
+
+然后依据 DFA 与 如下规则:
+\begin{itemize}
+    \item 对每条 $t$ 是 terminal 的边 $S_i \overset{t}{\rightarrow} S_j$, 令 $T_{(i,t)}$ 为 $s_j$. 其中, $S_i$ 表示状态 $i$,
+    \item 对每条 $X$ 是 non-terminal 的边 $S_i \overset{X}{\rightarrow} S_j$, 令 $T_{(i,X)}$ 为 $g_j$.
+    \item 对每个包含 $X\to \gamma.$ (结尾带点的规则 $k$) 的状态 $i$, 对每个 terminal $t$, 令 $T_{(i,t)}$ 为 $r_k$.
+    \item 对每个包含 $S'\to S.\$ $ 的状态 $i$, 令 $T_{(i,\$)}$ 为 accept.
+\end{itemize}
+
+这样就可以构造出 LR(0) Parsing Table, 如 \textbf{Table} \ref{tab:explr0} 所示. 
+
+注意到 $T_{(1,()}, T_{(3,()}, T_{(5,()}$ 出现了冲突, 这三个都属于 shift-reduce conflict. 只有构造出的 LR(0) Parsing Table 没有冲突时, grammar 才能被称为 LR(0) grammar.
+
+\begin{table}[!htb]
+    \centering
+    \caption{LR(0) Parsing Table for \textbf{Example} \ref{exp:lr0}}
+    \label{tab:explr0}
+    \begin{tabular}[c]{cccc|c}\toprule
+         & ( & ) & \$ & $S$\\ \midrule
+        1 & $s_3, r_3$ & $r_3$ & $r_3$ & $g_2$\\ \cmidrule{1-1}
+        2 & $r_1$ & $r_1$ & $r_1$, accept & \\ \cmidrule{1-1}
+        3 & $s_3, r_3$ & $r_3$ & $r_3$ & $g_4$\\ \cmidrule{1-1}
+        4 & & $s_5$ & & \\ \cmidrule{1-1}
+        5 & $s_3, r_3$ & $r_3$ & $r_3$ & $g_6$\\ \cmidrule{1-1}
+        6 & $r_2$ & $r_2$ & $r_2$ & \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+
 \subsubsection{SLR Parsing}
+SLR 中的 S 表示 Simple. SLR Parsing 在 LR(0) 的基础上通过简单的判断尝试解决冲突.
+
+SLR 在构造形如 LR(0) 的 DFA 之上, 还需要计算每个 non-terminal 的 Follow Set. SLR 只对那些下一个符号在对应 non-terminal 的 Follow Set 的情况进行 reduc. 具体更改如下:
+\begin{itemize}
+    \item 对每个包含 $X\to \gamma.$ (结尾带点的规则 $k$) 的状态 $i$, 对每个 terminal $t\in Follow(X)$, 令 $T_{(i,t)}$ 为 $r_k$.
+\end{itemize}
+
+构造出的 SLR Parsing Table, 如 \textbf{Table} \ref{tab:expslr1} 所示.
+
+\begin{table}[!htb]
+    \centering
+    \caption{SLR Parsing Table for \textbf{Example} \ref{exp:lr0}}
+    \label{tab:expslr1}
+    \begin{tabular}[c]{cccc|c}\toprule
+         & ( & ) & \$ & $S$\\ \midrule
+        1 & $s_3$ & $r_3$ & $r_3$ & $g_2$\\ \cmidrule{1-1}
+        2 & & & $r_1$, accept & \\ \cmidrule{1-1}
+        3 & $s_3$ & $r_3$ & $r_3$ & $g_4$\\ \cmidrule{1-1}
+        4 & & $s_5$ & & \\ \cmidrule{1-1}
+        5 & $s_3$ & $r_3$ & $r_3$ & $g_6$\\ \cmidrule{1-1}
+        6 & & $r_2$ & $r_2$ & \\
+        \bottomrule
+    \end{tabular}
+\end{table}
 
 \subsubsection{LR(1) Parsing}
+\begin{definition}
+    An LR(1) item consists of a grammar production, a right-hand-side position (represented by the dot), and a lookahead symbol. The idea is that an item ($A \to \alpha.\beta, x$) indicates that the sequence $\alpha$ is on top of the stack, and at the head of the input is a string derivable from $\beta x$.
+\end{definition}
+
+LR(1) Item 存在如下两种转化:
+\begin{itemize}
+    \item $X\to .\alpha\beta, t$ 接受 $\alpha$ 变为 $X\to \alpha . \beta, t$ 
+    \item 若有 $X\to \gamma T\omega, Y\to \alpha\beta$, 则对于每个 $t_i\in First(\omega t)$ ($\omega$ 可以是 $\epsilon$),  $X\to \gamma . Y \omega, t$ 可以转换为 $Y\to .\alpha \beta, t_i$
+\end{itemize}
+
+\begin{example}\label{exp:lr1}
+    对于如下 grammar:
+    \begin{itemize}
+        \item $S'\to S$
+        \item $S \to aAd$
+        \item $S \to bBd$
+        \item $S \to aBe$
+        \item $S \to bAe$
+        \item $A \to c$
+        \item $B \to c$
+    \end{itemize}
+    Start Symbol 有 LR(1) Item $S'\to .S, \$ $
+    
+    \begin{figure}[!htb]
+        \centering
+        \includegraphics[width=0.42\textwidth]{pic/CP3/explr1dfa.png}
+        \caption{LR(1) DFA for \textbf{Example} \ref{exp:lr1}}
+        \label{fig:explr1}
+    \end{figure}
+    
+\end{example}
+
+构造 LR(1) Parsing Table 的方式, 也是只基于 LR(0) 更改了 reduce:
+\begin{itemize}
+    \item 对每个包含 $X\to \gamma.$ (结尾带点的规则 $k$) 的状态 $i$, 对每个 lookahead symbol $t$, 令 $T_{(i,t)}$ 为 $r_k$.
+\end{itemize}
 
 \subsubsection{LALR(1) Parsing}
+LALR(1)(Look-Ahead LR(1)) 是 LR(1) 的简化版本. 
+
+对于每一个状态, 将其包含的所有 LR(1) items 的第一个分量的集合称为这个状态的核心 (core). 
+
+例如, 对于 \textbf{Figure} \ref{fig:explr1}, 其状态 5 和 6 的核心均为 $\{A\to c., B\to c.\}$. 将这样的具有相同核心的状态进行合并, 通常能够减少许多状态. 
+
+但是, 这有时（虽然很少）也可能引入 reduce-reduce conflict. 不过问题不大. 
+
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=0.42\textwidth]{pic/CP3/explalr1dfa.png}
+    \caption{LALR(1) DFA for \textbf{Example} \ref{exp:lr1}}
+\end{figure}
 
 \subsubsection{Hierarchy of Grammar Classes}
+The relationship between several classes of grammars. 
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=0.309\textwidth]{pic/CP3/A hierarchy of grammar classes.}
+    \caption{A hierarchy of grammar classes.}
+\end{figure}
 
-\subsubsection{LR Parsing of Ambiguous Grammars}
+\subsection{Using Parser Generators}
+\subsubsection{Yacc}
+Yacc (``Yet another compiler-compiler''): A classic and widely used parser
+generator
 
+A Yacc specification is divided into three sections, separated by \%\% marks:
 
+\begin{minted}{c}
+    parser declarations
+    %%
+    grammar rules
+    %%
+    programs
+\end{minted}
+
+\begin{itemize}
+    \item Parser declaration: a list of $N, T$ and so on
+    \item Programs: ordinary C code usable from the semantic action
+    \item Grammar rules: production of the form
+    \subitem \mintinline{c}{exp: exp PLUS exp {semantic action}}  
+    \subitem where \mintinline{c}{exp} is a nonterminal producing a right-hand side of \mintinline{c}{exp + exp}, and \mintinline{c}{PLUS} is a terminal symbol (token). The semantic action is written in ordinary C and will be executed whenever the parser reduces using this rule.
+\end{itemize}
+
+\begin{example}
+    For grammar
+    \begin{enumerate}
+        \item $P \to L$
+        \item $S \to id := id$
+        \item $S \to$ while $id$ do $S$
+        \item $S \to$ begin $L$ end
+        \item $S \to$ if $id$ then $S$
+        \item $S \to$ if $id$ then $S$ else $S$
+        \item $L \to S$
+        \item $L \to L ; S$
+    \end{enumerate}
+
+    \begin{minted}{c}
+%{
+int yylex(void);
+void yyerror(char *s) { EM_error(EM_tokPos, "%s", s); }
+%}
+%token ID WHILE BEGIN END DO IF THEN ELSE SEMI ASSIGN
+%start prog
+%%
+prog: stmlist
+stm : ID ASSIGN ID
+    | WHILE ID DO stm
+    | BEGIN stmlist END
+    | IF ID THEN stm
+    | IF ID THEN stm ELSE stm
+stmlist : stm
+        | stmlist SEMI stm
+    \end{minted}
+    
+\end{example}
+
+\subsubsection{Conflicts}
+\begin{itemize}
+    \item shift-reduce conflict: Resolved using shift by default in Yacc
+    \item reduce-reduce conflict: Resolved using the rule appears early in the grammar
+\end{itemize}
+
+\subsubsection{Precedence Directives}
+Ambiguous grammars are still be useful if finding ways to resolve the conflict.
+
+Yacc uses precedence directives to resolve this class of shift-reduce conflicts
+
+\subsection{Error Recovery}
+\subsubsection{Recovery Using the Error Symbol}
+Local error recovery mechanisms.
+
+If a syntax error is encountered in the middle of an expression, the parser should skip to the next semicolon or right parenthesis(called synchronizing tokens) and resume parsing.
+
+error is considered a terminal symbol. When the LR parser reaches an error state, it takes the following actions:
+\begin{enumerate}
+    \item Pop the stack (if necessary) until a state is reached in which the action for the error token is shift.
+    \item Shift the error token.
+    \item Discard input symbols (if necessary) until a lookahead is reached that has a nonerror action in the current state.
+    \item Resume normal parsing.
+\end{enumerate}
+
+\subsubsection{Global Error Repair}
+Global error repair: finds the smallest set of insertions and deletions that would turn the source string into a syntactically correct string, even if the insertions and deletions are not at a point where an LL or LR parser would first report an error.
+
+Burke-Fisher error repair: single-token insertion, deletion, or replacement at every point that occurs no earlier than $K$ tokens before the point where the parser reported the error.

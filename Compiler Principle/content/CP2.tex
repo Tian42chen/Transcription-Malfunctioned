@@ -44,20 +44,23 @@ Classification of lexical tokens: A finite set of token types.
 \end{figure}
 The preprocessor deletes the non-tokens.
 
-\subsubsection{An example}
-\begin{minted}{c}
-float match0(char *s){ /* find a zero */
-    if (!strncmp(s, "0.0", 3))
-        return 0.;
-}
-\end{minted}
+\begin{example}\quad
 
-\begin{minted}{text}
-FLOAT ID(match0) LPAREN CHAR STAR ID(s) RPAREN LBRACE 
-IF LPAREN BANG ID(strncmp) LPAREN ID(s) COMMA STRING(0.0) COMMA NUM(3) RPAREN RPAREN 
-RETURN REAL(0.0) SEMI 
-RBRACE EOF
-\end{minted}
+    \begin{minted}{c}
+        float match0(char *s){ /* find a zero */
+            if (!strncmp(s, "0.0", 3))
+                return 0.;
+        }
+    \end{minted}
+    
+    \begin{minted}{text}
+        FLOAT ID(match0) LPAREN CHAR STAR ID(s) RPAREN LBRACE 
+        IF LPAREN BANG ID(strncmp) LPAREN ID(s) COMMA STRING(0.0) COMMA NUM(3) RPAREN RPAREN 
+        RETURN REAL(0.0) SEMI 
+        RBRACE EOF
+    \end{minted}
+\end{example}
+
 
 
 
@@ -174,7 +177,7 @@ The conversion algorithm: (计算理论 III.2 上说这个转换是 naive 的)
 \subsubsection{From an NFA to a DFA}
 To avoid guesses by trying every possibility at once.
 
-这个计算理论有, II.13.
+计算理论 II.13.
 
 \subsubsection{The equivalent states}
 略
