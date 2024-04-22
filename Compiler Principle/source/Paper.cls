@@ -106,8 +106,10 @@
 	\renewcommand\figurename{\textbf{Figure}}
 	% 新增环境
 	\newenvironment{code}{\captionsetup{type=listing}}{}
-	%重定义 listing 名称
-	\renewcommand{\listingscaption}{\textbf{Code}}
+		%重定义 listing 名称
+		\renewcommand{\listingscaption}{\textbf{Code}}
+		%以 section 为单位编号
+		\numberwithin{listing}{section}
 	%目录居中
 	\renewcommand*\contentsname{\hfill Contents \hfill}
 	% 图片按章节编号

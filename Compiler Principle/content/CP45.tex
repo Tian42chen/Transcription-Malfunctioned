@@ -1,0 +1,35 @@
+\newpage
+\section{Overview of Semantic Analysis}
+
+\subsection{Symbol Table}
+\begin{definition}
+    A symbol table is a data structure that tracks the current bindings of identifiers
+\end{definition}
+
+
+\begin{code}
+    \caption{A Fancier Symbol Table}
+    \begin{minted}{c++}
+        enter_scope()   // start a new nested scope
+        find_symbol(x)  // finds current x (or null)
+        add_symbol(x)   // add a symbol x to the table
+        check_scope(x)  // true if x defined in current scope
+        exit_scope()    // exit current scope
+    \end{minted}
+\end{code}
+
+局部变量都有一个作用域(scope), 变量仅在自己的作用域中可见. 
+
+环境是由绑定(binding)组成的集合, 指标识符和含义之间的一种映射关系, 用箭头表示.
+
+\subsubsection{Imperative(命令式)}
+\begin{itemize}
+    \item 实现: bucket list(hash table)
+\end{itemize}
+插入 identifiers 时插入到头部, 在退出 scope 时方便 pop. 
+
+\subsubsection{Functional(函数式)}
+\begin{itemize}
+    \item 实现: 可持久化二叉搜索树(persistent BST)
+\end{itemize}
+使用可持久化来控制 scope

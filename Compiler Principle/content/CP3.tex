@@ -166,7 +166,7 @@ In LL(k) parsing table, columns include every k-length sequence of terminals.
         \centering
         \begin{tabular}[c]{ccccccc}\toprule
              & int & $*$ & $+$ & $($ & $)$ & \$ \\ \midrule
-            $E$ & $TX$ & & $TX$ & & &  \\ \cmidrule{1-1}
+            $E$ & $TX$ & & & $TX$ & &  \\ \cmidrule{1-1}
             $X$ & & & $+E$ & & $\epsilon$ & $\epsilon$  \\ \cmidrule{1-1}
             $T$ & int $Y$ & & & $(E)$ & &  \\ \cmidrule{1-1}
             $Y$ & & $*T$ & $\epsilon$ & & $\epsilon$ & $\epsilon$  \\ 
@@ -399,8 +399,8 @@ LR(0) Item  之间存在一些转换关系:
 \begin{itemize}
     \item 对每条 $t$ 是 terminal 的边 $S_i \overset{t}{\rightarrow} S_j$, 令 $T_{(i,t)}$ 为 $s_j$. 其中, $S_i$ 表示状态 $i$,
     \item 对每条 $X$ 是 non-terminal 的边 $S_i \overset{X}{\rightarrow} S_j$, 令 $T_{(i,X)}$ 为 $g_j$.
-    \item 对每个包含 $X\to \gamma.$ (结尾带点的规则 $k$) 的状态 $i$, 对每个 terminal $t$, 令 $T_{(i,t)}$ 为 $r_k$.
     \item 对每个包含 $S'\to S.\$ $ 的状态 $i$, 令 $T_{(i,\$)}$ 为 accept.
+    \item 对每个包含 $X\to \gamma.$ (结尾带点的规则 $k$) 的状态 $i$, 对每个 terminal $t$, 令 $T_{(i,t)}$ 为 $r_k$.
 \end{itemize}
 
 这样就可以构造出 LR(0) Parsing Table, 如 \textbf{Table} \ref{tab:explr0} 所示. 
