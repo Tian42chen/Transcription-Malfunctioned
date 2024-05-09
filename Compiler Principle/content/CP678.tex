@@ -1,14 +1,285 @@
 \newpage
 \section{Activation Record}
-\subsection{Stack Frame(帧栈)}
+\subsection{Stack Frame(栈帧)}
+\begin{definition}
+    栈中存放函数的局部变量/参数/返回地址/临时变量的这片区域为该函数的活动记录 (activation record) 或栈帧(stack frame).
+\end{definition}
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=0.319\textwidth]{pic/CP678/a typical stack frame layout.png}
+    \caption{a typical stack frame layout}
+\end{figure}
+\begin{itemize}
+    \item incoming arguments: 是前一个帧的一部分, 但其与 frame pointer 的偏移量已知.
+    \item return address: 由 CALL 指令创建, 告知完成此函数后需要返回何处.
+    \item local variables: 一些在帧中, 一些在寄存器上. 在寄存器与帧中临时空间之间移动.
+\end{itemize}
+
+\subsection{Frame Pointer}
+指向当前帧的指针,一般是上一个 sp;有些栈帧 会 分 配 一 个 寄 存 器 存fp; 虚寄存器: fp=sp+size(frame). 
+
+帧指针的变化:一个函数 $g$ 调用 $f$ 时,
+\begin{enumerate}
+    \item sp 指向g 传给 f 的第一个参数
+    \item f 分配栈帧(sp-栈帧大 小)
+    \item 进入 f 时旧的 sp 变成当前帧指针;fp 旧值被保存到栈帧内,新的帧指针变成旧 sp
+    \item f 退出时把 fp 拷贝给 sp,再取回原先保存的 fp 即可.
+\end{enumerate}
+
+\subsection{Parameter Passing}
+现代计算机传参约定:前 $k$($k=4$ or $k=6$, typically) 个参数放在寄存器里传递,剩余在储存器传递.
+
+寄 存 器 传 参 的 方 法 (4 种 ):
+\begin{enumerate}
+    \item 不 给 叶 过 程 (leaf procedure)分配栈帧 . 绝大多数过程都是叶过程, 不分配栈帧能节省很多开销.
+    \subitem  叶 过 程: 不调用其他过程的过程
+    \item 过 程 间 寄 存 器 分 配 (interprocedural register allocation): 先分析代码中全部的函数, 然后再根据分析分配寄存器
+    \item 若变量 $x$ 不再被使用, 可以直接写其寄存器, 不需要再保存 $x$ 到栈帧中. 
+    \item  寄 存 器 窗 口 技 术 (register windows): 每个函数调用分配一组新的寄存器, 无需内存传输.
+\end{enumerate}
+
+\subsection{Frame-Resident Variables}
+一般来说局部变量和中间结果会放到寄存器中,以下情况需要将变量储存到栈帧内(memory): 
+\begin{enumerate}
+    \item 变 量 传 地 址 / 引 用 (passed by reference) 
+    \item 被嵌套在 当 前 过 程 的 函 数 调 用(nested accessed) 
+    \item 太大 了 放 不 下 (too big to fit)
+    \item 变量是数组
+    \item 有特殊用途的变量(传参等) 
+    \item 存在过多的临时变量和局部变量(溢出 spill)
+\end{enumerate}
+
+在以下情况, 称变量为逃逸(escape):
+\begin{enumerate}
+    \item 传 地 址 
+    \item 被取地址
+    \item 被内层嵌套函数访问
+\end{enumerate}
 
 
+\subsection{Static Link}
+静态链本质是指向上一层嵌套层级的栈帧的指针.内层嵌套函数调用外层定义的变量需要用到静态链,否则无法寻址.
+
+其他访问外层变量的方法:
+\begin{enumerate}
+    \item 嵌套层次显示表(display):一个全局数组,位置 i 存放最近一次的,静态嵌套深度为 i的过程的栈帧. 是管理静态链的全局数组(不是栈指针) 
+    \item $\lambda$ 提升(lambda shifting):内层函数访问的外层声明变量,会作为函数参数传给内层嵌套函数.
+\end{enumerate}
+
+注意:静态链层级是函数的嵌套深度(函数之间),不是递归调用的深度(函数自己),两者不同概念
 
 \newpage
 \section{Translation to Intermediate Code}
+intermediate represent(中 间 表 示): 抽象的机器语言,链接前端和后端,解决了高级语言和目标机器汇编语言之间的转化.
+
+\begin{itemize}
+    \item 前端(front end):词法分析,语法分析,语义分析,翻译成中间代码
+    \item 后端(back end):IR 优化, 翻译成机器语言.
+\end{itemize}
+
+\subsection{Intermediate Representation Trees}
+\subsubsection{Tree Operator}
+
+Expressions(T\_exps): 
+\begin{itemize}
+    \item CONST($i$): 整 型 常 数 
+    \item NAME($n$): 符 号 常 数 
+    \item TEMP($t$): 临 时 变 量 
+    \item BINOP($o, e_1, e_2$):对操作数 $e_1,e_2$ 的 二 元 操 作 
+    \item MEM($e$):作为 MOVE 操作的左子式时表示对储存器 $e$ 地址的存入;其他位置表示读取该地址的内容 
+    \item CALL($f,l$):过程调用 
+    \item ESEQ($s,e$): 先计算语句 s 形成副作用,然后计算 $e$ 违该表达式的值 
+\end{itemize}
+
+Statements(T\_stm):
+\begin{itemize}
+    \item MOVE(TEMP $t, e$): 计算 $e$ 的值然后存到临时变量 $t$ 中
+    \item MOVE(MEM($e_1$),$e_2$):计算 $e_2$ 的值然后存入到 $e_1$ 作为地址的内存中 
+    \item JUMP($e$,$labs$):跳转到 $e$ 地址 或 者 $labs$ 为 label 的 地 址
+    \item CJUMP($o,e_1,e_2,t,f$): 依 次 计 算 $e_1$ 和 $e_2$, 生成值 $a,b$;然后用比较运算符操作 $aob$,如果结果为 true 跳到 $t$,反之跳转到 $f$; 
+    \item SEQ($s_1,s_2$):语句 $s_1$ 后 面 跟 $s_2$
+    \item LABEL($n$):定会一名字后的常数值为当前机器代码的地址.
+\end{itemize}
 
 
+\subsection{Translation into Trees}
+\subsubsection{Kinds of Expressions}
+\begin{itemize}
+    \item Ex 代表 expression
+    \item Nx 代表无结果的 statement
+    \item Cx 代表条件分支, 可能跳转到 true label 或 false label.
+\end{itemize}
+
+对于 CJUMP 和 JUMP 语句,还 不知道 label 的具体值,需要 使用两张表: 
+\begin{itemize}
+    \item 真值标号回填表 (true patch list)
+    \item 假值标号回填表 (false patch list)
+\end{itemize}
+
+\subsubsection{Variables}
+\begin{itemize}
+    \item Simple variables: 
+    \subitem MEM(BINOP(PLUS, TEMP $fp$, CONST $k$))
+    \item Following static links:
+    \subitem MEM(+(CONST $k_n$, MEM(+(CONST $k_{n-1}$, $\dots$ MEM(+(CONST $k_1$, TEMP $fp$))$\dots$))))
+    \item Array variables: 
+    \subitem MEM(+(MEM($e$), BINOP(MUL, $I$, CONST $W$)))
+\end{itemize}
+
+\subsubsection{Conditionals}
+e.g. if $x<5$ then $a>b$ else 0, \\
+$x<5$ translates into Cx($s_1$), $a>b$ translates into Cx($s_2$)
+
+SEQ($s_1$($z$,$f$), SEQ(LABEL $z$, $s_2$($t$,$f$)))
+
+\subsubsection{Loops}
+\begin{itemize}
+    \item while
+    \begin{minted}{text}
+    test:
+        if not(condition) goto done
+        body
+        goto test
+    done:
+    \end{minted}
+    
+    \item for
+    \begin{minted}{text}
+    for i:=lo to hi         let var i:=lo
+        do body                 var limit:=hi
+                            in while i<=limit
+                                do(body; i:=i+1)
+                            end
+    \end{minted}
+    
+\end{itemize}
+\subsubsection{Function Call}
+CALL(NAME $l_f$, [$sl, e_1, e_2,\dots, e_n$])
+
+$l_f$ is the label for $f$, $sl$ is the static link
+
+\subsection{Declarations}
+变量声明将会在 frame 中额外保留部分空间；函数声明会在 Tree code 中保留一个新的 fragment.
+
+变量的初值会被转换成一个 Tree 表达式，transDec 返
+回一个 Tr\_Exp，这个 Tr\_Exp 应当包含完成赋初值的
+赋值表达式；如果对函数和类型声明施加 transDec，
+结果将会得到 Ex(CONST(0))这样的空操作
+
+函数被翻译为入口处理代码(prologue),函数体(body)和出口处理函数(epilogue)组成的汇编语言代码.
+
+入口包含:
+\begin{enumerate}
+    \item 声明一个函数开始的伪指令(pseudo-instructions)
+    \item 函数名 label 的定义
+    \item 调整栈指针的一条指令,用于分配新的栈帧
+    \item 将逃逸(escaping)参数保存至栈帧的指令,以及将非逃逸参数传送的新临时寄存器指令
+    \item 保 存  此 函 数 用 到 的 caller-save 寄存器(包括返回地址寄存器)
+\end{enumerate}
+
+本体:
+\begin{enumerate}[start=6]
+    \item 函数体
+\end{enumerate}
+
+出口包含:
+\begin{enumerate}[start=7]
+    \item 将返回值传送至专用于返回结果的寄存器 
+    \item 用 于 恢 复 callee-save 的寄存器取数指令
+    \item 恢 复 栈 指 针 , 释 放 栈 帧
+    \item return 指令
+    \item 声明函数结束的伪指令
+\end{enumerate}
 
 
 \newpage
 \section{Basic Blocks and Traces}
+
+\subsection{Canonical Trees(规范树)}
+\subsubsection{Definition}
+\begin{definition}
+    A canonical trees have these properties:
+    \begin{enumerate}
+        \item No SEQ or ESEQ
+        \item The parent of each CALL is either EXP($\dots$) or MOVE(TEMP $t$, $\dots$).
+    \end{enumerate}
+\end{definition}
+
+Why?
+\begin{enumerate}
+    \item CJUMP 能够跳转到两个标号的任意一个,但实际的是条件为假时跳转到下一条
+    \item ESEQ 会使得子树的不同计算顺序产生不同结果
+    \item 表达式使用 CALL 会有计算顺序不同的问题
+    \item CALL 的嵌套调用(作为另一个 CALL 的参数)会出问题,覆盖存放返回值的寄存器的值
+\end{enumerate}
+
+
+重写流程:
+\begin{enumerate}
+    \item 一棵树重写成规范树 
+    \item 将树分组合成不含转移和标号的基本块(basicblock)集合 
+    \item 对基本块 进行 排 序 形 成 一 组 轨 迹(trace);每一个 CJUMP 后就是其 false 标号
+\end{enumerate}
+
+\subsubsection{Transformations on ESEQ}
+\begin{enumerate}
+    \item ESEQ($s_1$, ESEQ($s_2$,$e$)) $\to$ ESEQ(SEQ( $s_1,s_2$), $e$) 
+    \item BINOP($op$,ESEQ($s$,$e_1$), $e_2$) $\to$ ESEQ(BINOP($op$,$e_1$, $e_2$)) 
+    \subitem MEM(ESEQ($s$,$e_1$)) $\to$ ESEQ( $s$, MEM($e_1$)) 
+    \subitem JUMP(ESEQ($s$, $e_1$)) $\to$ SEQ($s$,JUMP($e_1$)) 
+    \subitem CJUMP(op,ESEQ($s$,$e_1$),$e_2$,$l_1,l_2$)\\
+    $\to$ SEQ($s$, CJUMP($op$, $e_1$, $e_2$, $l_1,l_2$)) 
+    \item BINOP(op,$e_1$, ESEQ(s,$e_2$)) \\
+    $\to$ ESEQ(MOVE (TEMP t, $e_1$), ESEQ(s, BINOP(op, TEMP t, $e_2$))) 
+    \subitem CJUMP(op, $e_1$, ESEQ(s, $e_2$), $l_1,l_2$) $\to$ \\
+     SEQ(MOVE(TEMP $t$, $e_1$), SEQ($s$, CJUMP($op$, TEMP $t$, $e_2$, $l_1,l_2$))).
+     \item 如果 ESEQ 中 $s$ 和 $e_1$ 是 可 交 换 的 (commute), 那 么 可 以 直 接 把 $s$ 和 $e_1$ 交换,ESEQ 提出来
+\end{enumerate}
+
+\subsubsection{Moving CALLs to top level}
+以 BINOP(op,CALL(),CALL() $\dots$) 为例, 第二个 CALL 会在 BINOP 执行前覆盖第一个CALL 返回在 RV 寄存器里的值. 解决办法是使用 ESEQ 将返回值保存到一个新的临时变 量里: CALL(fun,args) $\to$ ESEQ(MOVE(TEMP $t$, CALL(fun, args)), TEMP $t$)
+
+
+
+\subsection{Taming Conditional Branches}
+\subsubsection{Basic Blocks(基本块)}
+取 一 列 规 范 树 , 块 的 开 始 是 label, 以跳转指令为结尾. 即:
+\begin{enumerate}
+    \item 第一个语句是 LABEL
+    \item 最 后 一 个 语 句 是 JUMP 或 CJUMP
+    \item 没 有 其 他 的 LABEL,JUMP 或 CJUMP
+\end{enumerate}
+
+
+划分基本块方法: 从头到尾扫描语句序列,每次发现一个 LABEL 就开始一个新的基本块并结束上一个基本块; 每发现一个 JUMP 或 CJUMP 就结束一个基本块(并开始下一个基本块). 如果过程还遗留任何基本块不是 JUMP 或 CJUMP 结尾的, 则在基本块块末尾增加一条转移到下一个基本快标号处的 JUMP; 如果有任何基本块不是以 LABEL 开始的, 则生成一个新的标号插入到基 本 块 开 始; 在全部 末 尾 添 加 done LABEL, 将 JUMP(NAME done) 放到最后一个基本快末尾.
+
+
+\subsubsection{Trace(轨迹)}
+程 序 执 行期间可能连贯执行的语句序列. 要寻找一组能够覆盖整个程序的轨迹集合, 且每一个基本块仅出现在一条轨迹中.
+\begin{algorithm}[H]
+    \caption{Generation of traces}
+    \begin{algorithmic}
+        \State Put all the blocks of the program into a list $Q$
+        \While{$Q$ is not empty}
+            \State Start a new (empty) trace, call it $T$.
+            \State Remove the head element $b$ from $Q$.
+            \While{$b$ is not marked}
+                \State Mark $b$; append $b$ to the end of the current trace $T$.
+                \State Examine the successors of $b$ (the blocks to which $b$ branches);
+                \If{there is any unmarked successor $c$}
+                    \State $b \leftarrow c$
+                \EndIf
+            \EndWhile
+            \State (All the successors of $b$ are marked.)
+            \State End the current trace $T$.
+        \EndWhile
+    \end{algorithmic}
+\end{algorithm}
+
+\subsubsection{Finishing Up}
+\begin{enumerate}
+    \item 所有后面跟 false 标记的 CJUMP 不变
+    \item 对任何后面跟 true 标号的 CJUMP,交换其 true 标号和 false 标号以及判断条件取反
+    \item 对其后跟随的既不是 true 也不是 false 标号的 CJUMP,生成新的标号 $f'$ 并重写 CJUMP,使得其 false 标号紧跟其后.
+\end{enumerate}
+
