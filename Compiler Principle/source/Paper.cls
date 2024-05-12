@@ -115,6 +115,10 @@
 	% 图片按章节编号
 	\numberwithin{figure}{section}
 	\numberwithin{table}{section}
+	%proof 标题
+	\renewcommand{\proofname}{Proof}
+	%proof QED symbol
+	\renewcommand\qedsymbol{Q.E.D.}
 %
 
 %页面参数
