@@ -34,6 +34,7 @@
 \RequirePackage{algpseudocode}
 \RequirePackage{wrapfig}
 \RequirePackage{titletoc}
+\RequirePackage{bm}
 \RequirePackage{tikz}
 % \RequirePackage{pgfplots}
 \RequirePackage[hidelinks]{hyperref}
