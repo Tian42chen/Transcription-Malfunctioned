@@ -164,11 +164,11 @@ $succ[n]$ 是节点 $n$ 的后继节点; $pred[n]$ 是节点 $n$ 的前驱节点
     \caption{Representations of interference}
 \end{figure}
 
-绘制冲突图的办法:为新定义 (def) 添 加 冲 突 边 的 办 法是
+绘制冲突图的办法:为新定义 (def) 添 加 冲 突 边, 即
 \begin{enumerate}
     \item 对 变 量 $a$ 非 MOVE 指令的定义 , 以及在该指令节 点 $n$ 处,任意 $b_i\in out[n]$,添 加 冲 突 边 $(a,b_i)$
     \item 对 于 节 点标号为 $n$ 的 MOVE 指令 $a\leftarrow c$,对 $b_i\in out[n]$ 且 $b_i\ne c$, 添加边 $(a,b_i)$. 
+    \subitem 注:可以给 $(a,c)$ 画上虚线,便于寄存器 分配的 coalesce.
 \end{enumerate}
-注:可以给 $(a,c)$ 画上虚线,便于寄存器 分配的 coalesce.
 
 
