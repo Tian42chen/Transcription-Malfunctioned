@@ -6,7 +6,7 @@
 \end{definition}
 
 
-但不存在一个通用程序能算出每一个变量是否活跃, 所以使用一个保守的近似: 要求编译器保证所有活跃记录是可达的(reachable), 并最小化可达的不活跃记录. 
+不存在一个通用程序能算出每一个变量是否活跃, 所以使用一个保守的近似: 要求编译器保证所有活跃记录是可达的(reachable), 并最小化可达的不活跃记录. 
 
 \subsection{Mark-and-sweep Collection}
 程序变量与堆分配记录可以构成一张有向图. 变量就是图的一系列根.
@@ -17,7 +17,7 @@
 
 算法原理:
 \begin{enumerate}
-    \item 标记: 使用 Dfs 标记所有可达节点
+    \item 标记: 使用 DFS 标记所有可达节点
     \item 清扫: 未被标记的节点都是垃圾, 从头到尾扫描堆内存, 将未标记的节点加到空闲表(freelist)中, 同时清除已标记节点的标记. 
 \end{enumerate}
 
@@ -62,11 +62,11 @@
 \end{align*}
 若 $\frac{R}{H}>0.5$, 回收器应该向 OS 申请更大的内存, 以增大 $H$.
 
-\subsubsection{Constant optimization}
-优化下算法的常数. 
+\subsubsection{Optimization}
+对算法的空间与时间常数进行优化. 
 
 \begin{itemize}
-    \item Using an explicit stack: 将 DFS 的递归改写为循环. 因为递归的 DFS 其运行时的栈可能超过总的堆大小, 所以用显示的栈代替堆.
+    \item Using an explicit stack: 将 DFS 的递归改写为循环. 因为递归的 DFS 其运行时的栈可能超过总的堆大小, 所以用显式的栈代替使用堆.
     \item Pointer reversal: 压栈时使用 $x.f_i$ 指向其父节点, 弹栈时再恢复 $x.f_i$ 原本的值, 这样连显示的栈都不需要. 只需要额外的 $done$ 数组作为 $x$ 子域的下标.
 \end{itemize}
 
@@ -135,10 +135,10 @@ $freelists$ 使用空闲域的大小作为索引, 存储邻接链表, 方便之�
 算法流程:
 \begin{enumerate}
     \item 回收初始化: 初始化指针 next 指向 to-space 的开始. 每当 from-space 发现一个可达记录, 便把它复制到 to-space 的 next 所指位置, 同时使 next 增 加 该 记 录 的 大 小. 
-    \item 前向传播(forwarding): 使一个指向 from-space 的指针 $p$ 转而指向 to-space. 有三种情况:
+    \item 转递(forwarding): 使一个指向 from-space 的指针 $p$ 转而指向 to-space. 有三种情况:
     \begin{enumerate}
-        \item 若 $p$ 指向的 from-space 已经被复制, 则 $p.f_1$ 是一个特殊的前向传播指针(forwarding pointer)指向了副本所在. 因为只有这个指针指向了 to-space, 可以很容易地分辨. 
-        \item 若 $p$ 指向的 from-space 未被复制, 则将其复制到 next 所在位置, 然后将 $p.f_1$ 变为前向传播指针. 因为其已经被复制了, 所以可以覆写 $f_1$.
+        \item 若 $p$ 指向的 from-space 已经被复制, 则 $p.f_1$ 是一个特殊的转递指针(forwarding pointer)指向了副本所在. 因为只有这种指针指向了 to-space, 可以很容易地分辨. 
+        \item 若 $p$ 指向的 from-space 未被复制, 则将其复制到 next 所在位置, 然后将 $p.f_1$ 变为转递指针. 因为其已经被复制了, 所以可以覆写 $f_1$.
         \item 若 $p$ 不是指针或指向了 from-space 之外, 不做任何事. 
     \end{enumerate}
 \end{enumerate}
@@ -147,8 +147,8 @@ $freelists$ 使用空闲域的大小作为索引, 存储邻接链表, 方便之�
 使用 BFS 遍历可达数据. 
 
 \begin{itemize}
-    \item 在 to-space 上, 位于 scan 与 next 之间包含了已经被复制到 to-sapce, 但是其子域还没有前向传播的记录, 他们的子域仍指向着 from-space. 
-    \item 在 scan 之前包含了被复制且被前向传播的记录, 其中所有指针都指向 to-space.
+    \item 在 to-space 上, 位于 scan 与 next 之间包含了已经被复制到 to-sapce, 但是其子域还没有转递的记录, 他们的子域仍指向着 from-space. 
+    \item 在 scan 之前包含了被复制且被转递的记录, 其中所有指针都指向 to-space.
 \end{itemize}
 
 但其空间局部性不好, 比如说 $a+8$ 指向的地址就不是 $a[8]$, 因为 BFS 会把 $a[8]$ 放到诸如 $b[\ ],c[\ ]$后面.  DFS 的局部性很好, 但需要各种复杂的常数优化. 所以结合 BFS 与 DFS, 用 BFS 寻找需要复制的记录, 复制时使用 DFS 复制. 
@@ -180,7 +180,7 @@ $freelists$ 使用空闲域的大小作为索引, 存储邻接链表, 方便之�
     \end{enumerate}
 \end{enumerate}
 
-使用内联展开(inline expanding, 将函数调用替换为函数本体)可以省略 1) 和 6); 与 a. 结合可以消除 3); b. 也可以消除 4); 2), 5) 不能被消除. 但若是多个分配可以被合并优化. 至此, 分配就减少了4条指令. 
+使用内联展开(inline expanding, 将函数调用替换为函数本体)可以省略 1) 和 6); 与 a. 结合可以消除 3); b. 也可以消除 4); 2), 5) 不能被消除. 但若是多个分配可以被合并优化. 至此, 分配就减少到了4条指令. 
 
 
 \subsubsection{Describing Data Layouts}
@@ -196,11 +196,11 @@ $freelists$ 使用空闲域的大小作为索引, 存储邻接链表, 方便之�
         \item 调用 alloc 函数的地方, 因为分配新内存可能会触发垃圾回收. 
         \item 每个函数调用的地方, 因为被调用的函数可能直接或间接地调用 alloc 函数. 
     \end{itemize}
-    \item 指针映射的组织: 指针映射使用返回地址作为键, 因为返回地址是垃圾回收器在下一个活动记录中看到的内容. 每个返回地址对应一个活跃指针集合, 描述了在该返回地址处哪些寄存器或栈帧位置存储着指针. 
+    \item 指针映射的组织: 指针映射使用函数返回地址作为键, 因为返回地址是垃圾回收器在下一个活动记录中看到的内容. 每个返回地址对应一个活跃指针集合, 描述了在该返回地址处哪些寄存器或栈帧位置存储着指针. 
     \item 垃圾回收过程: 垃圾回收器从栈顶开始向下扫描, 逐帧查找活跃指针. 
     \begin{itemize}
         \item 每个返回地址都指向一个指针映射条目, 该条目描述了下一帧的信息. 
-        \item 在每一帧中, 垃圾回收器根据指针映射标记/复制该帧中的所有活跃指针. 
+        \item 在每一帧中, 垃圾回收器根据指针映射标记/转递(取决于垃圾回收方式)该帧中的所有活跃指针. 
     \end{itemize}
     \item callee-save 寄存器: 对于 callee-save 寄存器, 需要特殊处理. 
     \subitem 例如, 函数 $f$ 调用 $g$, $g$ 调用 $h$. 函数 $h$ 知道它将一些 callee-save 寄存器保存在其栈帧中, 并在其指针映射中记录了这一事实, 但 $h$ 不知道哪些寄存器是指针. 因此, $g$ 的指针映射必须描述在调用 $h$ 时, 哪些 callee-save 寄存器包含指针, 哪些是从 $f$ “继承”下来的.

@@ -119,6 +119,29 @@
 	\renewcommand{\proofname}{Proof}
 	%proof QED symbol
 	\renewcommand\qedsymbol{Q.E.D.}
+	% 数学符号
+		% 偏导
+		\newcommand{\pard}[2]{\frac{\partial #1}{\partial #2}}
+		% 向量
+		\newcommand{\bx}{\bm{x}}
+		\newcommand{\by}{\bm{y}}
+		\newcommand{\bg}{\bm{g}}
+		% 域
+		\newcommand{\R}{\mathbb{R}}
+		\newcommand{\FC}{\mathcal{F}}
+		\newcommand{\SC}{\mathcal{S}}
+		\newcommand{\LC}{\mathcal{L}}
+		% 范数
+		\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+		% encode
+		\newcommand{\encode}[1]{{``#1"}}
+		%subject to
+		\DeclareMathOperator{\st}{s.t.\ }
+		%argmin, argmax
+		\DeclareMathOperator*{\argmin}{argmin}
+		\DeclareMathOperator*{\argmax}{argmax}
+		% domain
+		\DeclareMathOperator*{\dom}{dom}
 %
 
 %页面参数
