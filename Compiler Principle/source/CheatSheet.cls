@@ -1,8 +1,8 @@
-\LoadClass[twoside,twocolumn, 10pt]{ctexart}
+\LoadClass[twoside,10pt]{ctexart}
 %宏包
 \RequirePackage{xeCJK}
 \RequirePackage{graphicx}
-\RequirePackage{geometry}
+\RequirePackage[landscape]{geometry}
 \RequirePackage{zhnumber}
 \RequirePackage{titlesec}
 \RequirePackage{fancyhdr}
@@ -36,10 +36,12 @@
 \RequirePackage{wrapfig}
 \RequirePackage{titletoc}
 \RequirePackage{tikz}
+\RequirePackage{blindtext}
 % \RequirePackage{pgfplots}
 \RequirePackage[hidelinks]{hyperref}
 
-\usetikzlibrary{positioning,arrows.meta,quotes}
+\usetikzlibrary{automata,positioning}
+\usetikzlibrary{arrows.meta,quotes}
 \usetikzlibrary{shapes}
 \usetikzlibrary{bayesnet}
 \usetikzlibrary{decorations.pathreplacing}
@@ -150,12 +152,12 @@
 
 %页面参数
 	%页边距
-	\geometry{top=0.8in,bottom=1in,left=0.5in,right=0.5in}
+	\geometry{top=0.1in,bottom=0.1in,left=0.1in,right=0.1in}
 	%行距
-	\linespread{1.2}
+	\linespread{0.8}
 	%目录深度
 	\setcounter{secnumdepth}{3}
-	\setcounter{tocdepth}{4}
+	\setcounter{tocdepth}{2}
 %
 
 %多级标题
@@ -191,11 +193,11 @@
 %
 
 % 页眉页码
-	\pagestyle{fancy}
+	\pagestyle{empty}
 	\fancyhf{}
-	\fancyhead[LE,RO]{\leftmark}
+	% \fancyhead[LE,RO]{\leftmark}
 	%\fancyhead[RE,LO]{\leftmark}
-	\fancyfoot[LE,RO]{\thepage}
+	% \fancyfoot[LE,RO]{\thepage}
 	% \lhead{课程：\@course}
 	% \chead{姓名：\@name}
 	% \rhead{学号：\@stuid}
@@ -208,13 +210,14 @@
   framesep=2mm,
   numbersep=4pt,
   baselinestretch=1.2,
-  fontsize=\small,
+  fontsize=\scriptsize,
   linenos,
   breaklines,
   autogobble,
   bgcolor=light_gray,
 }
 %
+
 
 % 头部
 	% \newcommand{\makeheader}{

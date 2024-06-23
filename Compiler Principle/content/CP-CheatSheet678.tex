@@ -1,12 +1,13 @@
-\newpage
-\section{Activation Record}
+\section{Activation Record(活动记录)}
 \subsection{Stack Frame(栈帧)}
+活动记录就是栈帧. 
+
 \begin{definition}
     栈中存放函数的局部变量/参数/返回地址/临时变量的这片区域为该函数的活动记录 (activation record) 或栈帧(stack frame).
 \end{definition}
-\begin{figure}[!htb]
+\begin{figure}[H]
     \centering
-    \includegraphics[width=0.319\textwidth]{pic/CP678/a typical stack frame layout.png}
+    \includegraphics[width=0.6\linewidth]{pic/CP678/a typical stack frame layout.png}
     \caption{a typical stack frame layout}
 \end{figure}
 \begin{itemize}
@@ -16,61 +17,70 @@
 \end{itemize}
 
 \subsection{Frame Pointer}
-指向当前帧的指针,一般是上一个 sp;有些栈帧 会 分 配 一 个 寄 存 器 存fp; 虚寄存器: fp=sp+size(frame). 
+\begin{itemize}
+    \item Frame Pointer/Base Pointer: 基址寄存器
+    \item Stack Pointer: 栈顶寄存器
+\end{itemize}
 
-帧指针的变化:一个函数 $g$ 调用 $f$ 时,
-\begin{enumerate}
-    \item sp 指向g 传给 f 的第一个参数
-    \item f 分配栈帧(sp-栈帧大 小)
-    \item 进入 f 时旧的 sp 变成当前帧指针;fp 旧值被保存到栈帧内,新的帧指针变成旧 sp
-    \item f 退出时把 fp 拷贝给 sp,再取回原先保存的 fp 即可.
+帧指针的变化:一个函数 $f$ 调用 $g(a_1,a_2,\dots)$ 时,
+进入g:
+\begin{enumerate}[start=1]
+    \item sp 指向第一个参数 $a_1$
+    \item 将旧的fp压入栈
+    \item 令新的fp=sp
+    \item sp 减去栈帧大小(向低地址增长)得到新的 sp
+    \item $g$ 可以基于 fp 向高地址获取参数, 或基于 sp 向低地址压入/查询局部变量
+\end{enumerate}
+从g退出: 
+\begin{enumerate}[start=6]
+    \item 返回值拷贝至特殊寄存器
+    \item sp=fp (释放 $g$ 的栈帧)
+    \item 从栈上取回旧的 fp 值到 fp 中
 \end{enumerate}
 
 \subsection{Parameter Passing}
-现代计算机传参约定:前 $k$($k=4$ or $k=6$, typically) 个参数放在寄存器里传递,剩余在储存器传递.
+调用函数需要保护现场: 因为寄存器的值可能会被子函数改变, 返回时``现场已经被破坏''. 为此部分寄存器的值需要在栈上进行备份. 分为以下两种: 
+\begin{itemize}
+    \item Caller-save: 例如临时寄存器, 调用者如果用到则需要自己保存, 子函数可以任意修改.
+    \item Callee-save: 例如fp/sp, 由子函数负责保存与恢复(进入子函数时push到栈, 退出时从栈里pop), 调用者无需关心.
+\end{itemize}
 
-寄 存 器 传 参 的 方 法 (4 种 ):
-\begin{enumerate}
-    \item 不 给 叶 过 程 (leaf procedure)分配栈帧 . 绝大多数过程都是叶过程, 不分配栈帧能节省很多开销.
-    \subitem  叶 过 程: 不调用其他过程的过程
-    \item 过 程 间 寄 存 器 分 配 (interprocedural register allocation): 先分析代码中全部的函数, 然后再根据分析分配寄存器
-    \item 若变量 $x$ 不再被使用, 可以直接写其寄存器, 不需要再保存 $x$ 到栈帧中. 
-    \item  寄 存 器 窗 口 技 术 (register windows): 每个函数调用分配一组新的寄存器, 无需内存传输.
-\end{enumerate}
+
+函数调用传参: 大部分现代编译器对于前几个参数直接通过寄存器传递, 多余的则仍然通过栈完成传递.
+
+优化策略:
+\begin{itemize}
+    \item 从变量生命周期入手: 如果寄存器对应的变量或参数在当前函数不再使用, 子函数覆盖了自然也无妨.
+    \item 全局寄存器分配策略: 每个函数使用不同的一组寄存器传参.
+    \item 优化叶过程(Leaf Procedure): 如果某函数不调用任何其他过程, 自然也不需要为(不存在的)子过程备份传入的参数.
+    \item 寄存器窗口Register Windows: 每次调用函数时, 尽可能利用尚未用到的寄存器, 然后为子函数分配新的一套可用的寄存器(SPARC采用该策略).
+\end{itemize}
 
 \subsection{Frame-Resident Variables}
-一般来说局部变量和中间结果会放到寄存器中,以下情况需要将变量储存到栈帧内(memory): 
-\begin{enumerate}
-    \item 变 量 传 地 址 / 引 用 (passed by reference) 
-    \item 被嵌套在 当 前 过 程 的 函 数 调 用(nested accessed) 
-    \item 太大 了 放 不 下 (too big to fit)
-    \item 变量是数组
-    \item 有特殊用途的变量(传参等) 
-    \item 存在过多的临时变量和局部变量(溢出 spill)
-\end{enumerate}
+寄存器并非万能: 有时, 在栈上分配空间(实体化)是不可避免的. 例如:
+\begin{itemize}
+    \item 对象过大, 无法放在寄存器中
+    \item 数组对象, 需要通过地址偏移访问
+    \item 寄存器被特殊需要, 例如上文提到可能用于传参
+    \item 太多中间值/局部变量, 有限的寄存器放不下. 称为 Spill, 在寄存器分配部分会展开讨论
+    \item 变量 逃逸(escape)(也就是脱离了当前scope/无法确定变量有效的生命周期): 
+    \subitem 引用传参: 需要内存地址
+    \subitem 显式地取变量地址
+    \subitem 被嵌套函数访问
+\end{itemize}
 
-在以下情况, 称变量为逃逸(escape):
-\begin{enumerate}
-    \item 传 地 址 
-    \item 被取地址
-    \item 被内层嵌套函数访问
-\end{enumerate}
+\subsection{Block Structure}
+在允许函数嵌套定义的语言(比如Tiger)中, 内部函数可能使用外部函数中的局部变量. 为了使得内部函数访问非局部定义的外部变量, 有以下几种方法: 
+
+静态链接: 当内部函数 $g$ 被调用时, 调用者 $f$ 传入一个指针指向 $f$ 的栈帧(或者说活动记录), 这种情况下, 称为 $f$ statically encloses $g$.  如果多次嵌套, 嵌套次数为$N$, 这些指针会构成一个长为 $N$ 的单向链表串联起栈帧. 每个函数记录自己的嵌套深度 $n$. 如果访问了在深度 $m$ 的变量, 只需沿着该链向上 $n-m$ 次就可以找到该变量所在的栈帧. 优缺点: Overhead小, 但是因为要通过链表向上经过多层速度较慢. 
 
 
-\subsection{Static Link}
-静态链本质是指向上一层嵌套层级的栈帧的指针.内层嵌套函数调用外层定义的变量需要用到静态链,否则无法寻址.
+Lamda lifting: 从最深的一层叶过程开始, 把所有 $g(a_1)$ 用到的外部变量 $o_1, o_2$ 改写为真正传入的参数, 于是变为$g(o_1, o_2, a_1)$. 如此逐渐向上改写每一层即可. 
 
-其他访问外层变量的方法:
-\begin{enumerate}
-    \item 嵌套层次显示表(display):一个全局数组,位置 i 存放最近一次的,静态嵌套深度为 i的过程的栈帧. 是管理静态链的全局数组(不是栈指针) 
-    \item $\lambda$ 提升(lambda shifting):内层函数访问的外层声明变量,会作为函数参数传给内层嵌套函数.
-\end{enumerate}
 
-注意:静态链层级是函数的嵌套深度(函数之间),不是递归调用的深度(函数自己),两者不同概念
+Display数组: 一个全局数组, 记录当前每个嵌套深度 $i$ 对应的栈帧地址. 这样不需要经过链表即可直接找到变量对应的栈帧. 
 
-\newpage
 
-\newpage
 \section{Translation to Intermediate Code}
 intermediate represent(中 间 表 示): 抽象的机器语言,链接前端和后端,解决了高级语言和目标机器汇编语言之间的转化.
 
@@ -81,7 +91,6 @@ intermediate represent(中 间 表 示): 抽象的机器语言,链接前端和�
 
 \subsection{Intermediate Representation Trees}
 \subsubsection{Tree Operator}
-
 Expressions(T\_exps): 
 \begin{itemize}
     \item CONST($i$): 整 型 常 数 
@@ -156,7 +165,6 @@ SEQ($s_1$($z$,$f$), SEQ(LABEL $z$, $s_2$($t$,$f$)))
     
 \end{itemize}
 
-
 \subsubsection{Function Call}
 CALL(NAME $l_f$, [$sl, e_1, e_2,\dots, e_n$])
 
@@ -170,11 +178,11 @@ $l_f$ is the label for $f$, $sl$ is the static link
 赋值表达式；如果对函数和类型声明施加 transDec，
 结果将会得到 Ex(CONST(0))这样的空操作
 
-函数被翻译为入口处理代码(prologue),函数体(body)和出口处理函数(epilogue)组成的汇编语言代码.
+函数被翻译为入口代码 (prologue), 函数体 (body) 和出口函数 (epilogue) 组成的汇编语言代码.
 
 入口包含:
 \begin{enumerate}
-    \item 声明一个函数开始的伪指令(pseudo-instructions)
+    \item 声明一个函数开始的伪指令 (pseudo instructions)
     \item 函数名 label 的定义
     \item 调整栈指针的一条指令,用于分配新的栈帧
     \item 将逃逸(escaping)参数保存至栈帧的指令,以及将非逃逸参数传送的新临时寄存器指令
@@ -196,7 +204,6 @@ $l_f$ is the label for $f$, $sl$ is the static link
 \end{enumerate}
 
 
-\newpage
 \section{Basic Blocks and Traces}
 
 \subsection{Canonical Trees(规范树)}
@@ -217,23 +224,23 @@ Why?
     \item CALL 的嵌套调用(作为另一个 CALL 的参数)会出问题,覆盖存放返回值的寄存器的值
 \end{enumerate}
 
-
 重写流程:
 \begin{enumerate}
     \item 一棵树重写成规范树 
-    \item 将树分组合成不含转移和标号的基本块(basicblock)集合 
+    \item 将树分组合成不含转移和标号的基本块 (basic block) 集合 
     \item 对基本块 进行 排 序 形 成 一 组 轨 迹(trace);每一个 CJUMP 后就是其 false 标号
 \end{enumerate}
 
 \subsubsection{Transformations on ESEQ}
 % \begin{enumerate}
 %     \item ESEQ($s_1$, ESEQ($s_2$,$e$)) $\to$ ESEQ(SEQ( $s_1,s_2$), $e$) 
-%     \item BINOP($op$,ESEQ($s$,$e_1$), $e_2$) $\to$ ESEQ(BINOP($op$,$e_1$, $e_2$)) 
+%     \item BINOP($op$,ESEQ($s$,$e_1$), $e_2$) \\
+%     $\to$ ESEQ(BINOP($op$,$e_1$, $e_2$)) 
 %     \subitem MEM(ESEQ($s$,$e_1$)) $\to$ ESEQ( $s$, MEM($e_1$)) 
 %     \subitem JUMP(ESEQ($s$, $e_1$)) $\to$ SEQ($s$,JUMP($e_1$)) 
 %     \subitem CJUMP(op,ESEQ($s$,$e_1$),$e_2$,$l_1,l_2$)\\
 %     $\to$ SEQ($s$, CJUMP($op$, $e_1$, $e_2$, $l_1,l_2$)) 
-%     \item BINOP(op,$e_1$, ESEQ(s,$e_2$)) \\
+%     \item BINOP(op,$e_1$, ESEQ(s,$e_2$))
 %     $\to$ ESEQ(MOVE (TEMP t, $e_1$), ESEQ(s, BINOP(op, TEMP t, $e_2$))) 
 %     \subitem CJUMP(op, $e_1$, ESEQ(s, $e_2$), $l_1,l_2$) $\to$ \\
 %      SEQ(MOVE(TEMP $t$, $e_1$), SEQ($s$, CJUMP($op$, TEMP $t$, $e_2$, $l_1,l_2$))).
@@ -262,7 +269,6 @@ Why?
 以 BINOP(op,CALL(),CALL() $\dots$) 为例, 第二个 CALL 会在 BINOP 执行前覆盖第一个CALL 返回在 RV 寄存器里的值. 解决办法是使用 ESEQ 将返回值保存到一个新的临时变 量里: CALL(fun,args) $\to$ ESEQ(MOVE(TEMP $t$, CALL(fun, args)), TEMP $t$)
 
 
-
 \subsection{Taming Conditional Branches}
 \subsubsection{Basic Blocks(基本块)}
 取 一 列 规 范 树 , 块 的 开 始 是 label, 以跳转指令为结尾. 即:
@@ -271,7 +277,6 @@ Why?
     \item 最 后 一 个 语 句 是 JUMP 或 CJUMP
     \item 没 有 其 他 的 LABEL,JUMP 或 CJUMP
 \end{enumerate}
-
 
 划分基本块方法: 从头到尾扫描语句序列,每次发现一个 LABEL 就开始一个新的基本块并结束上一个基本块; 每发现一个 JUMP 或 CJUMP 就结束一个基本块(并开始下一个基本块). 如果过程还遗留任何基本块不是 JUMP 或 CJUMP 结尾的, 则在基本块块末尾增加一条转移到下一个基本快标号处的 JUMP; 如果有任何基本块不是以 LABEL 开始的, 则生成一个新的标号插入到基 本 块 开 始; 在全部 末 尾 添 加 done LABEL, 将 JUMP(NAME done) 放到最后一个基本快末尾.
 
@@ -298,10 +303,10 @@ Why?
     \end{algorithmic}
 \end{algorithm}
 
+
 \subsubsection{Finishing Up}
 \begin{enumerate}
     \item 所有后面跟 false 标记的 CJUMP 不变
     \item 对任何后面跟 true 标号的 CJUMP,交换其 true 标号和 false 标号以及判断条件取反
     \item 对其后跟随的既不是 true 也不是 false 标号的 CJUMP,生成新的标号 $f'$ 并重写 CJUMP,使得其 false 标号紧跟其后.
 \end{enumerate}
-

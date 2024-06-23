@@ -1,52 +1,19 @@
-\newpage
 \section{Parsing}
+\subsection{Context-free Grammars(CFG)}
 \begin{itemize}
-    \item Lexical Analysis: Create sequence of tokens from characters
-    \item Parsing: Create abstract syntax tree from sequence of tokens
+    \item Definition for CFG % 计算理论 IV.1.
+    \item Derivations % 计算理论 IV.2-3
+    \item Parse Trees % 计算理论 IV.5
 \end{itemize}
 
-Syntax: the way in which words are put together to form phrases, clauses, or sentences
-
-\begin{itemize}
-    \item Input: sequence of tokens from lexer; 
-    \item Output: parse tree of the program (But some parsers never produce a parse tree ...)
-\end{itemize}
-
-\begin{figure}[!htb]
-    \centering
-    \includegraphics[width=0.42\textwidth]{pic/CP3/compiler.png}
-    \caption{compiler}
-\end{figure}
-
-
-\subsection{Context-free Grammars}
-\subsubsection{Definition for CFG}
-计算理论 IV.1.
-
-\subsubsection{Derivations}
-计算理论 IV.2-3
-
-用 CFG 生成 string
-
-\subsubsection{Parse Trees}
-计算理论 IV.5
-
-Representing derivations as a tree. Parse trees have meaning. 
-
-\subsubsection{Ambiguous Grammars}
-A grammar is ambiguous if the same sequence of tokens can give rise to two or more parse trees.
 
 解决二义性(Ambiguity)的方式就是重写文法. 解决二义性没有通用的方法, 一般都是通过声明 precedence(优先级) 与 associativity(结合性) 来消除文法中的二义性.
 
-\subsubsection{End-Of-File Marker}
-Use \$ to represent end of file
+使用 \$ 代表文件的结束. 
 
 \subsection{Predictive Parsing}
-
 \subsubsection{Recursive-Descent Parser}
-Each grammar production turns into one clause of a recursive function. 自顶向下分析.
-
-Problem: 预测分析需要每个子表达式的 the first terminal symbol 提供足够的信息来决定生成的是什么.
+自顶向下分析.
 
 \begin{definition}[Nullable]
     Non-terminal $X$ is Nullable if $X$ can derive the empty string.
@@ -97,43 +64,19 @@ $\epsilon$ 不会出现在 Follow Sets 中. Start Symbol 的 Follow Set 包含�
     \end{algorithmic}
 \end{algorithm}
 
-\subsubsection{Building a Predictive Parser}
-\begin{itemize}
-    \item $Z\to XYZ | d$
-    \item $Y\to c | \epsilon $
-    \item $X\to a | Y$
-\end{itemize}
-\begin{table}[!htb]
-    \centering
-    \begin{tabular}[c]{cccc}\toprule
-        & Nullable & First & Follow \\ \midrule
-        $Z$ & no  & $d,a,c$ & \\ \cmidrule{1-1}
-        $Y$ & yes & $c$ & $a,c,d $\\ \cmidrule{1-1}
-        $X$ & yes & $a,c$ & $a,c,d$\\
-        \bottomrule
-    \end{tabular}
-\end{table}
-
-
-\subsubsection{Building parsing table}
-\begin{itemize}
-    \item if $T\in First(s)$ then enter $(X\to s)$ in row $X$, col $T$
-    \item if $s$ is Nullable and $T\in Follow(X)$, enter $(X\to s)$ in row $X$, col $T$
-\end{itemize}
-
-Build parsing table where row $X$, col $T$ tells parser which clause to execute in function $X$ with next-token $T$:
-\begin{table}[!htb]
-    \centering
-    \begin{tabular}[c]{cccc}\toprule
-        & $a$ & $c$ & $d$\\ \midrule
-        $Z$ & $Z\to XYZ$ & $Z\to XYZ$ &     \begin{tabular}[c]{@{}l@{}} $Z\to d$ \\ $Z\to XYZ$ \end{tabular} \\ \cmidrule{1-1}
-        $Y$ & $Y\to\ $ &     \begin{tabular}[c]{@{}l@{}} $Y\to\ $ \\ $Y\to c$ \end{tabular} & $Y\to\ $ \\ \cmidrule{1-1}
-        $X$ &    \begin{tabular}[c]{@{}l@{}} $X\to a$ \\ $X\to Y$ \end{tabular} & $X\to Y$ & $X\to Y$ \\ 
-        \bottomrule
-    \end{tabular}
-\end{table}
-
 \subsubsection{Predictive Parsing: LL(1)}
+
+\begin{enumerate}
+    \item Building a Predictive Parser
+    \item Build parsing table where row $X$, col $T$ tells parser which clause to execute in function $X$ with next-token $T$.
+    \begin{itemize}
+        \item if $T\in First(s)$ then enter $(X\to s)$ in row $X$, col $T$
+        \item if $s$ is Nullable and $T\in Follow(X)$, enter $(X\to s)$ in row $X$, col $T$
+    \end{itemize}
+    
+\end{enumerate}
+
+
 依据 grammar 构造的 parsing table 没有冲突, 此 grammar 才能被称为 LL(1) grammar.
 
 LL(1): Left-to-right parse, Left-most derivation, 1 symbol lookahead.
@@ -150,7 +93,7 @@ In LL(k) parsing table, columns include every k-length sequence of terminals.
         \item $X\to +E|\epsilon$
         \item $Y\to *T|\epsilon$
     \end{itemize}
-    \begin{table}[!htb]
+    \begin{table}[H]
         \centering
         \begin{tabular}[c]{cccc}\toprule
              & Nullable & First & Follow\\ \midrule
@@ -162,7 +105,7 @@ In LL(k) parsing table, columns include every k-length sequence of terminals.
         \end{tabular}
     \end{table}
 
-    \begin{table}[!htb]
+    \begin{table}[H]
         \centering
         \begin{tabular}[c]{ccccccc}\toprule
              & int & $*$ & $+$ & $($ & $)$ & \$ \\ \midrule
@@ -174,7 +117,7 @@ In LL(k) parsing table, columns include every k-length sequence of terminals.
         \end{tabular}
     \end{table}
     
-    \begin{table}[!htb]
+    \begin{table}[H]
         \centering
         % \caption{}
         \begin{tabular}[c]{lll}\toprule
@@ -195,28 +138,25 @@ In LL(k) parsing table, columns include every k-length sequence of terminals.
     
 \end{example}
 
-\subsubsection{Eliminate left-recursion}
-消除左递归
-Rewrite the grammar so it parses the same language but the rules are different.
-
+\subsubsection{Eliminate left-recursion(消除左递归)}
 \begin{itemize}
     \item $E\to E+T|T \Rightarrow E\to TE', E'\to +TE'|\epsilon$
     \item $A\to A\alpha | \beta \Rightarrow A\to \beta A', A'\to \alpha A' | \epsilon$
 \end{itemize}
 
-\subsubsection{Left Factoring}
-提取左因子
+\subsubsection{Left Factoring(提取左因子)}
 \begin{itemize}
     \item $E\to T+E|T \Rightarrow E\to TX, X\to +E|\epsilon$
     \item $P\to \alpha\beta | \alpha \gamma \Rightarrow P\to \alpha Q, Q\to \beta | \gamma$
 \end{itemize}
+
 \subsubsection{Error Recovery}
-How should error be handled?
+可以通过以下几种方式恢复: 
 \begin{itemize}
-    \item Raise an exception and quit parsing
-    \item Print an error message and recover from the error
+    \item 删除: 例如, 可以一直跳过token直到遇到当前非终结符对应Follow集中的token
+    \item 插入: 例如, 如果左右括号不匹配, 我们可以插入一个括号, 暂时假装它是匹配的
+    \item 替换: 例如, 变量名错误可以替换为最相近的变量名
 \end{itemize}
-This can proceed by deleting, replacing, or inserting tokens
 
 \subsection{LR Parsing}
 \subsubsection{Bottom-up Parsing}
@@ -233,12 +173,6 @@ Shift-reduce parsing:
 \end{itemize}
 
 LALR variant: The basis for parsers for most modern programming languages, Implemented in tools such as Yacc.
-
-\begin{figure}[!htb]
-    \centering
-    \includegraphics[width=0.309\textwidth]{pic/CP3/lrexp.png}
-    \caption{Bottom-up Parsing Example}
-\end{figure}
 
 \subsubsection{LR Parsing Engine}
 LR parser 使用 DFA 来决定何时 shift/reduce. 具体的:
@@ -273,78 +207,62 @@ LR parser table 具体的使用方式:
     \item $Error$: Stop parsing, report failure
 \end{itemize}
 
-如 \textbf{Figure} \ref{fig:explruse} 所示, stack 需要维护 token 与 state 两个量, 这里使用 (state, token) 对表示. 
+stack 需要维护 token 与 state 两个量, 使用 (state, token) 对表示. 
 
-\begin{algorithm}[H]
-    \caption{LR parser table 使用}
-    \begin{algorithmic}
-        \State $a$ 表示当前入读的 token. 
-        \State $a_{top}, s_{top}$ 分别为 栈顶的 token 与 state.
-        \State $T_{(i,a)}$ 表示 parser table 中, state $i$ 行, token $a$ 列 所对应的 element. 
-        \Repeat
-            \If{$T_{(s_{top}, a)}$ is $s_n$}
-                \State PUSH($n, a$)
-                \State $a$=GETCHAR()
-            \ElsIf{$T_{(s_{top}, a)}$ is $r_k$}
-                \State Assume  rule $k$ is $A\to \beta$
-                \State POP() $|\beta|$ times
-                \State $T_{(s_{top}, A)}$ is $g_n$
-                \State PUSH($n, A$)
-            \Else
-                \State Error
-            \EndIf
-        \Until{$T_{(s_{top}, a)}$ is accept}
-        \State Accept
-    \end{algorithmic}
-\end{algorithm}
+% \begin{algorithm}[H]
+%     \caption{LR parser table 使用}
+%     \begin{algorithmic}
+%         \State $a$ 表示当前入读的 token. 
+%         \State $a_{top}, s_{top}$ 分别为 栈顶的 token 与 state.
+%         \State $T_{(i,a)}$ 表示 parser table 中, state $i$ 行, token $a$ 列 所对应的 element. 
+%         \Repeat
+%             \If{$T_{(s_{top}, a)}$ is $s_n$}
+%                 \State PUSH($n, a$)
+%                 \State $a$=GETCHAR()
+%             \ElsIf{$T_{(s_{top}, a)}$ is $r_k$}
+%                 \State Assume  rule $k$ is $A\to \beta$
+%                 \State POP() $|\beta|$ times
+%                 \State $T_{(s_{top}, A)}$ is $g_n$
+%                 \State PUSH($n, A$)
+%             \Else
+%                 \State Error
+%             \EndIf
+%         \Until{$T_{(s_{top}, a)}$ is accept}
+%         \State Accept
+%     \end{algorithmic}
+% \end{algorithm}
 
-\quad
-
-\quad
-
-\quad
-
-\begin{example}\quad
+% \begin{example}\quad
     
-    \begin{enumerate}
-        \item $S\to S;S$
-        \item $S\to id:=E$
-        \item $S\to print(L)$
-        \item $E\to id$
-        \item $E\to num$
-        \item $E\to E+E$
-        \item $E\to (S,E)$
-        \item $L\to E$
-        \item $L\to L, E$
-    \end{enumerate}
+%     \begin{enumerate}
+%         \item $S\to S;S$
+%         \item $S\to id:=E$
+%         \item $S\to print(L)$
+%         \item $E\to id$
+%         \item $E\to num$
+%         \item $E\to E+E$
+%         \item $E\to (S,E)$
+%         \item $L\to E$
+%         \item $L\to L, E$
+%     \end{enumerate}
 
-    \begin{figure}[H]
-        \centering
-        \includegraphics[width=0.42\textwidth]{pic/CP3/lrtable.png}
-        \caption{LR parsing table}
-    \end{figure}
+%     \begin{figure}[H]
+%         \centering
+%         \includegraphics[width=0.88\linewidth]{pic/CP3/lrtable.png}
+%         \caption{LR parsing table}
+%     \end{figure}
     
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.42\textwidth]{pic/CP3/Shift-reduce parse of a sentence}
-    \caption{Shift-reduce parse of a sentence}
-    \label{fig:explruse}
-\end{figure}
+%     \begin{figure}[H]
+%         \centering
+%         \includegraphics[width=0.88\linewidth]{pic/CP3/Shift-reduce parse of a sentence}
+%         \caption{Shift-reduce parse of a sentence}
+%         \label{fig:explruse}
+%     \end{figure}
 
 
-\end{example}
+% \end{example}
 
 \subsubsection{LR(0) Parsing}
-Making shift/reduce decisions without any lookahead.
-
-% \begin{figure}[!htb]
-%     \centering
-%     \includegraphics[width=0.42\textwidth]{pic/CP3/LR(0).png}
-%     \caption{Items and States}
-% \end{figure}
-
-%TODO 完全听不懂, 回去看辅学()
-
 \begin{definition}[LR(0) item]
     A grammar rule, combined with the dot that indicates a position in its right-hand side, is called an item (specifically, an LR(0) item).
 \end{definition}
@@ -373,22 +291,16 @@ LR(0) Item  之间存在一些转换关系:
 \end{itemize}
 通过这些转换关系将 LR(0) items 写为一个 NFA, 然后将 NFA 转换为 DFA. 
 
-% \begin{figure}[!htb]
-%     \centering
-%     \includegraphics[width=0.22\textwidth]{pic/CP3/expnfa.png}
-%     \caption{NFA for \textbf{Example} \ref{exp:lr0}}
-% \end{figure}
-
-\begin{figure}[!htb]
+\begin{figure}[H]
     \centering
-    \begin{subfigure}{0.22\textwidth}
+    \begin{subfigure}{0.3\linewidth}
         \centering
-        \includegraphics[height=2\textwidth]{pic/CP3/expnfa.png}
+        \includegraphics[height=2\linewidth]{pic/CP3/expnfa.png}
         \caption{NFA}
     \end{subfigure}
-    \begin{subfigure}{0.22\textwidth}
+    \begin{subfigure}{0.3\linewidth}
         \centering
-        \includegraphics[height=2\textwidth]{pic/CP3/expdfa.png}
+        \includegraphics[height=2\linewidth]{pic/CP3/expdfa.png}
         \caption{DFA}
     \end{subfigure}
     \caption{LR(0) NFA and DFA for \textbf{Example} \ref{exp:lr0}}
@@ -403,11 +315,14 @@ LR(0) Item  之间存在一些转换关系:
     \item 对每个包含 $X\to \gamma.$ (结尾带点的规则 $k$) 的状态 $i$, 对每个 terminal $t$, 令 $T_{(i,t)}$ 为 $r_k$.
 \end{itemize}
 
+
 这样就可以构造出 LR(0) Parsing Table, 如 \textbf{Table} \ref{tab:explr0} 所示. 
+
 
 注意到 $T_{(1,()}, T_{(3,()}, T_{(5,()}$ 出现了冲突, 这三个都属于 shift-reduce conflict. 只有构造出的 LR(0) Parsing Table 没有冲突时, grammar 才能被称为 LR(0) grammar.
 
-\begin{table}[!htb]
+
+\begin{table}[H]
     \centering
     \caption{LR(0) Parsing Table for \textbf{Example} \ref{exp:lr0}}
     \label{tab:explr0}
@@ -423,8 +338,8 @@ LR(0) Item  之间存在一些转换关系:
     \end{tabular}
 \end{table}
 
-
 \subsubsection{SLR Parsing}
+
 SLR 中的 S 表示 Simple. SLR Parsing 在 LR(0) 的基础上通过简单的判断尝试解决冲突.
 
 SLR 在构造形如 LR(0) 的 DFA 之上, 还需要计算每个 non-terminal 的 Follow Set. SLR 只对那些下一个符号在对应 non-terminal 的 Follow Set 的情况进行 reduc. 具体更改如下:
@@ -434,7 +349,7 @@ SLR 在构造形如 LR(0) 的 DFA 之上, 还需要计算每个 non-terminal 的
 
 构造出的 SLR Parsing Table, 如 \textbf{Table} \ref{tab:expslr1} 所示.
 
-\begin{table}[!htb]
+\begin{table}[H]
     \centering
     \caption{SLR Parsing Table for \textbf{Example} \ref{exp:lr0}}
     \label{tab:expslr1}
@@ -449,6 +364,7 @@ SLR 在构造形如 LR(0) 的 DFA 之上, 还需要计算每个 non-terminal 的
         \bottomrule
     \end{tabular}
 \end{table}
+
 
 \subsubsection{LR(1) Parsing}
 \begin{definition}
@@ -474,14 +390,37 @@ LR(1) Item 存在如下两种转化:
     \end{itemize}
     Start Symbol 有 LR(1) Item $S'\to .S, \$ $
     
-    \begin{figure}[!htb]
-        \centering
-        \includegraphics[width=0.42\textwidth]{pic/CP3/explr1dfa.png}
-        \caption{LR(1) DFA for \textbf{Example} \ref{exp:lr1}}
-        \label{fig:explr1}
-    \end{figure}
-    
 \end{example}
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}{0.48\linewidth}
+        \centering
+        \includegraphics[width=0.88\linewidth]{pic/CP3/explr1dfa.png}
+        \caption{LR(1)}
+        \label{fig:explr1}
+    \end{subfigure}
+    \begin{subfigure}{0.48\linewidth}
+        \centering
+        \includegraphics[width=0.88\linewidth]{pic/CP3/explalr1dfa.png}
+        \caption{LALR(1)}
+    \end{subfigure}
+    \caption{DFA for \textbf{Example} \ref{exp:lr1}}
+\end{figure}
+
+
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=0.88\linewidth]{pic/CP3/explr1dfa.png}
+%     \caption{LR(1) DFA for \textbf{Example} \ref{exp:lr1}}
+%     \label{fig:explr1}
+% \end{figure}
+
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=0.88\linewidth]{pic/CP3/explalr1dfa.png}
+%     \caption{LALR(1) DFA for \textbf{Example} \ref{exp:lr1}}
+% \end{figure}
 
 构造 LR(1) Parsing Table 的方式, 也是只基于 LR(0) 更改了 reduce:
 \begin{itemize}
@@ -497,75 +436,18 @@ LALR(1)(Look-Ahead LR(1)) 是 LR(1) 的简化版本.
 
 但是, 这有时(虽然很少)也可能引入 reduce-reduce conflict. 不过问题不大. 
 
-\begin{figure}[!htb]
-    \centering
-    \includegraphics[width=0.42\textwidth]{pic/CP3/explalr1dfa.png}
-    \caption{LALR(1) DFA for \textbf{Example} \ref{exp:lr1}}
-\end{figure}
+
 
 \subsubsection{Hierarchy of Grammar Classes}
 The relationship between several classes of grammars. 
-\begin{figure}[!htb]
+\begin{figure}[H]
     \centering
-    \includegraphics[width=0.309\textwidth]{pic/CP3/A hierarchy of grammar classes.}
+    \includegraphics[width=0.6\linewidth]{pic/CP3/A hierarchy of grammar classes.}
     \caption{A hierarchy of grammar classes.}
 \end{figure}
 
-\subsection{Using Parser Generators}
-\subsubsection{Yacc}
-Yacc (``Yet another compiler-compiler''): A classic and widely used parser
-generator
-
-A Yacc specification is divided into three sections, separated by \%\% marks:
-
-\begin{minted}{c}
-    parser declarations
-    %%
-    grammar rules
-    %%
-    programs
-\end{minted}
-
-\begin{itemize}
-    \item Parser declaration: a list of $N, T$ and so on
-    \item Programs: ordinary C code usable from the semantic action
-    \item Grammar rules: production of the form
-    \subitem \mintinline{c}{exp: exp PLUS exp {semantic action}}  
-    \subitem where \mintinline{c}{exp} is a nonterminal producing a right-hand side of \mintinline{c}{exp + exp}, and \mintinline{c}{PLUS} is a terminal symbol (token). The semantic action is written in ordinary C and will be executed whenever the parser reduces using this rule.
-\end{itemize}
-
-\begin{example}
-    For grammar
-    \begin{enumerate}
-        \item $P \to L$
-        \item $S \to id := id$
-        \item $S \to$ while $id$ do $S$
-        \item $S \to$ begin $L$ end
-        \item $S \to$ if $id$ then $S$
-        \item $S \to$ if $id$ then $S$ else $S$
-        \item $L \to S$
-        \item $L \to L ; S$
-    \end{enumerate}
-
-    \begin{minted}{c}
-%{
-int yylex(void);
-void yyerror(char *s) { EM_error(EM_tokPos, "%s", s); }
-%}
-%token ID WHILE BEGIN END DO IF THEN ELSE SEMI ASSIGN
-%start prog
-%%
-prog: stmlist
-stm : ID ASSIGN ID
-    | WHILE ID DO stm
-    | BEGIN stmlist END
-    | IF ID THEN stm
-    | IF ID THEN stm ELSE stm
-stmlist : stm
-        | stmlist SEMI stm
-    \end{minted}
-    
-\end{example}
+\subsection{Yacc}
+基于LALR(1)
 
 \subsubsection{Conflicts}
 \begin{itemize}
@@ -573,26 +455,13 @@ stmlist : stm
     \item reduce-reduce conflict: Resolved using the rule appears early in the grammar
 \end{itemize}
 
-\subsubsection{Precedence Directives}
-Ambiguous grammars are still be useful if finding ways to resolve the conflict.
-
-Yacc uses precedence directives to resolve this class of shift-reduce conflicts
+\subsubsection{Ambiguous}
+\begin{itemize}
+    \item 指定运算符优先级: 先出现的优先
+    \item 指定运算符结合律: \%left(左结合, 例如乘法加法) \%right(右结合, 例如一元运算符负号)
+\end{itemize}
 
 \subsection{Error Recovery}
-\subsubsection{Recovery Using the Error Symbol}
-Local error recovery mechanisms.
 
-If a syntax error is encountered in the middle of an expression, the parser should skip to the next semicolon or right parenthesis(called synchronizing tokens) and resume parsing.
+局部错误恢复: 调整Parse过程的栈, 使其恢复到正常从而继续进行Parsing. 把错误的影响范围控制在右括号处/分号处. 如果语法处理时遇到错误, 可以一路跳过直到右括号和分号, 然后继续处理. 
 
-error is considered a terminal symbol. When the LR parser reaches an error state, it takes the following actions:
-\begin{enumerate}
-    \item Pop the stack (if necessary) until a state is reached in which the action for the error token is shift.
-    \item Shift the error token.
-    \item Discard input symbols (if necessary) until a lookahead is reached that has a nonerror action in the current state.
-    \item Resume normal parsing.
-\end{enumerate}
-
-\subsubsection{Global Error Repair}
-Global error repair: finds the smallest set of insertions and deletions that would turn the source string into a syntactically correct string, even if the insertions and deletions are not at a point where an LL or LR parser would first report an error.
-
-Burke-Fisher error repair: single-token insertion, deletion, or replacement at every point that occurs no earlier than $K$ tokens before the point where the parser reported the error.
