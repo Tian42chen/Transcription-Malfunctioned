@@ -2,7 +2,7 @@
 %宏包
 \RequirePackage{xeCJK}
 \RequirePackage{graphicx}
-\RequirePackage[landscape]{geometry}
+\RequirePackage[paperwidth=11in, paperheight=17in]{geometry}
 \RequirePackage{zhnumber}
 \RequirePackage{titlesec}
 \RequirePackage{fancyhdr}

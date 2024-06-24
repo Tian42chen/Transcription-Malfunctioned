@@ -374,7 +374,7 @@ SLR 在构造形如 LR(0) 的 DFA 之上, 还需要计算每个 non-terminal 的
 LR(1) Item 存在如下两种转化:
 \begin{itemize}
     \item $X\to .\alpha\beta, t$ 接受 $\alpha$ 变为 $X\to \alpha . \beta, t$ 
-    \item 若有 $X\to \gamma T\omega, Y\to \alpha\beta$, 则对于每个 $t_i\in First(\omega t)$ ($\omega$ 可以是 $\epsilon$),  $X\to \gamma . Y \omega, t$ 可以转换为 $Y\to .\alpha \beta, t_i$
+    \item 若有 $X\to \gamma Y\omega, Y\to \alpha\beta$, 则对于每个 $t_i\in First(\omega t)$ ($\omega$ 可以是 $\epsilon$),  $X\to \gamma . Y \omega, t$ 可以转换为 $Y\to .\alpha \beta, t_i$
 \end{itemize}
 
 \begin{example}\label{exp:lr1}
