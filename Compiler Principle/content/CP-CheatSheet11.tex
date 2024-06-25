@@ -72,14 +72,14 @@
 染色算法通过简化合并溢出来工作, 直到只剩下预着色节点, 然后才能开始向冲突图中加入其他节点. 预着色节点不能溢出所以前端必须使他们的活跃范围保持较小, 可以通过 MOVE 指令来实现. 
 
 
-% 对于节点 $a$, 其溢出优先级计算公式: 
-% \begin{align*}
-%     Priority = \frac{Out_{use+def}+10\times In_{use+def}}{D}
-% \end{align*}
-% 其中,
-% \begin{itemize}
-%     \item $Out_{use+def}$ 为 $a$ 在循环外的 use 与 def 总数.
-%     \item $In_{use+def}$ 为 $a$ 在循环内的 use 与 def 总数.
-%     \item $D$ 为 $a$ 的度, 只包含实线. 
-% \end{itemize}
-% 优先级值越小, 说明优先级越高. 表示优先溢出不被经常使用的高度数节点. 
+对于节点 $a$, 其溢出优先级计算公式: 
+\begin{align*}
+    Priority = \frac{Out_{use+def}+10\times In_{use+def}}{D}
+\end{align*}
+其中,
+\begin{itemize}
+    \item $Out_{use+def}$ 为 $a$ 在循环外的 use 与 def 总数.
+    \item $In_{use+def}$ 为 $a$ 在循环内的 use 与 def 总数.
+    \item $D$ 为 $a$ 的度, 只包含实线. 
+\end{itemize}
+优先级值越小, 说明优先级越高. 表示优先溢出不被经常使用的高度数节点. 
