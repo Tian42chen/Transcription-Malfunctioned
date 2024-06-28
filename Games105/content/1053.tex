@@ -1,0 +1,162 @@
+\newpage
+\section{Character Kinematics}
+\subsection{Skeleton and forward Kinematics}
+
+\subsubsection{Skeleton}
+
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=0.618\linewidth]{pic/1053/Skeleton}
+    \caption{Skeleton}
+\end{figure}
+
+
+\subsubsection{Kinematics of a Chain}
+
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=0.618\linewidth]{pic/1053/Kinematics of a Chain}
+    \caption{Kinematics of a Chain}
+\end{figure}
+
+\begin{itemize}
+    \item $Q_i$: orientation of joint $i$.  (相对于全局的方向)
+    \item $R_i$: rotation of joint $i$. (相对于上一个关节的旋转)
+    \item $\bp_i$: positon. 全局坐标系下到 $i$ 的位置向量
+    \item $\bl_i$: offset, translation. 从 $i-1$ 到 $i$ 的局部坐标系位置向量, 固定的. 
+\end{itemize}
+
+From rotation to orientation:
+\begin{align*}
+    Q_i=Q_{i-1}R_i
+\end{align*}
+
+From orientation to rotation
+\begin{align*}
+    R_i=Q_{i-1}^\top Q_i
+\end{align*}
+
+Relative rotation:
+\begin{align*}
+    R_4^1&=Q_1^\top Q_4\\
+    &= (R_0R_1)^\top R_0 R_1 R_2R_3R_4\\
+    &=R_2R_3R_4
+\end{align*}
+
+\begin{align*}
+    \bp_i=\bp_{i-1}+Q_{i-1}\bl_{i-1}
+\end{align*}
+
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=0.618\linewidth]{pic/1053/反向求解}
+    \caption{坐标系变换}
+\end{figure}
+这里 $\bx_0$ 在 4 的坐标系下, $\bx$ 在全局坐标系下, 若要求在 3 的坐标系下的 $\bx^{Q_3}$
+\begin{align*}
+    \bm x&=\bp_4+Q_4\bx_0\\
+    &=\bp_3+Q_3(\bl_3+R_4\bx_0)\\
+    \bx^{Q_3}&=Q_3^\top(\bx-\bp_3)\\
+    &=\bl_3+R_4\bx_0
+\end{align*}
+
+
+\subsubsection{Kinematics of a Character}
+\begin{definition}[Degrees of Freedom (DoF)]
+    Number of independent parameters that define the configuration or state of
+a mechanical system. 
+\end{definition}
+
+Types of Joints:
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=0.618\linewidth]{pic/1053/Types of Joints}
+    \caption{Types of Joints}
+\end{figure}
+
+Pose Parameters: 
+\begin{align*}
+    (\bt_0, R_0, R_1,R_2,\dots)
+\end{align*}
+where $\bt_0$ is root, $R_i$ is internal joints.
+
+
+
+\subsection{Inverse Kinematics}
+
+\subsubsection{Forward and Inverse Problems}
+
+\subsubsection{Inverse Kinematics}
+Given the position of the end-effector $\bx_i$, compute the joint rotations $R_i$, rotation parameters $\bm{\theta}_i$.
+
+
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=0.618\linewidth]{pic/1053/Solutions of IK Problems}
+    \caption{Solutions of IK Problems}
+\end{figure}
+
+
+\begin{example}
+    Two-Joint IK
+    \begin{figure}[!htb]
+        \centering
+        \includegraphics[width=0.618\linewidth]{pic/1053/Two-Joint IK}
+        \caption{Two-Joint IK}
+    \end{figure}
+    
+    \begin{enumerate}
+        \item Rotate joint 1 such that
+        \begin{align*}
+            \norm{\bl_{0x}}=\norm{\bl_{02}}
+        \end{align*}
+        \item Rotate joint 0 such that
+        \begin{align*}
+            \bl_{0x}=\bl_{02}
+        \end{align*}
+        \item Rotate joint 0 around $\bl_{0x}$ if necessary.
+    \end{enumerate}
+
+\end{example}
+
+\subsubsection{IK as an Optimization Problem}
+For an IK problem, find $\bm\theta$ to optimize
+\begin{align*}
+    \min_{\btheta} &F(\btheta)\\
+    F(\theta)&=\frac{1}{2}\norm{f(\btheta)-\tilde{\bx}}_2^2
+\end{align*}
+
+\subsubsection{Cyclic Coordinate Descent (CCD) IK}
+Iteratively rotation each joint to make the end-effector align with vector between the joint and the target.
+
+Easy to implement, very fast. Result can be sensitive to the initial solution.
+
+\subsubsection{Gradient Descent}
+求 
+\begin{align*}
+    \bx=f(\theta_0,\theta_1,\dots)
+\end{align*}
+的梯度, 进行下降. 
+
+\begin{itemize}
+    \item Finite Differencing
+    \item Geometric Approach
+\end{itemize}
+
+
+
+Update parameters against the direction of the gradient of the objective function
+\begin{align*}
+    \btheta^{i+1}&=\btheta^i-\alpha \nabla_\btheta F(\btheta^i)\\
+    &=\btheta^i-\alpha J^\top \Delta
+\end{align*}
+
+First-order approach, convergence can be slow. Need to re-compute Jacobian at each iteration.
+
+\subsubsection{Gauss-Newton Method}
+
+\subsubsection{Jacobian Inverse Method}
+
+\subsubsection{Damped Jacobian Inverse Method}
+
+

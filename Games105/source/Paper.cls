@@ -94,9 +94,13 @@
 		% 偏导
 		\newcommand{\pard}[2]{\frac{\partial #1}{\partial #2}}
 		% 向量
-		\newcommand{\bx}{\bm{x}}
-		\newcommand{\by}{\bm{y}}
-		\newcommand{\bg}{\bm{g}}
+		\newcommand{\bx}{{\bm{x}}}
+		\newcommand{\by}{{\bm{y}}}
+		\newcommand{\bg}{{\bm{g}}}
+		\newcommand{\bp}{{\bm{p}}}
+		\newcommand{\bl}{{\bm{l}}}
+		\newcommand{\bt}{{\bm{t}}}
+		\newcommand{\btheta}{{\bm{\theta}}}
 		% 域
 		\newcommand{\R}{\mathbb{R}}
 		\newcommand{\FC}{\mathcal{F}}
