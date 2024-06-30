@@ -8,6 +8,7 @@
 \RequirePackage{fancyhdr}
 \RequirePackage{enumitem}
 \RequirePackage{listings}
+\RequirePackage{minted}
 \RequirePackage{xcolor}
 \RequirePackage{array}
 \RequirePackage{float}
@@ -21,6 +22,8 @@
 \RequirePackage{diagbox}
 \RequirePackage{amsmath}
 \RequirePackage{mathtools}
+\RequirePackage{bm}
+\RequirePackage{amsthm}
 % \RequirePackage{unicode-math}
 \RequirePackage{extarrows}
 \RequirePackage{caption}
@@ -41,11 +44,12 @@
 \usetikzlibrary{shapes}
 \usetikzlibrary{bayesnet}
 \usetikzlibrary{decorations.pathreplacing}
-\usetikzlibrary{calc}
+\usetikzlibrary{calc, math}
 \tikzset{>=stealth}
 \definecolor{light_red}{RGB}{209,105,81}
 \definecolor{light_green}{RGB}{58,181,75}
 \definecolor{light_blue}{RGB}{0,153,228}
+\definecolor{light_gray}{RGB}{245,245,245}
 
 \setlength{\headheight}{15pt}
 
@@ -63,8 +67,18 @@
 %
 
 \newtheorem{theorem}{Theorem}[section]
-\newtheorem{definition}{Definition}[section]
+\newtheorem{thesis}{Thesis}[theorem]
+\newtheorem{claim}{Claim}[theorem]
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{assumption}[theorem]{Assumption}
+\theoremstyle{definition}
+\newtheorem{example}{Example}[section]
+% \newtheorem{claimproof}{Proof of claim}[theorem]
+% \newtheorem{proof}{Proof}[section]
 \numberwithin{equation}{section}
+\counterwithin{algorithm}{section}
 
 \hypersetup{
 	colorlinks=true,%打开颜色显示
@@ -76,6 +90,33 @@
 }
 
 %自定义命令
+	% 数学符号
+		% 偏导
+		\newcommand{\pard}[2]{\frac{\partial #1}{\partial #2}}
+		% 向量
+		\newcommand{\bx}{{\bm{x}}}
+		\newcommand{\by}{{\bm{y}}}
+		\newcommand{\bg}{{\bm{g}}}
+		\newcommand{\bp}{{\bm{p}}}
+		\newcommand{\bl}{{\bm{l}}}
+		\newcommand{\bt}{{\bm{t}}}
+		\newcommand{\btheta}{{\bm{\theta}}}
+		% 域
+		\newcommand{\R}{\mathbb{R}}
+		\newcommand{\FC}{\mathcal{F}}
+		\newcommand{\SC}{\mathcal{S}}
+		\newcommand{\LC}{\mathcal{L}}
+		% 范数
+		\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+		% encode
+		\newcommand{\encode}[1]{{``#1"}}
+		%subject to
+		\DeclareMathOperator{\st}{s.t.\ }
+		%argmin, argmax
+		\DeclareMathOperator*{\argmin}{argmin}
+		\DeclareMathOperator*{\argmax}{argmax}
+		% domain
+		\DeclareMathOperator*{\dom}{dom}
 	% 复制代码不带行号
 	\newcommand{\emptyaccsupp}[1]{\BeginAccSupp{ActualText={}}#1\EndAccSupp{}}
 	%脚注
@@ -91,8 +132,21 @@
 	\renewcommand\tablename{\textbf{Table}}
 	% 重定义图片编号
 	\renewcommand\figurename{\textbf{Figure}}
+	% 新增环境
+	\newenvironment{code}{\captionsetup{type=listing}}{}
+		%重定义 listing 名称
+		\renewcommand{\listingscaption}{\textbf{Code}}
+		%以 section 为单位编号
+		\numberwithin{listing}{section}
 	%目录居中
 	\renewcommand*\contentsname{\hfill Contents \hfill}
+	% 图片按章节编号
+	\numberwithin{figure}{section}
+	\numberwithin{table}{section}
+	%proof 标题
+	\renewcommand{\proofname}{Proof}
+	%proof QED symbol
+	\renewcommand\qedsymbol{Q.E.D.}
 %
 
 %页面参数
@@ -148,33 +202,49 @@
 	% \rhead{学号：\@stuid}
 %
 
-\lstset{
-	language=c++,
-    basicstyle          =   \small\fontspec{Consolas},          % 基本代码风格
-	morekeywords		=	{ll},	%增加高亮
-    keywordstyle        =   \color{blue!90},          % 关键字风格
-    commentstyle        =   \color{green!40!black!60},  % 注释的风格，斜体
-    stringstyle         =   \ttfamily\slshape\color[RGB]{140,81,25},  % 字符串风格
-    % framerule           =   2.5em,
-	rulesepcolor		=	\color{red!20!green!20!blue!20},%代码块边框为淡青色
-	framextopmargin=2pt,framexbottommargin=2pt,abovecaptionskip=-3pt,belowcaptionskip=3pt,%阴影边框设定
-	rulecolor           =   \color{gray!10},  
-	flexiblecolumns     =   flase,                % 别问为什么，加上这个
-    numbers             =   left,   % 行号的位置在左边
-    showspaces          =   false,  % 是否显示空格，显示了有点乱，所以不显示了
-    numberstyle         =   \footnotesize\fontspec{Consolas}\emptyaccsupp,    % 行号的样式，小五号，tt等宽字体
-    showstringspaces    =   false,
-    captionpos          =   t,      % 这段代码的名字所呈现的位置，t指的是top上面
-    frame               =   shadowbox,   % 显示边框
-    tabsize             =   4,
-    breaklines          =   true,   % 自动换行，建议不要写太长的行
-    breakatwhitespace   =   false,       	% 设置自动中断是否只发生在空格处
-    escapeinside        =   ``,     	% 在``里显示中文
-    columns             =   fixed,  % 如果不加这一句，字间距就不固定，很丑，必须
-    % basewidth           =    0.6em,
-    xleftmargin         =    1em,  
-    xrightmargin        =    1em,     % 设定listing左右的空白
+% 代码
+\usemintedstyle{vs}
+\setminted{
+  % frame=lines,
+  framesep=2mm,
+  numbersep=4pt,
+  baselinestretch=1.2,
+  fontsize=\small,
+  linenos,
+  breaklines,
+  autogobble,
+  bgcolor=light_gray,
 }
+%
+
+% \lstset{
+% 	language=c++,
+%     basicstyle          =   \small\fontspec{Consolas},          % 基本代码风格
+% 	morekeywords		=	{ll},	%增加高亮
+%     keywordstyle        =   \color{blue!90},          % 关键字风格
+%     commentstyle        =   \color{green!40!black!60},  % 注释的风格，斜体
+%     stringstyle         =   \ttfamily\slshape\color[RGB]{140,81,25},  % 字符串风格
+%     % framerule           =   2.5em,
+% 	rulesepcolor		=	\color{red!20!green!20!blue!20},%代码块边框为淡青色
+% 	framextopmargin=2pt,framexbottommargin=2pt,abovecaptionskip=-3pt,belowcaptionskip=3pt,%阴影边框设定
+% 	rulecolor           =   \color{gray!10},  
+% 	flexiblecolumns     =   flase,                % 别问为什么，加上这个
+%     numbers             =   left,   % 行号的位置在左边
+%     showspaces          =   false,  % 是否显示空格，显示了有点乱，所以不显示了
+%     numberstyle         =   \footnotesize\fontspec{Consolas}\emptyaccsupp,    % 行号的样式，小五号，tt等宽字体
+%     showstringspaces    =   false,
+%     captionpos          =   t,      % 这段代码的名字所呈现的位置，t指的是top上面
+%     frame               =   shadowbox,   % 显示边框
+%     tabsize             =   4,
+%     breaklines          =   true,   % 自动换行，建议不要写太长的行
+%     breakatwhitespace   =   false,       	% 设置自动中断是否只发生在空格处
+%     escapeinside        =   ``,     	% 在``里显示中文
+%     columns             =   fixed,  % 如果不加这一句，字间距就不固定，很丑，必须
+%     % basewidth           =    0.6em,
+%     xleftmargin         =    1em,  
+%     xrightmargin        =    1em,     % 设定listing左右的空白
+% }
+
 % 头部
 	% \newcommand{\makeheader}{
 	% 	%标题
