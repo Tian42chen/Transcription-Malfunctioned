@@ -271,8 +271,8 @@ Quaternion Multiplication:
     &=\begin{bmatrix}
         w_1 & -x_1 & -y_1 & -z_1 \\
         x_1 &  w_1 & -z_1 &  y_1 \\
-        y_1 & -x_1 &  w_1 &  x_1 \\
-        z_1 & -y_1 &  z_1 &  w_1 \\
+        y_1 &  z_1 &  w_1 & -x_1 \\
+        z_1 & -y_1 &  x_1 &  w_1 \\
     \end{bmatrix}\begin{bmatrix}
         w_2\\x_2\\y_2\\z_2
     \end{bmatrix}\\
@@ -346,9 +346,9 @@ Quaternion Multiplication:
         0 \\ \bm p'
     \end{bmatrix}=\bm q \begin{bmatrix}
         0\\\bm p
-    \end{bmatrix} \bm q^* = (\bm q) \begin{bmatrix}
+    \end{bmatrix} \bm q^* = (-\bm q) \begin{bmatrix}
         0\\\bm p
-    \end{bmatrix} (\bm q)^* 
+    \end{bmatrix} (-\bm q)^* 
 \end{align*}
 $\bm q$ 与 $-\bm q$ 表示的是同一个旋转.
 

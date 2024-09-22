@@ -100,6 +100,8 @@
 		\newcommand{\bp}{{\bm{p}}}
 		\newcommand{\bl}{{\bm{l}}}
 		\newcommand{\bt}{{\bm{t}}}
+		\newcommand{\br}{{\bm{r}}}
+		\newcommand{\bo}{{\bm{o}}}
 		\newcommand{\btheta}{{\bm{\theta}}}
 		% 域
 		\newcommand{\R}{\mathbb{R}}
