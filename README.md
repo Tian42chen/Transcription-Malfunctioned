@@ -7,9 +7,12 @@
 
 ## 环境
 - 平台: windows 10
-- Tex 发行版: [MiKTex](https://miktex.org/download)
+  - Tex 发行版: [MiKTex](https://miktex.org/download)
+- 平台: MacOS 15
+  - Tex 发行版: [MacTex Basic](https://www.tug.org/mactex/morepackages.html)
+  - 配合 [TeX Live Utility](https://amaxwell.github.io/tlutility/) 使用, 需要手动安装一系列宏包.
 - 编辑器: vscode
-  - 用到了 minted 宏包插入代码, 其依赖于 python, 需要安装 Pygments, 并给予 vscode 编译 latex 时运行任意脚本的权限. (更具体的参考网络上的文章)
+- 用到了 minted 宏包插入代码, 其依赖于 python, 需要安装 Pygments, 并给予 vscode 编译 latex 时运行任意脚本的权限. (更具体的参考网络上的文章)
 
 ## 笔记
 完成度: 基本完成 > 完成度较高 > 完成度较低 > 残缺
