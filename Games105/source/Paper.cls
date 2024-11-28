@@ -98,10 +98,12 @@
 		\newcommand{\by}{{\bm{y}}}
 		\newcommand{\bg}{{\bm{g}}}
 		\newcommand{\bp}{{\bm{p}}}
+		\newcommand{\bq}{{\bm{q}}}
 		\newcommand{\bl}{{\bm{l}}}
 		\newcommand{\bt}{{\bm{t}}}
 		\newcommand{\br}{{\bm{r}}}
 		\newcommand{\bo}{{\bm{o}}}
+		\newcommand{\bv}{{\bm{v}}}
 		\newcommand{\btheta}{{\bm{\theta}}}
 		% 域
 		\newcommand{\R}{\mathbb{R}}
