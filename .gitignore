@@ -23,6 +23,8 @@ CP.pdf
 ACG.pdf
 AdaA.pdf
 
+.DS_Store
+
 ## Core latex/pdflatex auxiliary files:
 *.aux
 *.lof
