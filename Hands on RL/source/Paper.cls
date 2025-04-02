@@ -115,6 +115,8 @@
 		\newcommand{\VC}{\mathcal{V}}
 		\newcommand{\LC}{\mathcal{L}}
 		\newcommand{\PC}{\mathcal{P}}
+		\newcommand{\TC}{\mathcal{T}}
+		\newcommand{\OC}{\mathcal{O}}
 		% 范数
 		\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
 		% encode
