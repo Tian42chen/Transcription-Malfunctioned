@@ -1,0 +1,70 @@
+\newpage
+\section{多臂老虎机}
+
+\subsection{问题介绍}
+\subsubsection{形式化描述}
+问题表示为一个元组 $\braket{\AC,\RC}$, 其中:
+\begin{itemize}
+    \item $\AC$ 为动作集合, 一个动作表示拉动一个拉杆, 对有 $K$ 个拉杆的老虎机, 其动作空间为 $\{ a_1,\dots,a_K \}$, $a_t\in \AC$.
+    \item $\RC$ 为奖励概率分布, $\RC(r|a)$. 
+\end{itemize}
+
+每个时间步只能拉动一个拉杆, 目标为最大化一段时间步 $T$ 内累积奖励 $\max \sum_{t=1}^T r_t,\ r_t\sim \RC(\cdot | a_t)$. 其中 $a_t$ 为 $t$ 刻动作, $r_t$ 为 $a_t$ 奖励. 
+
+\subsubsection{累积懊悔}
+
+对每个动作 $a$, 定义期望奖励为 $Q(a)-\mathbb{E}_{r\sim \RC(\cdot | a) }[r]$, 最优期望奖励为 $Q^*=\max_{a\in\AC}Q(a)$. 懊悔定义为 $R(a)=Q^*-Q(a)$. 累积懊悔为 $T$ 次操作后累积的懊悔总量, 对于一次完整的 $T$ 步决策 $\{ a_1, a_2,\dots,a_T \}$, 累积懊悔 $\sigma_R=\sum_{t=1}^TR(a_t)$. 多臂老虎机目标为最大化奖励, 等效为最小化累积懊悔. 
+
+\subsubsection{估计期望奖励}
+对于第 $k$ 步期某个拉杆望奖励估值更新:
+\begin{align*}
+    Q_k&=\frac{1}{k}\sum_{i=1}^k r_i\\
+    &=\frac{1}{k}\left( r_k+\sum_{i=1}^{k-1}r_i \right) \\
+    &=\frac{1}{k}\left[ r_k+(k-1)Q_{k-1}\right] \\
+    &=Q_{k-1}+\frac{1}{k}(r_k-Q_{k-1})
+\end{align*}
+
+\subsection{解决算法}
+平衡探索与利用.
+
+\subsubsection{\texorpdfstring{$\epsilon$}.-贪心 }
+贪心算法上加噪声
+\begin{align*}
+    a_t=\left\{ \begin{array}{ll}
+        \argmax_{a\in \AC} \hat{Q}(a) & 1-\epsilon\\
+        random(a), a\in \AC & \epsilon
+    \end{array} \right.
+\end{align*}
+
+因为累积懊悔会随时间线性增长, 所以可以让 $\epsilon$ 随时间衰减, $\epsilon_t=\frac{1}{t}$.
+
+\subsubsection{上置信界}
+
+引入不确定性度量 $U(a)$, 鼓励探索不确定性大的拉杆. 
+
+上置信界算法(upper confidence bound, UCB), 基于霍夫丁不等式(Hoeffding's inequality). 令 $X_1, \dots, X_n$ 为 $n$ 个独立同分布随机变量, 取值 $[0,1]$, 其经验期望 $\bar{x}_n=\frac{1}{n}\sum_{j=1}^nX_j$, 有
+\begin{align*}
+    \mathbb{P}\{ \mathbb{E}[X]\ge \bar{x}_n + u \}\le e^{-2nu^2}
+\end{align*}
+对于多臂老虎机问题, $\hat{Q}_t(a)$ 带入 $\bar{x}_n$, 不等式参数 $u=\hat{U}_t(a)$ 代表不确定度量. 给定概率 $p=e^{-2N_t(a)U_t(a)^2}$, 有
+\begin{align*}
+    1-p\le P\{Q_t(a)< \hat{Q}_t(a)+\hat{U}_t(a)\}
+\end{align*}
+当 $p$ 很小时, $P\{Q_t(a)< \hat{Q}_t(a)+\hat{U}_t(a)\}$ 很大, $\hat{Q}_t(a)+\hat{U}_t(a)$ 可视为期望上界. 
+
+上置信界算法选取期望奖励上界最大的动作, 即 $a=\argmax_{a\in\AC} [\hat{Q}_t(a)+\hat{U}_t(a)]$. 其中, 根据 $p=e^{-2N_t(a)U_t(a)^2}$, 有 $\hat{U}_t(a)=\sqrt{\frac{\log p}{2N_t(a)}}$. 
+
+上置信界算法可以理解为, 每次选取前先估计期望奖励上界, 真实期望奖励只有较小的概率 $p$ 超过估计, 然后选出估计最大的拉杆. 
+
+具体算法设置中, 
+\begin{itemize}
+    \item $p=\frac{1}{t}$.
+    \item $\hat{U}_t(a)=\sqrt{\frac{\log p}{2[N_t(a)+1]}}$, 分母 $+1$ 避免为0. 
+    \item $a=\argmax_{a\in\AC} [\hat{Q}_t(a)+c\cdot\hat{U}_t(a)]$, 用系数 $c$ 控制不确定性的比重. 
+\end{itemize}
+
+\subsubsection{汤普森采样算法}
+汤普森采样是一种计算所有拉杆的最高奖励概率的蒙特卡洛采样方法.
+
+用 Beta 分布对每个动作的奖励概率分布建模. 若某拉杆被选择了 $k$ 次, 其中 $m_1$ 次奖励为 1, $m_2$ 次奖励为 0, 则该拉杆的奖励服从参数为 $(m_1+1, m_2+1)$ 的 Beta 分布.
+
