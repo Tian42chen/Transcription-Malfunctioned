@@ -1,0 +1,113 @@
+\newpage
+\section{时序差分算法}
+
+对于马尔可夫决策状态转移概率隐式的情况. 智能体只能通过与环境进行交互, 采样数据进行学习, 这种方法统称为无模型强化学习 (model-free reinforcement learning).
+
+无模型强化学习不需要知道环境的奖励函数和状态转移函数. 会介绍两大经典算法: Sarsa, Q-learning. 都是基于时序差分 (temporal difference) 的强化学习算法. 
+
+\begin{itemize}
+    \item 在线策略学习: 使用当前策略下采样的样本学习, 若策略更新, 抛弃之前的样本
+    \item 离线策略学习: 策略更新不抛弃样本
+\end{itemize}
+
+\subsection{时序差分方法}
+时序差分是用来估计一个策略价值函数的方法. 结合了蒙特卡洛与动态规划的思想, 从样本中学习, 利用后续状态的价值估计更新当前状态价值估计. 基于蒙特卡洛的增量式更新:
+\begin{align*}
+    V(s_t)\leftarrow V(s_t) + \alpha [G_t - V(s_t)]
+\end{align*}
+变为:
+\begin{align*}
+    V(s_t)\leftarrow V(s_t) + \alpha \left[r_t + \gamma V(s_{t+1})-V(s_t)\right]
+\end{align*}
+其中 $r_t + \gamma V(s_{t+1})-V(s_t)$ 称为时序差分误差. 
+
+蒙特卡洛更新目标是下式第一行, 而时序差分更新目标是下式第二行.
+\begin{align*}
+    V_\pi(s)&=\E_\pi [G_t|S_t=s]\\
+    &=\E_\pi[r_t + \gamma V_\pi(S_{t+1})| S_t = s]
+\end{align*}
+
+\subsection{Sarsa}
+使用时序差分来估计动作价值函数 $Q$:
+\begin{align*}
+    Q(s_t, a_t) \leftarrow Q(s_t, a_t) + \alpha \left[ r_t + \gamma Q(s_{t+1}, a_{t+1}) - Q(s_t, a_t) \right]
+\end{align*}
+然后选择此状态下动作价值最大的动作, i.e. $\argmax_a Q(s, a)$. 以此进行策略提升.
+
+但是有两个问题, 一是准确估计动作价值函数需要大量样本, 于是用广义策略提升的思想, 直接用部分样本进行评估并更新. 二是完全贪婪可能导致某些动作状态对 $(s,a)$ 永远不会被访问, 于是采用 $\epsilon-$greedy. 
+
+至于为什么被称为 Sarsa, 因为其动作价值的更新用到了当前状态 $s$, 当前动作 $a$, 获得奖励 $r$, 下个状态 $s'$, 下个动作 $a'$, 拼接后得到 Sarsa
+
+\begin{algorithm}[htb]
+    \caption{Sarsa}
+    \begin{algorithmic}
+        \State 初始化 $Q(s,a)$
+        \For{序列 $e=1\to E$}
+            \State 得到初始状态 $s$
+            \State 以 $\epsilon-$greedy, 根据 $Q$ 选择当前状态 $s$ 下的动作 $a$
+            \For{时间步 $t=1\to T$}
+                \State 得到环境反馈 $r, s'$
+                \State 以 $\epsilon-$greedy, 根据 $Q$ 选择当前状态 $s'$ 下的动作 $a'$
+                \State $Q(s, a) \leftarrow Q(s, a) + \alpha \left[ r + \gamma Q(s', a') - Q(s, a) \right]$
+                \State $s\leftarrow s',\ a\leftarrow a'$
+            \EndFor
+        \EndFor
+    \end{algorithmic}
+\end{algorithm}
+
+
+\subsection{多步 Sarsa 算法}
+蒙特卡洛使用当前状态之后每一步的奖励而不使用任何估计, 其是无偏 (unbiased) 的, 但是有较大的方差, 因为状态转移有不确定性, 每一步的误差都会累加, 影响最终的价值估计. 
+
+时序差分法只利用一步奖励和下一个状态的价值估计, 方差较小, 是有偏的, 因为其用到了价值估计. 
+
+而多步时序差分结合二者优势, 使用 $n$ 步奖励, 然后使用之后的状态价值估计. 即
+\begin{align*}
+    G_t=& r_t+\gamma r_{t+1} + \dots + \gamma^n Q(s_{t+n}, a_{t+n})\\
+    Q(s_t, a_t)\leftarrow& Q(s_t, a_t) + \alpha[ r_t + \gamma r_{t+1} + \dots \\
+    &+ \gamma^n Q(s_{t+n}, a_{t+n}) - Q(s_t, a_t) ]
+\end{align*}
+
+\subsection{Q-learning}
+Q-learning 的更新方式为:
+\begin{align*}
+    Q(s_t, a_t) \leftarrow Q(s_t, a_t) + \alpha \left[ r_t + \gamma \max_a Q(s_{t+1}, a) - Q(s_t, a_t) \right]
+\end{align*}
+其可以看做是直接在估计 $Q^*$, 回顾动作价值函数的贝尔曼最优方程:
+\begin{align*}
+    Q^*(s,a) &= r(s,a) + \gamma \sum_{s'\in\SC} P(s'|s,a)\max_{a'\in\AC}Q^*(s', a')
+\end{align*}
+
+\begin{algorithm}[htb]
+    \caption{Q-learning}
+    \begin{algorithmic}
+        \State 初始化 $Q(s,a)$
+        \For{序列 $e=1\to E$}
+            \State 得到初始状态 $s$
+            \For{时间步 $t=1\to T$}
+                \State 以 $\epsilon-$greedy, 根据 $Q$ 选择当前状态 $s$ 下的动作 $a$
+                \State 得到环境反馈 $r, s'$
+                \State $\displaystyle Q(s, a) \leftarrow Q(s, a) + \alpha \left[ r + \gamma \max_{a'} Q(s', a') - Q(s, a) \right]$
+                \State $s\leftarrow s'$
+            \EndFor
+        \EndFor
+    \end{algorithmic}
+\end{algorithm}
+
+
+Q-learning 的更新不必使用贪心策略, 因为给定任意 $(s,a,r,s')$ 都可以根据公式更新 $Q$. 但是为了探索, 通常使用 $\epsilon-$greedy 策略与环境交互. 
+
+Sarsa 需要使用 $\epsilon-$greedy 采样, 是因为其更新用到了 $Q(s',a')$.
+
+称 Sarsa 为在线策略 (on-policy) 算法, Q-learning 为离线策略 (off-policy) 算法. 
+
+
+\subsubsection{在线策略与离线策略}
+称采样数据的策略为行为策略 (behavior policy), 称利用数据来更新的策略为目标策略 (target policy). 在线策略表示行为策略和目标策略是同一个, 而离线策略表示行为策略和目标策略不是同一个. 判断二者的重要手段之一是看计算价值目标的数据是否来自当前策略. 
+
+\begin{itemize}
+    \item Sarsa 更新公式必须使用当前策略采样得到的五元组 $(s,a,r,s',a')$.
+    \item Q-learning 更新公式使用 $(s,a,r,s')$, 其中 $s,a$ 是条件, $r,s'$ 由环境采样而得, 不一定需要当前策略采样. 
+\end{itemize}
+
+
